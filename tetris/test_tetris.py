@@ -1,6 +1,6 @@
 import pyxel
 import pytest
-from tetris import Tetris, Direction
+from tetris import Tetris, Direction, Shape
 
 
 class TestTetris:
@@ -33,20 +33,20 @@ class TestTetris:
         THEN check the shapes exist in the list.
         """
         tetris = Tetris()
-        L_shape = tetris.draw_shape(Direction.RIGHT)[0]["L_shape"]
-        T_shape = tetris.draw_shape(Direction.RIGHT)[1]["T_shape"]
-        O_shape = tetris.draw_shape(Direction.RIGHT)[2]["O_shape"]
-        I_shape = tetris.draw_shape(Direction.RIGHT)[3]["I_shape"]
-        Z_shape = tetris.draw_shape(Direction.RIGHT)[4]["Z_shape"]
-        S_shape = tetris.draw_shape(Direction.RIGHT)[5]["S_shape"]
-        L2_shape = tetris.draw_shape(Direction.RIGHT)[6]["L2_shape"]
-        assert len(L_shape) == 4
-        assert len(T_shape) == 4
-        assert len(O_shape) == 4
-        assert len(I_shape) == 4
-        assert len(Z_shape) == 4
-        assert len(S_shape) == 4
-        assert len(L2_shape) == 4
+        L_shape = tetris.draw_shape(Direction.RIGHT)[0] 
+        T_shape = tetris.draw_shape(Direction.RIGHT)[1] 
+        O_shape = tetris.draw_shape(Direction.RIGHT)[2] 
+        I_shape = tetris.draw_shape(Direction.RIGHT)[3] 
+        Z_shape = tetris.draw_shape(Direction.RIGHT)[4] 
+        S_shape = tetris.draw_shape(Direction.RIGHT)[5] 
+        J_shape = tetris.draw_shape(Direction.RIGHT)[6] 
+        assert type(L_shape) == list
+        assert type(T_shape) == list
+        assert type(O_shape) == list
+        assert type(I_shape) == list
+        assert type(Z_shape) == list
+        assert type(S_shape) == list
+        assert type(J_shape) == list
 
     def test_each_shape_works_with_each_direction(self):
         tetris = Tetris()
@@ -58,21 +58,21 @@ class TestTetris:
         ]
 
         for i in direction:
-            L_shape = tetris.draw_shape(i)[0]["L_shape"]
-            T_shape = tetris.draw_shape(i)[1]["T_shape"]
-            O_shape = tetris.draw_shape(i)[2]["O_shape"]
-            I_shape = tetris.draw_shape(i)[3]["I_shape"]
-            Z_shape = tetris.draw_shape(i)[4]["Z_shape"]
-            S_shape = tetris.draw_shape(i)[5]["S_shape"]
-            L2_shape = tetris.draw_shape(i)[6]["L2_shape"]
+            L_shape = tetris.draw_shape(i)[0]
+            T_shape = tetris.draw_shape(i)[1]
+            O_shape = tetris.draw_shape(i)[2]
+            I_shape = tetris.draw_shape(i)[3]
+            Z_shape = tetris.draw_shape(i)[4]
+            S_shape = tetris.draw_shape(i)[5]
+            J_shape = tetris.draw_shape(i)[6]
             assert len(L_shape) == 4
             assert len(T_shape) == 4
             assert len(O_shape) == 4
             assert len(I_shape) == 4
             assert len(Z_shape) == 4
             assert len(S_shape) == 4
-            assert len(L2_shape) == 4
-
+            assert len(J_shape) == 4
+            
     def test_rotation_works_correctly_using_key_inputs(self):
         pass
 
