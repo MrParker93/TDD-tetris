@@ -1,6 +1,7 @@
 import pyxel
 import pytest
-from tetris import Tetris, Direction, Shape
+import constants
+from tetris import Tetris
 
 
 class TestTetris:
@@ -14,7 +15,7 @@ class TestTetris:
         """
         tetris = Tetris()
         board = (pyxel.width, pyxel.height)
-        assert board == (120, 180)
+        assert board == (120, 220)
 
     def test_board_background_colour_is_black(self):
         """
@@ -22,57 +23,38 @@ class TestTetris:
         WHEN the application is running
         THEN check the correct background is displayed.
         """
-        tetris = Tetris()
         background_colour = pyxel.COLOR_BLACK
-        assert background_colour == 0
+        assert background_colour == constants.BACKGROUND_COLOUR
 
-    def test_each_section_of_each_shape_exists(self):
-        """
-        GIVEN each type of section of each shape
-        WHEN the application is running
-        THEN check the shapes exist in the list.
-        """
+    def test_each_shape_exists(self):
+        """"""
+        for blocks in constants.BLOCKS.keys():
+            for _ in constants.BLOCK_NAME:
+                if constants.BLOCK_NAME[0] in blocks:
+                    assert "O_NEUTRAL" or "O_DOWN" or "O_LEFT" or "O_UP" in blocks
+                if constants.BLOCK_NAME[1] in blocks:
+                    assert "I_NEUTRAL" or "I_DOWN" or "I_LEFT" or "I_UP" in blocks
+                if constants.BLOCK_NAME[2] in blocks:
+                    assert "S_NEUTRAL" or "S_DOWN" or "S_LEFT" or "S_UP" in blocks
+                if constants.BLOCK_NAME[3] in blocks:
+                    assert "Z_NEUTRAL" or "Z_DOWN" or "Z_LEFT" or "Z_UP" in blocks
+                if constants.BLOCK_NAME[4] in blocks:
+                    assert "L_NEUTRAL" or "L_DOWN" or "L_LEFT" or "L_UP" in blocks
+                if constants.BLOCK_NAME[5] in blocks:
+                    assert "J_NEUTRAL" or "J_DOWN" or "J_LEFT" or "J_UP" in blocks
+                if constants.BLOCK_NAME[6] in blocks:
+                    assert "T_NEUTRAL" or "T_DOWN" or "T_LEFT" or "T_UP" in blocks
+
+    def test_directions_and_rotation_is_registered_by_key_inputs(self):
+        """"""
         tetris = Tetris()
-        L_shape = tetris.draw_shape(Direction.RIGHT)[0] 
-        T_shape = tetris.draw_shape(Direction.RIGHT)[1] 
-        O_shape = tetris.draw_shape(Direction.RIGHT)[2] 
-        I_shape = tetris.draw_shape(Direction.RIGHT)[3] 
-        Z_shape = tetris.draw_shape(Direction.RIGHT)[4] 
-        S_shape = tetris.draw_shape(Direction.RIGHT)[5] 
-        J_shape = tetris.draw_shape(Direction.RIGHT)[6] 
-        assert type(L_shape) == list
-        assert type(T_shape) == list
-        assert type(O_shape) == list
-        assert type(I_shape) == list
-        assert type(Z_shape) == list
-        assert type(S_shape) == list
-        assert type(J_shape) == list
+        tetris.update()
+        assert tetris.direction == None
+        assert tetris.rotation == None
 
     def test_each_shape_works_with_each_direction(self):
-        tetris = Tetris()
-        direction = [
-            Direction.RIGHT,
-            Direction.DOWN,
-            Direction.LEFT,
-            Direction.UP
-        ]
+        pass
 
-        for i in direction:
-            L_shape = tetris.draw_shape(i)[0]
-            T_shape = tetris.draw_shape(i)[1]
-            O_shape = tetris.draw_shape(i)[2]
-            I_shape = tetris.draw_shape(i)[3]
-            Z_shape = tetris.draw_shape(i)[4]
-            S_shape = tetris.draw_shape(i)[5]
-            J_shape = tetris.draw_shape(i)[6]
-            assert len(L_shape) == 4
-            assert len(T_shape) == 4
-            assert len(O_shape) == 4
-            assert len(I_shape) == 4
-            assert len(Z_shape) == 4
-            assert len(S_shape) == 4
-            assert len(J_shape) == 4
-            
     def test_rotation_works_correctly_using_key_inputs(self):
         pass
 

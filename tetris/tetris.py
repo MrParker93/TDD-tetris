@@ -16,6 +16,7 @@ class Tetris:
     """DESCRIPTION OF CLASS"""
 
     def __init__(self):
+        """DESCRIPTION OF METHOD"""
         pyxel.init(constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT,
                    caption="Tetris!", fps=60)
         pyxel.load("assets/shapes.pyxres")
@@ -23,14 +24,16 @@ class Tetris:
         pyxel.run(self.update, self.draw)
 
     def reset(self):
+        """DESCRIPTION OF METHOD"""
         self.game_state = "running"
         self.score = constants.SCORE
-        self.x = constants.FALL_POSITION
-        # self.y =
-        pass
+        self.x = constants.STARTING_POSITION_X
+        self.y = constants.STARTING_POSITION_Y
+        self.current_shape = None
+        self.block_orientation = None
 
     def update(self):
-
+        """DESCRIPTION OF METHOD"""
         if pyxel.btn(pyxel.KEY_Q):
             pyxel.quit()
 
@@ -71,34 +74,44 @@ class Tetris:
         if pyxel.btnp(pyxel.KEY_Z, 10, 2):
             if self.check_rotation_is_possible() == True:
                 self.rotation = constants.ANTI_CLOCKWISE
+                self.rotate(self.current_shape, self.rotation)
 
         if pyxel.btnp(pyxel.KEY_X, 10, 2):
             if self.check_rotation_is_possible() == True:
                 self.rotation = constants.CLOCKWISE
+                self.rotate(self.current_shape, self.rotation)
 
     def check_block_collision(self, direction=constants.NEUTRAL):
+        """DESCRIPTION OF METHOD"""
         pass
 
     def check_rotation_is_possible(self, rotation_direction):
+        """DESCRIPTION OF METHOD"""
+        pass
+
+    def rotate(self, shape, rotation):
+        """DESCRIPTION OF METHOD"""
         pass
 
     def draw(self):
+        """DESCRIPTION OF METHOD"""
         pyxel.cls(0)
         pyxel.rectb(constants.SCREEN_WIDTH // 12, constants.SCREEN_HEIGHT // 22,
                     constants.BORDER_WIDTH, constants.BORDER_HEIGHT, constants.BORDER_COLOUR)
 
         for k, v in constants.BLOCKS.items():
-            if k == "T_DOWN":
+            if k == random.choice(constants.BLOCK_OPTIONS):
                 for coords in v:
                     pyxel.blt(
-                        x=coords[0] * constants.BLOCK_SIZE * self.x,
-                        y=coords[1] * constants.BLOCK_SIZE * self.x,
+                        x=coords[0] * constants.BLOCK_SIZE + self.x,
+                        y=coords[1] * constants.BLOCK_SIZE + self.y,
                         img=0,
                         u=0,
                         v=constants.T_BLOCK,
                         w=8,
                         h=8
                     )
+                self.block_orientation = k[2:]
 
         # Show current score
         pyxel.text(constants.SCREEN_WIDTH // 3, (constants.SCREEN_HEIGHT / 18) *
