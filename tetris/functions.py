@@ -1,5 +1,6 @@
 from constants import BLOCKS
 import pyxel
+import random
 import constants
 
 game_text = {"score_label": "SCORE :", "quit_label": "Q :",
@@ -51,3 +52,4 @@ shape = (
 # print(face_left[1])
 # print(face_left[2])
 
+print(random.choice("a" "b"))

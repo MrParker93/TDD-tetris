@@ -18,6 +18,8 @@ BORDER_WIDTH = 100
 
 # Area inside border where game is played
 BOARD_GRID = [[0] * BORDER_WIDTH for _ in range(BORDER_HEIGHT)]
+print(len(BOARD_GRID[0]))
+print(len(BOARD_GRID))
 
 # Set colours for different elements of the game
 BORDER_COLOUR = pyxel.COLOR_NAVY
@@ -107,3 +109,4 @@ BLOCKS = {
 }
 
 BLOCK_OPTIONS = [blocks for blocks in BLOCKS.keys()]
+RANDOM_BLOCK = BLOCK_OPTIONS[random.randrange(0, 28, 4)]
