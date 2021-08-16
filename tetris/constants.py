@@ -18,8 +18,6 @@ BORDER_WIDTH = 100
 
 # Area inside border where game is played
 BOARD_GRID = [[0] * BORDER_WIDTH for _ in range(BORDER_HEIGHT)]
-print(len(BOARD_GRID[0]))
-print(len(BOARD_GRID))
 
 # Set colours for different elements of the game
 BORDER_COLOUR = pyxel.COLOR_NAVY
@@ -32,7 +30,7 @@ STARTING_LEVEL = 0
 
 # Spawning position of blocks
 STARTING_POSITION_X = (SCREEN_WIDTH // BORDER_WIDTH) * (BORDER_WIDTH // 2)
-STARTING_POSITION_Y = (SCREEN_HEIGHT // BORDER_HEIGHT) * 4
+STARTING_POSITION_Y = (SCREEN_HEIGHT // BORDER_HEIGHT) * 16
 
 # Inital score
 SCORE = 0
@@ -53,13 +51,16 @@ CLOCKWISE = "cw"
 ANTI_CLOCKWISE = "acw"
 
 # Block pyxres image coordinates (u=0) this is value for v
-O_BLOCK = 0
-L_BLOCK = 24
-J_BLOCK = 72
-I_BLOCK = 88
-T_BLOCK = 128
-Z_BLOCK = 160
-S_BLOCK = 192
+PYXRES_VALUES = {
+
+    "O_BLOCK": 0,
+    "L_BLOCK": 24,
+    "J_BLOCK": 72,
+    "I_BLOCK": 88,
+    "T_BLOCK": 128,
+    "Z_BLOCK": 160,
+    "S_BLOCK": 192
+}
 
 # Names of each block
 BLOCK_NAME = ["O", "I", "S", "Z", "L", "J", "T"]
@@ -108,5 +109,8 @@ BLOCKS = {
     "T_UP": {(0, 1), (1, 1), (1, 0), (2, 1)}
 }
 
+# List of all the keys in blocks
 BLOCK_OPTIONS = [blocks for blocks in BLOCKS.keys()]
+
+# Randomly choose from all blocks facing right only
 RANDOM_BLOCK = BLOCK_OPTIONS[random.randrange(0, 28, 4)]

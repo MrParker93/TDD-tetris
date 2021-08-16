@@ -2,7 +2,6 @@ import enum
 import pyxel
 import pprint
 import random
-from functions import colours
 
 #####################################
 # SET GLOBAL VARIABLE GAME SETTINGS #
@@ -131,7 +130,7 @@ class Tetris:
     def define_movement(self):
         """Defines all the possible movements with each key press."""
         if pyxel.btn(pyxel.KEY_RIGHT):
-            
+
             pass
         if pyxel.btn(pyxel.KEY_DOWN):
             pass
@@ -151,7 +150,7 @@ class Tetris:
         if self.check_for_loss():
             self.draw_lose()
         else:
-            
+
             pass
 
     def check_for_clears(self):
@@ -219,161 +218,161 @@ class Tetris:
             if L_shape:
                 if Direction == Direction.RIGHT:
                     self.shape.append([
-                            Shape(x, y, l_shape=True),
-                            Shape(x, y + 9, l_shape=True),
-                            Shape(x, y + 18, l_shape=True),
-                            Shape(x + 9, y + 18, l_shape=True)
-                        ])
+                        Shape(x, y, l_shape=True),
+                        Shape(x, y + 9, l_shape=True),
+                        Shape(x, y + 18, l_shape=True),
+                        Shape(x + 9, y + 18, l_shape=True)
+                    ])
 
                 if Direction == Direction.DOWN:
                     self.shape.append([
-                            Shape(x, y, l_shape=True),
-                            Shape(x + 9, y, l_shape=True),
-                            Shape(x + 18, y, l_shape=True),
-                            Shape(x, y + 9, l_shape=True)
-                        ])
+                        Shape(x, y, l_shape=True),
+                        Shape(x + 9, y, l_shape=True),
+                        Shape(x + 18, y, l_shape=True),
+                        Shape(x, y + 9, l_shape=True)
+                    ])
 
                 if Direction == Direction.LEFT:
                     self.shape.append([
-                            Shape(x, y, l_shape=True),
-                            Shape(x + 9, y, l_shape=True),
-                            Shape(x + 9, y + 9, l_shape=True),
-                            Shape(x + 9, y + 18, l_shape=True)
-                        ])
+                        Shape(x, y, l_shape=True),
+                        Shape(x + 9, y, l_shape=True),
+                        Shape(x + 9, y + 9, l_shape=True),
+                        Shape(x + 9, y + 18, l_shape=True)
+                    ])
 
                 if Direction == Direction.UP:
                     self.shape.append([
-                            Shape(x, y + 9, l_shape=True),
-                            Shape(x + 9, y + 9, l_shape=True),
-                            Shape(x + 18, y + 9, l_shape=True),
-                            Shape(x + 18, y, l_shape=True)
-                        ])
+                        Shape(x, y + 9, l_shape=True),
+                        Shape(x + 9, y + 9, l_shape=True),
+                        Shape(x + 18, y + 9, l_shape=True),
+                        Shape(x + 18, y, l_shape=True)
+                    ])
 
             if T_shape:
                 if Direction == Direction.RIGHT:
                     self.shape.append([
-                            Shape(x, y, t_shape=True),
-                            Shape(x, y + 9, t_shape=True),
-                            Shape(x + 9, y + 9, t_shape=True),
-                            Shape(x, y + 18, t_shape=True)
-                        ])
+                        Shape(x, y, t_shape=True),
+                        Shape(x, y + 9, t_shape=True),
+                        Shape(x + 9, y + 9, t_shape=True),
+                        Shape(x, y + 18, t_shape=True)
+                    ])
 
                 if Direction == Direction.DOWN:
                     self.shape.append([
-                            Shape(x, y, t_shape=True),
-                            Shape(x + 9, y, t_shape=True),
-                            Shape(x + 18, y, t_shape=True),
-                            Shape(x + 9, y + 9, t_shape=True)
-                        ])
+                        Shape(x, y, t_shape=True),
+                        Shape(x + 9, y, t_shape=True),
+                        Shape(x + 18, y, t_shape=True),
+                        Shape(x + 9, y + 9, t_shape=True)
+                    ])
 
                 if Direction == Direction.LEFT:
                     self.shape.append([
-                            Shape(x, y + 9, t_shape=True),
-                            Shape(x + 9, y + 9, t_shape=True),
-                            Shape(x + 9, y + 18, t_shape=True),
-                            Shape(x + 9, y, t_shape=True)
-                        ])
+                        Shape(x, y + 9, t_shape=True),
+                        Shape(x + 9, y + 9, t_shape=True),
+                        Shape(x + 9, y + 18, t_shape=True),
+                        Shape(x + 9, y, t_shape=True)
+                    ])
 
                 if Direction == Direction.UP:
                     self.shape.append([
-                            Shape(x, y + 9, t_shape=True),
-                            Shape(x + 9, y + 9, t_shape=True),
-                            Shape(x + 18, y + 9, t_shape=True),
-                            Shape(x + 9, y, t_shape=True)
-                        ])
+                        Shape(x, y + 9, t_shape=True),
+                        Shape(x + 9, y + 9, t_shape=True),
+                        Shape(x + 18, y + 9, t_shape=True),
+                        Shape(x + 9, y, t_shape=True)
+                    ])
 
             if O_shape:
                 if Direction:
                     self.shape.append([
-                            Shape(x, y, o_shape=True),
-                            Shape(x + 9, y, o_shape=True),
-                            Shape(x, y + 9, o_shape=True),
-                            Shape(x + 9, y + 9, o_shape=True)
-                        ])
+                        Shape(x, y, o_shape=True),
+                        Shape(x + 9, y, o_shape=True),
+                        Shape(x, y + 9, o_shape=True),
+                        Shape(x + 9, y + 9, o_shape=True)
+                    ])
 
             if I_shape:
                 if Direction == Direction.RIGHT or Direction == Direction.LEFT:
                     self.shape.append([
-                            Shape(x, y, i_shape=True),
-                            Shape(x, y + 9, i_shape=True),
-                            Shape(x, y + 18, i_shape=True),
-                            Shape(x, y + 27, i_shape=True)
-                        ])
+                        Shape(x, y, i_shape=True),
+                        Shape(x, y + 9, i_shape=True),
+                        Shape(x, y + 18, i_shape=True),
+                        Shape(x, y + 27, i_shape=True)
+                    ])
 
                 if Direction == Direction.DOWN or Direction == Direction.UP:
                     self.shape.append([
-                            Shape(x, y, i_shape=True),
-                            Shape(x + 9, y, i_shape=True),
-                            Shape(x + 18, y, i_shape=True),
-                            Shape(x + 27, y, i_shape=True)
-                        ])
+                        Shape(x, y, i_shape=True),
+                        Shape(x + 9, y, i_shape=True),
+                        Shape(x + 18, y, i_shape=True),
+                        Shape(x + 27, y, i_shape=True)
+                    ])
 
             if Z_shape:
                 if Direction == Direction.RIGHT or Direction == Direction.LEFT:
                     self.shape.append([
-                            Shape(x, y, z_shape=True),
-                            Shape(x + 9, y, z_shape=True),
-                            Shape(x + 9, y + 9, z_shape=True),
-                            Shape(x + 18, y + 9, z_shape=True)
-                        ])
+                        Shape(x, y, z_shape=True),
+                        Shape(x + 9, y, z_shape=True),
+                        Shape(x + 9, y + 9, z_shape=True),
+                        Shape(x + 18, y + 9, z_shape=True)
+                    ])
 
                 if Direction == Direction.DOWN or Direction == Direction.UP:
                     self.shape.append([
-                            Shape(x + 9, y, z_shape=True),
-                            Shape(x + 9, y + 9, z_shape=True),
-                            Shape(x, y + 9, z_shape=True),
-                            Shape(x, y + 18, z_shape=True)
-                        ])
+                        Shape(x + 9, y, z_shape=True),
+                        Shape(x + 9, y + 9, z_shape=True),
+                        Shape(x, y + 9, z_shape=True),
+                        Shape(x, y + 18, z_shape=True)
+                    ])
 
             if S_shape:
                 if Direction == Direction.RIGHT or Direction == Direction.LEFT:
                     self.shape.append([
-                            Shape(x, y + 9, s_shape=True),
-                            Shape(x + 9, y, s_shape=True),
-                            Shape(x + 9, y + 9, s_shape=True),
-                            Shape(x + 18, y, s_shape=True)
-                        ])
+                        Shape(x, y + 9, s_shape=True),
+                        Shape(x + 9, y, s_shape=True),
+                        Shape(x + 9, y + 9, s_shape=True),
+                        Shape(x + 18, y, s_shape=True)
+                    ])
 
                 if Direction == Direction.DOWN or Direction == Direction.UP:
                     self.shape.append([
-                            Shape(x, y, s_shape=True),
-                            Shape(x + 9, y + 9, s_shape=True),
-                            Shape(x, y + 9, s_shape=True),
-                            Shape(x + 9, y + 18, s_shape=True)
-                        ])
+                        Shape(x, y, s_shape=True),
+                        Shape(x + 9, y + 9, s_shape=True),
+                        Shape(x, y + 9, s_shape=True),
+                        Shape(x + 9, y + 18, s_shape=True)
+                    ])
 
             if J_shape:
                 if Direction == Direction.RIGHT:
                     self.shape.append([
-                            Shape(x, y, j_shape=True),
-                            Shape(x + 9, y, j_shape=True),
-                            Shape(x, y + 9, j_shape=True),
-                            Shape(x, y + 18, j_shape=True)
-                        ])
+                        Shape(x, y, j_shape=True),
+                        Shape(x + 9, y, j_shape=True),
+                        Shape(x, y + 9, j_shape=True),
+                        Shape(x, y + 18, j_shape=True)
+                    ])
 
                 if Direction == Direction.DOWN:
                     self.shape.append([
-                            Shape(x, y, j_shape=True),
-                            Shape(x + 9, y, j_shape=True),
-                            Shape(x + 18, y, j_shape=True),
-                            Shape(x + 18, y + 9, j_shape=True)
-                        ])
+                        Shape(x, y, j_shape=True),
+                        Shape(x + 9, y, j_shape=True),
+                        Shape(x + 18, y, j_shape=True),
+                        Shape(x + 18, y + 9, j_shape=True)
+                    ])
 
                 if Direction == Direction.LEFT:
                     self.shape.append([
-                            Shape(x, y + 18, j_shape=True),
-                            Shape(x + 9, y + 18, j_shape=True),
-                            Shape(x + 9, y + 9, j_shape=True),
-                            Shape(x + 9, y, j_shape=True)
-                        ])
+                        Shape(x, y + 18, j_shape=True),
+                        Shape(x + 9, y + 18, j_shape=True),
+                        Shape(x + 9, y + 9, j_shape=True),
+                        Shape(x + 9, y, j_shape=True)
+                    ])
 
                 if Direction == Direction.UP:
                     self.shape.append([
-                            Shape(x + 18, y, j_shape=True),
-                            Shape(x + 18, y + 9, j_shape=True),
-                            Shape(x + 9, y + 9, j_shape=True),
-                            Shape(x, y + 9, j_shape=True)
-                        ])
+                        Shape(x + 18, y, j_shape=True),
+                        Shape(x + 18, y + 9, j_shape=True),
+                        Shape(x + 9, y + 9, j_shape=True),
+                        Shape(x, y + 9, j_shape=True)
+                    ])
 
             return self.shape
 
