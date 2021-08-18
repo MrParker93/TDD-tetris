@@ -2,14 +2,8 @@ import pyxel
 import pprint
 import random
 import constants
-from functions import colour_each_block, rotate, check_block_collision, check_rotation_is_possible
+from tetromino import Tetrominoes
 
-
-class Tetrominoes:
-    """DESCRIPTION OF CLASS"""
-
-    def __init__(self):
-        pass
 
 
 class Tetris:
@@ -26,13 +20,9 @@ class Tetris:
     def reset(self):
         """DESCRIPTION OF METHOD"""
         self.board = constants.BOARD_GRID
-        self.movement_speed = constants.MOVEMENT_SPEED
         self.score = constants.SCORE
-        self.x = constants.STARTING_POSITION_X
-        self.y = constants.STARTING_POSITION_Y
         self.game_state = "running"
-        self.current_shape = None
-        self.block_orientation = None
+        self.block = Tetrominoes(shape=random.choice(constants.BLOCK_NAME))
 
     def update(self):
         """DESCRIPTION OF METHOD"""
@@ -51,93 +41,53 @@ class Tetris:
         if self.game_state == "paused":
             return
         
-        self.direction = constants.NEUTRAL
+        self.direction = None
         self.rotation = None
-
+    
         if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
 
             if pyxel.btnp(pyxel.KEY_DOWN and pyxel.KEY_RIGHT, 10, 2):
-                if check_block_collision(self.board, self.x, self. y, constants.DOWN_RIGHT) == False:
-                    self.direction = constants.DOWN_RIGHT
-                    self.y = self.y + self.movement_speed
-                    self.x = self.x + self.movement_speed
+                self.direction = constants.DOWN_RIGHT
 
             elif pyxel.btnp(pyxel.KEY_DOWN and pyxel.KEY_LEFT, 10, 2):
-                if check_block_collision(self.board, self.x, self. y, constants.DOWN_LEFT) == False:
-                    self.direction = constants.DOWN_LEFT
-                    self.x = self.x - self.movement_speed
-                    self.y = self.y + self.movement_speed
+                self.direction = constants.DOWN_LEFT
+                   
             else:
-                if check_block_collision(self.board, self.x, self. y, constants.DOWN) == False:
-                  self.direction = constants.DOWN
-                  self.y = self.y + self.movement_speed
+                self.direction = constants.DOWN
 
-        if pyxel.btnp(pyxel.KEY_RIGHT, 10, 2):
-            if check_block_collision(self.board, self.x, self. y, constants.RIGHT) == False:
-                self.direction = constants.RIGHT
-                self.x = self.x + self.movement_speed
+        elif pyxel.btnp(pyxel.KEY_RIGHT, 10, 2):
+            self.direction = constants.RIGHT
 
-        if pyxel.btnp(pyxel.KEY_LEFT, 10, 2):
-            if check_block_collision(self.board, self.x, self. y, constants.LEFT) == False:
-                self.direction = constants.LEFT
-                self.x = self.x - self.movement_speed
+        elif pyxel.btnp(pyxel.KEY_LEFT, 10, 2):
+            self.direction = constants.LEFT
 
+        self.block.move_block(self.direction, self.board)
+        
         if pyxel.btnp(pyxel.KEY_Z, 10, 2):
-            if check_rotation_is_possible(constants.ANTI_CLOCKWISE) == True:
-                self.rotation = constants.ANTI_CLOCKWISE
-                new_orientation = rotate(self.current_shape, self.rotation, self.block_orientation)
-                for k, v in constants.BLOCKS.items():
-                    while k == self.current_shape + "_" + new_orientation:
-                        for coords in v:
-                            pyxel.blt(
-                                x=coords[0] * constants.BLOCK_SIZE + self.x,
-                                y=coords[1] * constants.BLOCK_SIZE + self.y,
-                                img=0,
-                                u=0,
-                                v=constants.PYXRES_VALUES[k[:1] + "_BLOCK"],
-                                w=8,
-                                h=8
-                            )
+            self.rotation = constants.ANTI_CLOCKWISE
 
-        if pyxel.btnp(pyxel.KEY_X, 10, 2):
-            if check_rotation_is_possible(constants.CLOCKWISE) == True:
-                self.rotation = constants.CLOCKWISE
-                new_orientation = rotate(self.current_shape, self.rotation, self.block_orientation)
-                for k, v in constants.BLOCKS.items():
-                    while k == self.current_shape + "_" + new_orientation:
-                        for coords in v:
-                            pyxel.blt(
-                                x=coords[0] * constants.BLOCK_SIZE + self.x,
-                                y=coords[1] * constants.BLOCK_SIZE + self.y,
-                                img=0,
-                                u=0,
-                                v=constants.PYXRES_VALUES[k[:1] + "_BLOCK"],
-                                w=8,
-                                h=8
-                            )
-                        self.current_shape = k[:1]
-                        self.block_orientation = new_orientation
+        elif pyxel.btnp(pyxel.KEY_X, 10, 2):
+            self.rotation = constants.CLOCKWISE
 
+        self.block.rotate(self.rotation, self.block.orientation, self.board)
+        
     def draw_border_and_blocks(self):
         """"""
         pyxel.cls(0)
-        pyxel.rectb(constants.SCREEN_WIDTH // 12, constants.SCREEN_HEIGHT // 22,
-                    constants.BORDER_WIDTH, constants.BORDER_HEIGHT, constants.BORDER_COLOUR)
+        pyxel.rectb(8, 8, constants.BORDER_WIDTH, constants.BORDER_HEIGHT, constants.BORDER_COLOUR)
 
-        for k, v in constants.BLOCKS.items():
-            if k == constants.RANDOM_BLOCK:
-                for coords in v:
-                    pyxel.blt(
-                        x=coords[0] * constants.BLOCK_SIZE + self.x,
-                        y=coords[1] * constants.BLOCK_SIZE + self.y,
+        current_block = self.block.get_block_sections(self.block.position, self.block.orientation)
+
+        for section in current_block:
+            pyxel.blt(
+                        x=section[0] * constants.BLOCK_SIZE + 8,
+                        y=section[1] * constants.BLOCK_SIZE + 8,
                         img=0,
                         u=0,
-                        v=constants.PYXRES_VALUES[k[:1] + "_BLOCK"],
+                        v=constants.PYXRES_VALUES[self.block.shape + "_BLOCK"],
                         w=8,
-                        h=8
+                        h=8,
                     )
-                self.current_shape = k[:1]
-                self.block_orientation = k[2:]
 
     def draw(self):
         """DESCRIPTION OF METHOD"""

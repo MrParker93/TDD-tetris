@@ -1,5 +1,6 @@
 import pyxel
 import random
+import pprint
 
 #####################################
 # SET GLOBAL VARIABLE GAME SETTINGS #
@@ -13,8 +14,8 @@ SCREEN_HEIGHT = 220
 BLOCK_SIZE = 8
 
 # Size of the border inside display window
-BORDER_HEIGHT = 165
-BORDER_WIDTH = 100
+BORDER_HEIGHT = 168
+BORDER_WIDTH = 104
 
 # Area inside border where game is played
 BOARD_GRID = [[0] * BORDER_WIDTH for _ in range(BORDER_HEIGHT)]
@@ -29,17 +30,16 @@ TEXT_COLOUR = pyxel.COLOR_GRAY
 STARTING_LEVEL = 0
 
 # Spawning position of blocks
-STARTING_POSITION_X = (SCREEN_WIDTH // BORDER_WIDTH) * (BORDER_WIDTH // 2)
-STARTING_POSITION_Y = (SCREEN_HEIGHT // BORDER_HEIGHT) * 16
+STARTING_POSITION_X = (SCREEN_WIDTH // 12)
+STARTING_POSITION_Y = (SCREEN_HEIGHT // 22)
 
 # Inital score
 SCORE = 0
 
 # Movement speed of blocks
-MOVEMENT_SPEED = 4
+MOVEMENT_SPEED = 2
 
 # Directions
-NEUTRAL = None
 RIGHT = "right"
 DOWN_RIGHT = "downRight"
 DOWN = "down"
@@ -67,45 +67,45 @@ BLOCK_NAME = ["O", "I", "S", "Z", "L", "J", "T"]
 
 BLOCKS = {
     # Each orientation for O block
-    "O_RIGHT": {(0, 1), (1, 1), (0, 2), (1, 2)},
-    "O_DOWN": {(0, 1), (1, 1), (0, 2), (1, 2)},
-    "O_LEFT": {(0, 1), (1, 1), (0, 2), (1, 2)},
-    "O_UP": {(0, 1), (1, 1), (0, 2), (1, 2)},
+    "O_RIGHT": {(0, 0), (0, 1), (1, 0), (1, 1)},
+    "O_DOWN": {(0, 0), (0, 1), (1, 0), (1, 1)},
+    "O_LEFT": {(0, 0), (0, 1), (1, 0), (1, 1)},
+    "O_UP": {(0, 0), (0, 1), (1, 0), (1, 1)},
 
     # Each orientation for I block
-    "I_RIGHT": {(1, 0), (1, 1), (1, 2), (1, 3)},
-    "I_DOWN": {(0, 2), (1, 2), (2, 2), (3, 2)},
-    "I_LEFT": {(1, 0), (1, 1), (1, 2), (1, 3)},
-    "I_UP": {(0, 2), (1, 2), (2, 2), (3, 2)},
+    "I_RIGHT": {(0, 0), (0, 1), (0, 2), (0, 3)},
+    "I_DOWN": {(0, 0), (1, 0), (2, 0), (3, 0)},
+    "I_LEFT": {(0, 3), (0, 2), (0, 1), (0, 0)},
+    "I_UP": {(3, 0), (2, 0), (1, 0), (0, 0)},
 
     # Each orientation for S block
     "S_RIGHT": {(2, 0), (1, 0), (1, 1), (0, 1)},
-    "S_DOWN": {(1, 0), (1, 1), (2, 1), (2, 2)},
-    "S_LEFT": {(2, 0), (1, 0), (1, 1), (0, 1)},
-    "S_UP": {(1, 0), (1, 1), (2, 1), (2, 2)},
+    "S_DOWN": {(0, 0), (0, 1), (1, 1), (1, 2)},
+    "S_LEFT": {(0, 1), (1, 1), (1, 0), (2, 0)},
+    "S_UP": {(1, 2), (1, 1), (0, 1), (0, 0)},
 
     # Each orientation for Z block
     "Z_RIGHT": {(0, 0), (1, 0), (1, 1), (2, 1)},
     "Z_DOWN": {(1, 0), (1, 1), (0, 1), (0, 2)},
-    "Z_LEFT": {(0, 0), (1, 0), (1, 1), (2, 1)},
-    "Z_UP": {(1, 0), (1, 1), (0, 1), (0, 2)},
+    "Z_LEFT": {(2, 1), (1, 1), (1, 0), (0, 0)},
+    "Z_UP": {(0, 2), (0, 1), (1, 1), (1, 0)},
 
     # Each orientation for L block
-    "L_RIGHT": {(1, 0), (1, 1), (1, 2), (2, 2)},
-    "L_DOWN": {(3, 2), (2, 2), (1, 2), (1, 3)},
-    "L_LEFT": {(1, 1), (2, 1), (2, 2), (2, 3)},
-    "L_UP": {(0, 2), (1, 2), (2, 2), (2, 1)},
+    "L_RIGHT": {(0, 0), (0, 1), (0, 2), (1, 2)},
+    "L_DOWN": {(0, 0), (0, 1), (1, 0), (2, 0)},
+    "L_LEFT": {(0, 0), (1, 0), (1, 1), (1, 2)},
+    "L_UP": {(0, 1), (1, 1), (2, 1), (2, 0)},
 
     # Each orientation for J block
-    "J_RIGHT": {(2, 0), (1, 0), (1, 1), (1, 2)},
-    "J_DOWN": {(0, 1), (1, 1), (2, 1), (2, 2)},
-    "J_LEFT": {(1, 0), (1, 1), (1, 2), (0, 2)},
-    "J_UP": {(1, 0), (1, 1), (2, 1), (3, 1)},
+    "J_RIGHT": {(0, 2), (1, 2), (1, 1), (1, 0)},
+    "J_DOWN": {(0, 0), (0, 1), (1, 1), (2, 1)},
+    "J_LEFT": {(0, 0), (1, 0), (0, 1), (0, 2)},
+    "J_UP": {(0, 0), (1, 0), (2, 0), (2, 1)},
 
     # Each orientation for T block
-    "T_RIGHT": {(1, 0), (1, 1), (2, 1), (1, 2)},
-    "T_DOWN": {(0, 1), (1, 1), (2, 1), (1, 2)},
-    "T_LEFT": {(1, 0), (1, 1), (0, 1), (1, 2)},
+    "T_RIGHT": {(0, 0), (0, 1), (1, 1), (0, 2)},
+    "T_DOWN": {(0, 0), (1, 0), (2, 0), (1, 1)},
+    "T_LEFT": {(0, 1), (1, 0), (1, 1), (1, 2)},
     "T_UP": {(0, 1), (1, 1), (1, 0), (2, 1)}
 }
 
@@ -114,3 +114,4 @@ BLOCK_OPTIONS = [blocks for blocks in BLOCKS.keys()]
 
 # Randomly choose from all blocks facing right only
 RANDOM_BLOCK = BLOCK_OPTIONS[random.randrange(0, 28, 4)]
+
