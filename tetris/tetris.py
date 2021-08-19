@@ -19,9 +19,12 @@ class Tetris:
 
     def reset(self):
         """DESCRIPTION OF METHOD"""
-        self.board = constants.BOARD_GRID
         self.score = constants.SCORE
         self.game_state = "running"
+        self.game_over = False
+        self.board = []
+        for row in range(21):
+            self.board.append([0] * 12)
         self.block = Tetrominoes(shape=random.choice(constants.BLOCK_NAME))
 
     def update(self):
@@ -61,7 +64,13 @@ class Tetris:
         elif pyxel.btnp(pyxel.KEY_LEFT, 10, 2):
             self.direction = constants.LEFT
 
-        self.block.move_block(self.direction, self.board)
+        if self.block.move_block(self.direction, self.board):
+            if self.direction == constants.DOWN or constants.DOWN_LEFT or constants.DOWN_RIGHT:
+                if self.game_over:
+                    # DO SOMETHING
+                    self.reset()
+                    return
+                self.
         
         if pyxel.btnp(pyxel.KEY_Z, 10, 2):
             self.rotation = constants.ANTI_CLOCKWISE
@@ -88,6 +97,12 @@ class Tetris:
                         w=8,
                         h=8,
                     )
+    
+    def set_block(self):
+        for section in self.block.get_block_sections(self.block.position, self.block.orientation):
+            self.block[section[0]][section[1]] = 1
+
+
 
     def draw(self):
         """DESCRIPTION OF METHOD"""

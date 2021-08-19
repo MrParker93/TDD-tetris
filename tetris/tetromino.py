@@ -45,7 +45,7 @@ class Tetrominoes:
     def get_block_sections(self, position, orientation):
         block_name = self.shape + "_" + orientation
         block_sections = constants.BLOCKS[block_name]
-        return {(section[0] + position[0], section[1] + position[1]) for section in block_sections}
+        return [(section[0] + position[0], section[1] + position[1]) for section in block_sections]
 
     # Check the block can move in a specified direction
 
@@ -81,12 +81,12 @@ class Tetrominoes:
         if rotation == "acw":
             if o == "RIGHT":
                 new_orientation = "UP"
-            elif o == "DOWN":
-                new_orientation = "RIGHT"
-            elif o == "LEFT":
-                new_orientation = "DOWN"
             elif o == "UP":
                 new_orientation = "LEFT"
+            elif o == "LEFT":
+                new_orientation = "DOWN"
+            elif o == "DOWN":
+                new_orientation = "RIGHT"
 
         if self.check_block_collision(self.get_block_sections(self.position, new_orientation), board):
             self.orientation = new_orientation
