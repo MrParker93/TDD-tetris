@@ -22,10 +22,10 @@ class Tetris:
         self.score = constants.SCORE
         self.game_state = "running"
         self.game_over = False
-        self.board = []
-        for row in range(21):
-            self.board.append([0] * 12)
-        self.block = Tetrominoes(shape=random.choice(constants.BLOCK_NAME))
+        self.board = [[0] * 12 for _ in range(21)]
+        self.bag = random.sample(range(7), 7)
+
+        self.block = Tetrominoes(shape=self.bag.pop())
 
     def update(self):
         """DESCRIPTION OF METHOD"""
@@ -70,7 +70,7 @@ class Tetris:
                     # DO SOMETHING
                     self.reset()
                     return
-                self.
+                # self.set_block()
         
         if pyxel.btnp(pyxel.KEY_Z, 10, 2):
             self.rotation = constants.ANTI_CLOCKWISE
@@ -83,24 +83,19 @@ class Tetris:
     def draw_border_and_blocks(self):
         """"""
         pyxel.cls(0)
+        
         pyxel.rectb(8, 8, constants.BORDER_WIDTH, constants.BORDER_HEIGHT, constants.BORDER_COLOUR)
 
-        current_block = self.block.get_block_sections(self.block.position, self.block.orientation)
+        current_block = self.block.get_block_sections(self.block.shape)
 
-        for section in current_block:
-            pyxel.blt(
-                        x=section[0] * constants.BLOCK_SIZE + 8,
-                        y=section[1] * constants.BLOCK_SIZE + 8,
-                        img=0,
-                        u=0,
-                        v=constants.PYXRES_VALUES[self.block.shape + "_BLOCK"],
-                        w=8,
-                        h=8,
-                    )
+        for row in range(21):
+            for col in range(12):
+                if self.board[row][col] != 0:
+                    pyxel.blt((row * 8) + 8, (col * 8) + 8, 0, 0, self.board[row][col])
     
     def set_block(self):
         for section in self.block.get_block_sections(self.block.position, self.block.orientation):
-            self.block[section[0]][section[1]] = 1
+            self.board[section[1]][section[0]] = 1
 
 
 

@@ -2,6 +2,7 @@ import pyxel
 import pytest
 import constants
 from tetris import Tetris
+from tetromino import Tetrominoes
 
 
 class TestTetris:
@@ -45,18 +46,43 @@ class TestTetris:
                 if constants.BLOCK_NAME[6] in blocks:
                     assert "T_NEUTRAL" or "T_DOWN" or "T_LEFT" or "T_UP" in blocks
 
-    def test_directions_and_rotation_is_registered_by_key_inputs(self):
+    def test_each_direction_moves_each_shape_in_the_correct_coordiantes(self):
         """"""
-        tetris = Tetris()
-        tetris.update()
-        assert tetris.direction == None
-        assert tetris.rotation == None
+        tetris = Tetrominoes()
+        tetris.position = (1, 1)
+        board = []
+        tetris.move_block(direction="right", board=board)
+        assert tetris.position == (2, 1)
+        tetris.move_block(direction="left", board=board)
+        assert tetris.position == (1, 1)
+        tetris.move_block(direction="down", board=board)
+        assert tetris.position == (1, 2)
+        tetris.move_block(direction="downRight", board=board)
+        assert tetris.position == (2, 3)
+        tetris.move_block(direction="downLeft", board=board)
+        assert tetris.position == (1, 4)
 
-    def test_each_shape_works_with_each_direction(self):
-        pass
-
-    def test_rotation_works_correctly_using_key_inputs(self):
-        pass
+    def test_rotation_for_each_orientation_for_each_shape(self):
+        
+        tetris = Tetrominoes()
+        tetris.orientation = "RIGHT"
+        board = []
+        tetris.rotate(rotation="cw", orientation=tetris.orientation, board=board)
+        assert tetris.orientation == "DOWN"
+        tetris.rotate(rotation="cw", orientation=tetris.orientation, board=board)
+        assert tetris.orientation == "LEFT"
+        tetris.rotate(rotation="cw", orientation=tetris.orientation, board=board)
+        assert tetris.orientation == "UP"
+        tetris.rotate(rotation="cw", orientation=tetris.orientation, board=board)
+        assert tetris.orientation == "RIGHT"
+        tetris.rotate(rotation="acw", orientation=tetris.orientation, board=board)
+        assert tetris.orientation == "UP"
+        tetris.rotate(rotation="acw", orientation=tetris.orientation, board=board)
+        assert tetris.orientation == "LEFT"
+        tetris.rotate(rotation="acw", orientation=tetris.orientation, board=board)
+        assert tetris.orientation == "DOWN"
+        tetris.rotate(rotation="acw", orientation=tetris.orientation, board=board)
+        assert tetris.orientation == "RIGHT"
 
     def test_shapes_are_generated_correctly_after_previous_shape_is_used(self):
         pass

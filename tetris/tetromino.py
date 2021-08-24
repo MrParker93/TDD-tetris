@@ -8,12 +8,11 @@ class Tetrominoes:
     """DESCRIPTION OF CLASS"""
 
     def __init__(self, shape=None):
-        self.orientation = "RIGHT"
 
         if shape != None:
             self.shape = shape
         else:
-            self.shape = random.choice(constants.BLOCK_NAME)
+            self.shape = random.randrange(7)
 
         self.position = (0, 0)
 
@@ -42,17 +41,15 @@ class Tetrominoes:
         
         return False
 
-    def get_block_sections(self, position, orientation):
-        block_name = self.shape + "_" + orientation
-        block_sections = constants.BLOCKS[block_name]
-        return [(section[0] + position[0], section[1] + position[1]) for section in block_sections]
-
+    def get_block_sections(self, shape):
+        return constants.BLOCKS[shape]
+        
     # Check the block can move in a specified direction
 
     def check_block_collision(self, block_sections, board):
         """DESCRIPTION OF METHOD"""
         for section in block_sections:
-            if not (0 <= section[0] <= 12) or not (0 <= section[1] <= 20):
+            if not (0 <= section[0] <= (len(board[0]) - 1) // 8) or not (0 <= section[1] <= (len(board) - 1) // 8):
                 return False
         return True
 
@@ -64,32 +61,4 @@ class Tetrominoes:
 
     def rotate(self, rotation, orientation, board):
         """DESCRIPTION OF METHOD"""
-        if rotation == None:
-            return
-
-        o = orientation
-        if rotation == "cw":
-            if o == "RIGHT":
-                new_orientation = "DOWN"
-            elif o == "DOWN":
-                new_orientation = "LEFT"
-            elif o == "LEFT":
-                new_orientation = "UP"
-            elif o == "UP":
-                new_orientation = "RIGHT"
         
-        if rotation == "acw":
-            if o == "RIGHT":
-                new_orientation = "UP"
-            elif o == "UP":
-                new_orientation = "LEFT"
-            elif o == "LEFT":
-                new_orientation = "DOWN"
-            elif o == "DOWN":
-                new_orientation = "RIGHT"
-
-        if self.check_block_collision(self.get_block_sections(self.position, new_orientation), board):
-            self.orientation = new_orientation
-            return True
-
-        return False
