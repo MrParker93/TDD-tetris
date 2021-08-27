@@ -1,6 +1,6 @@
+import time
 import pyxel
 import random
-import constants
 import pprint
 
 FALL_SPEED = 10
@@ -21,28 +21,31 @@ class Tetris:
         self.is_gameover = False
         self.game_state = "running"
         self.current_piece = self.generate_block()
+        self.next_piece = self.generate_block()
         self.board = Board()
-        self.piece = Pieces(self.current_piece)
+        self.piece = Pieces(self.current_piece, self.next_piece)
         self.direction = None
         self.rotation = None
 
     def update(self):
-        if pyxel.btn(pyxel.KEY_Q) or self.is_gameover == True:
+        if pyxel.btn(pyxel.KEY_Q):
             pyxel.quit()
 
         if pyxel.btn(pyxel.KEY_P):
-            if self.game_state == "running":
+            if self.game_state == "running" and not self.is_gameover:
                 self.game_state = "paused"
             else:
                 self.game_state = "running"
         
-        if self.game_state == "running":
+        if self.game_state == "running" or self.game_state == "stopped":
             if pyxel.btn(pyxel.KEY_R):
                 self.reset()
 
+        if self.game_state == "running":
+
             if pyxel.frame_count % FALL_SPEED == 0:
                 self.piece.block_falling()
-                self.check_for_collisions(  )
+                self.check_for_downward_collisions()
 
             if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
                 self.direction = "DOWN"
@@ -73,13 +76,33 @@ class Tetris:
     def draw(self):
         pyxel.cls(0)
         self.board.draw_border()
+        self.board.draw_next_block()
         self.board.draw_block()
         self.piece.draw_block()
+        self.piece.draw_next_block()
         self.Text.show_text(self)
 
         if self.game_state == "paused":
             pyxel.text(50, 100, "PAUSED", pyxel.frame_count % 16)
-            
+        
+        if self.is_gameover:
+            self.game_state = "stopped"
+            pyxel.cls(0)
+            pyxel.text(45, 95, "GAMEOVER", pyxel.frame_count % 16)
+            pyxel.text(45, 110, "Score: ", 6)
+            pyxel.text(75, 110, str(self.score), 10)
+            pyxel.text(45, 120, "Level: ", 6)
+            pyxel.text(75, 120, str(self.level), 10)
+            pyxel.text(45, 130, "Combos: ", 6)
+            pyxel.text(75, 130, str(self.combos), 10)
+            pyxel.text(45, 140, "Lines: ", 6)
+            pyxel.text(75, 140, str(self.lines), 10)
+
+            pyxel.text(12, 196, "Q: ", 10)
+            pyxel.text(24, 196, "QUIT", 6)
+            pyxel.text(66, 196, "R: ", 10)
+            pyxel.text(78, 196, "RESTART", 6)
+
     def rotate_clockwise(self, current_piece):
         current_piece = list(zip(*current_piece[::-1]))
         return current_piece
@@ -89,7 +112,6 @@ class Tetris:
         rotate_twice = self.rotate_clockwise(rotate_once)
         anticlockwise_piece = self.rotate_clockwise(rotate_twice)
         current_piece = anticlockwise_piece
-        print(current_piece)
         return current_piece
 
     def move_block(self, direction):
@@ -97,23 +119,35 @@ class Tetris:
             return
         
         if direction == "DOWN":
-            for row in reversed(range(0, 22)):
-                if row < 21:
+            for row in reversed(range(22)):
+                if not self.check_for_downward_collisions():
+                    if 1 < row < 22 and self.piece.board[21].count(0) == 10 :
                         self.piece.board[row] = self.piece.board[row - 1]
-    
-    def check_for_collisions(self):
+            # for row in reversed(range(0, 22)):
+            #     if not self.check_for_downward_collisions():
+            #         if row < 21:
+            #             self.piece.board[row] = self.piece.board[row - 1]
+
+    def check_for_downward_collisions(self):
         for row in range(22):
-            for index, col in enumerate (range(10)):
-                try:
-                    if self.piece.board[row][col] != 0 and self.board.board[row + 1][col] != 0:
-                        self.add_block_to_board()
-                        new_piece = self.generate_block()
-                        self.current_piece = new_piece
-                        return True
+            for col in range(10):
+                if self.piece.board[row][col] != 0 and self.board.board[1][col] != 0:
+                    self.is_gameover = True
+
+                if self.piece.board[row][col] != 0 and self.board.board[row + 1][col] != 0:
+                    self.add_block_to_board()
+                    self.current_piece = self.next_piece
+                    self.next_piece = self.generate_block()
+                    self.piece = Pieces(self.current_piece, self.next_piece)
+                    return True
                     
-                    elif self.piece.board
-                except IndexError as e:
-                    pass
+                elif self.piece.board[21].count(0) != 10:
+                    self.add_block_to_board()
+                    self.current_piece = self.next_piece
+                    self.next_piece = self.generate_block()
+                    self.piece = Pieces(self.current_piece, self.next_piece)
+                    return True
+
         return False
 
     def add_block_to_board(self):
@@ -121,6 +155,7 @@ class Tetris:
             for col in range(10):
                 if self.piece.board[row][col] != 0:
                     self.board.board[row][col] = self.piece.board[row][col]
+        # print(*self.board.board, sep="\n")
         
     def generate_block(self):
         block = random.choice([_ for _ in range(7)])
@@ -156,16 +191,16 @@ class Tetris:
 
             # L block
             [
-                [0, 24, 0],
-                [0, 24, 0],
-                [0, 24, 24],
+                [0, 0, 24],
+                [24, 24, 24],
+                [0, 0, 0],
             ],
 
             # J block
             [
-                [0, 72, 0],
-                [0, 72, 0],
-                [72, 72, 0],
+                [72, 72, 72],
+                [0, 0, 72],
+                [0, 0, 0],
             ],
 
             # T block
@@ -204,13 +239,14 @@ class Tetris:
 class Board:
     def __init__(self):
         self.board = [[0] * 10 for _ in range(22)]
+        self.next_piece_board = [[0] * 4 for _ in range(6)]
         
     def draw_border(self):
         # Main area for gameplay
         pyxel.rectb(4, 8, 10 * 8, 22 * 7.8, 5)
 
         # Show next block
-        pyxel.rectb(87, 16, 30, 48, 5)
+        pyxel.rectb(87, 16, 30, 6 * 8, 5)
 
     def draw_block(self):
         for row in range(22):
@@ -219,17 +255,29 @@ class Board:
                     pyxel.blt(col * 8, row * 8, 0, 0,
                             self.board[row][col], 8, 8)
 
+    def draw_next_block(self):
+        for row in range(6):
+            for col in range(3):
+                if self.next_piece_board[row][col] != 0:
+                    if self.next_piece_board[row][col] == 8:
+                        pyxel.blt((col * 8) + 95, (row * 8) + 40, 0, 0, self.next_piece_board[row][col], 8, 8)
+                    elif self.next_piece_board[row][col] == 88:
+                        pyxel.blt((col * 8) + 82, (row * 8) + 24, 0, 0, self.next_piece_board[row][col], 8, 8)
+                    else:
+                        pyxel.blt((col * 8) + 87, (row * 8) + 32, 0, 0, self.next_piece_board[row][col], 8, 8)
+        
 
 class Pieces(Board):
-    def __init__(self, piece):
+    def __init__(self, piece, next_piece):
         super().__init__()
         self.piece = piece
+        self.next_piece = next_piece
         self.insert_block_in_board()
+        self.insert_next_block()
 
     def block_falling(self):
         for row in reversed(range(0, 22)):
             self.board[row] = self.board[row - 1]
-
         self.board[0] = [0 for x in range(10)]
 
     def insert_block_in_board(self):
@@ -237,7 +285,12 @@ class Pieces(Board):
             for index, section in enumerate(each_row):
                 self.board[index].pop()
                 self.board[index].insert(3, section)
-
+    
+    def insert_next_block(self):
+        for each_row in self.next_piece:
+            for index, section in enumerate(each_row):
+                self.next_piece_board[index].pop()
+                self.next_piece_board[index].insert(0, section)
 
 if __name__ == "__main__":
     Tetris()
