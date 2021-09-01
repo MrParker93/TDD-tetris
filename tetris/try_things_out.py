@@ -45,17 +45,17 @@ class Tetris:
 
             if pyxel.frame_count % FALL_SPEED == 0:
                 self.piece.block_falling()
-                self.check_for_downward_collisions()
+                self.check_vertical_collisions()
 
             if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
                 self.direction = "DOWN"
                 self.move_block(self.direction)
 
-            elif pyxel.btnp(pyxel.KEY_LEFT, 10, 2):
+            elif pyxel.btnp(pyxel.KEY_LEFT, 10, 2) and not pyxel.btn(pyxel.KEY_RIGHT):
                 self.direction = "LEFT"
                 self.move_block(self.direction)
 
-            elif pyxel.btnp(pyxel.KEY_RIGHT, 10, 2):
+            elif pyxel.btnp(pyxel.KEY_RIGHT, 10, 2) and not pyxel.btn(pyxel.KEY_LEFT):
                 self.direction = "RIGHT"
                 self.move_block(self.direction)
 
@@ -63,12 +63,12 @@ class Tetris:
                 self.direction = "SPACE"
                 self.move_block(self.direction)
 
-            elif pyxel.btnp(pyxel.KEY_Z, 10, 2):
+            elif pyxel.btnp(pyxel.KEY_Z, 10, 2) and not pyxel.btn(pyxel.KEY_X):
                 self.rotation = "ACW"
                 rotated_piece = self.rotate_anticlockwise(self.current_piece)
                 self.current_piece = rotated_piece
 
-            elif pyxel.btnp(pyxel.KEY_X, 10, 2):
+            elif pyxel.btnp(pyxel.KEY_X, 10, 2) and not pyxel.btn(pyxel.KEY_Z):
                 self.rotation = "CW"
                 rotated_piece = self.rotate_clockwise(self.current_piece)
                 self.current_piece = rotated_piece
@@ -105,8 +105,25 @@ class Tetris:
 
     def rotate_clockwise(self, current_piece):
         current_piece = list(zip(*current_piece[::-1]))
-        return current_piece
         
+        for i, row in enumerate(range(22)):
+            if i < 10:
+                if self.piece.board[row][i] != 0:
+                    if self.piece.board[row][i] == 8:
+                        pass
+
+                    elif self.piece.board[row][i] == 88:
+                        for ind, section in enumerate(current_piece):
+                            self.piece.board[row][i - 2: i + 1] = section
+                            print(section)
+
+                    else:
+                        for ind, section in enumerate(current_piece):
+                            self.piece.board[row][i - 1: i + 1] = section
+                            print(section)
+        
+        return current_piece
+
     def rotate_anticlockwise(self, current_piece):
         rotate_once = self.rotate_clockwise(current_piece)
         rotate_twice = self.rotate_clockwise(rotate_once)
@@ -120,15 +137,28 @@ class Tetris:
         
         if direction == "DOWN":
             for row in reversed(range(22)):
-                if not self.check_for_downward_collisions():
-                    if 1 < row < 22 and self.piece.board[21].count(0) == 10 :
+                if not self.check_vertical_collisions():
+                    if 1 < row < 22:
                         self.piece.board[row] = self.piece.board[row - 1]
-            # for row in reversed(range(0, 22)):
-            #     if not self.check_for_downward_collisions():
-            #         if row < 21:
-            #             self.piece.board[row] = self.piece.board[row - 1]
 
-    def check_for_downward_collisions(self):
+        if direction == "RIGHT":
+            for row in range(22):
+                for col in reversed(range(9)):
+                    if not self.check_horizontal_collisions(row, col, direction):
+                        tmp = self.piece.board[row][col]
+                        self.piece.board[row][col] = 0
+                        self.piece.board[row][col + 1] += tmp
+        
+        if direction == "LEFT":
+            for row in range(22):
+                for col in range(10):
+                    if not self.check_horizontal_collisions(row, col, direction):
+                        tmp = self.piece.board[row][col]
+                        self.piece.board[row][col] = 0
+                        self.piece.board[row][col - 1] += tmp
+        
+
+    def check_vertical_collisions(self):
         for row in range(22):
             for col in range(10):
                 if self.piece.board[row][col] != 0 and self.board.board[1][col] != 0:
@@ -141,7 +171,7 @@ class Tetris:
                     self.piece = Pieces(self.current_piece, self.next_piece)
                     return True
                     
-                elif self.piece.board[21].count(0) != 10:
+                elif self.piece.board[21][col] != 0 and self.board.board[21][col] == 0:
                     self.add_block_to_board()
                     self.current_piece = self.next_piece
                     self.next_piece = self.generate_block()
@@ -150,12 +180,28 @@ class Tetris:
 
         return False
 
+    def check_horizontal_collisions(self, row, col, direction):
+        if direction == "RIGHT":
+            if self.piece.board[row][9] != 0:
+                return True
+
+            elif self.piece.board[row][col] != 0 and self.board.board[row][col + 1] != 0:
+                return True
+                    
+        elif direction == "LEFT":
+            if self.piece.board[row][1] != 0:
+                return True
+
+            elif self.piece.board[row][col] != 0 and self.board.board[row][col - 1] != 0:
+                return True
+
+        return False
+
     def add_block_to_board(self):
         for row in range(22):
             for col in range(10):
                 if self.piece.board[row][col] != 0:
                     self.board.board[row][col] = self.piece.board[row][col]
-        # print(*self.board.board, sep="\n")
         
     def generate_block(self):
         block = random.choice([_ for _ in range(7)])

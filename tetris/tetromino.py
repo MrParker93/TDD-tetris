@@ -1,38 +1,38 @@
-from hashlib import new
 import pyxel
 import random
-import constants
+from constants import *
+
 
 
 class Tetrominoes:
     """DESCRIPTION OF CLASS"""
 
     def __init__(self, shape=None):
-
         if shape != None:
             self.shape = shape
         else:
-            self.shape = random.randrange(7)
+            self.shape = random.sample(BLOCKS, 7).pop()
 
-        self.position = (0, 0)
+        self.position = (0, 3)
+        self.orientation = random.randrange(0, len(shape))
 
     def move_block(self, direction, board):
         if direction == None:
             return
 
-        if direction == "right":
+        if direction == RIGHT:
             new_position = (self.position[0] + 1, self.position[1])
 
-        elif direction == "left":
+        elif direction == LEFT:
             new_position = (self.position[0] - 1, self.position[1])
 
-        elif direction == "down":
+        elif direction == DOWN:
             new_position = (self.position[0], self.position[1] + 1)
 
-        elif direction == "downRight":
+        elif direction == DOWN_RIGHT:
             new_position = (self.position[0] + 1, self.position[1] + 1)
 
-        elif direction == "downLeft":
+        elif direction == DOWN_LEFT:
             new_position = (self.position[0] - 1, self.position[1] + 1)
 
         if self.check_block_collision(self.get_block_sections(new_position, self.orientation), board):
@@ -41,8 +41,12 @@ class Tetrominoes:
         
         return False
 
-    def get_block_sections(self, shape):
-        return constants.BLOCKS[shape]
+    def get_block_sections(self, position, orientation):
+        current_shape = self.shape[orientation]
+        for index, tile in enumerate(current_shape):
+            if tile[index] != 0:
+                return
+            
         
     # Check the block can move in a specified direction
 

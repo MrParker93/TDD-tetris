@@ -1,7 +1,5 @@
 import pyxel
 import random
-import pprint
-import copy
 
 #####################################
 # SET GLOBAL VARIABLE GAME SETTINGS #
@@ -11,12 +9,15 @@ import copy
 SCREEN_WIDTH = 120
 SCREEN_HEIGHT = 220
 
-# Size of the border inside display window
-BORDER_HEIGHT = 168
-BORDER_WIDTH = 104
-
 # Area inside border where game is played
-BOARD_GRID = [[0] * BORDER_WIDTH for _ in range(BORDER_HEIGHT)]
+BOARD_GRID = [[0] * 10 for _ in range(20)]
+
+# Height and width of the grid
+BOARD_HEIGHT = len(BOARD_GRID)
+BOARD_WIDTH = len(BOARD_GRID[0])
+
+# Area displaying the next block
+NEXT_GRID = [[4] * 4 for _ in range(6)]
 
 # Set colours for different elements of the game
 BORDER_COLOUR = pyxel.COLOR_NAVY
@@ -27,23 +28,27 @@ TEXT_COLOUR = pyxel.COLOR_GRAY
 # Initial starting level (can be changed to increase difficulty)
 STARTING_LEVEL = 0
 
-# Inital score
+# Inital score, lines and combos
 SCORE = 0
+LINES = 0
+COMBOS = 0
 
-# Movement speed of blocks
+# Movement speed of blocks, fall speed of blocks
 MOVEMENT_SPEED = 2
+FALL_SPEED = 10
 
 # Directions
-RIGHT = "right"
-DOWN_RIGHT = "downRight"
-DOWN = "down"
-DOWN_LEFT = "downLeft"
-LEFT = "left"
+RIGHT = "RIGHT"
+DOWN_RIGHT = "DOWNRIGHT"
+DOWN = "DOWN"
+DOWN_LEFT = "DOWNLEFT"
+LEFT = "LEFT"
 
 # Rotations
-CLOCKWISE = "cw"
+CLOCKWISE = "CW"
+ANTICLOCKWISE = "ACW"
 
-# Block pyxres image coordinates (u=0) this is value for v
+# Block pyxres image coordinates (u=0) this is value for v in pyxel.blt()
 PYXRES_VALUES = {
 
     "O_BLOCK": 8,
@@ -55,59 +60,97 @@ PYXRES_VALUES = {
     "S_BLOCK": 192
 }
 
-
-BLOCKS = [
-    # O block
-    [
-        [8, 8],
-        [8, 8]
-    ],
-
-    # I block
-    [
-        [0, 0, 0, 0],
-        [88, 88, 88, 88],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ],
-
-    # S block
-    [
-        [0, 192, 192],
-        [192, 192, 0],
-        [0, 0, 0],
-    ],
-
-    # Z block
-    [
-        [160, 160, 0],
-        [0, 160, 160],
-        [0, 0, 0]
-    ],
-
-    # L block
-    [
-        [24, 0, 0],
-        [24, 0, 0],
-        [24, 24, 0],
-    ],
-
-    # J block
-    [
-        [0, 72, 0],
-        [0, 72, 0],
-        [72, 72, 0],
-    ],
-
-    # T block
-    [
-        [0, 128, 0],
-        [128, 128, 128],
-        [0, 0, 0]
-    ]
+# Every block and every orientation for each
+O_BLOCK = [
+    [[8, 8],
+     [8, 8]]
 ]
 
-# for blocks in BLOCKS:
-#     print(blocks)
-#     for section in blocks:
-#         print(section)
+I_BLOCK = [
+    [[0, 88, 0, 0],
+     [0, 88, 0, 0],
+     [0, 88, 0, 0],
+     [0, 88, 0, 0]],
+
+    [[0, 0, 0, 0],
+     [88, 88, 88, 88],
+     [0, 0, 0, 0],
+     [0, 0, 0, 0]]
+
+]
+
+S_BLOCK = [
+    [[0, 192, 192],
+     [192, 192, 0],
+     [0, 0, 0]],
+
+    [[192, 0, 0],
+     [192, 192, 0],
+     [0, 192, 0]]
+]
+
+Z_BLOCK = [
+    [[160, 160, 0],
+     [0, 160, 160],
+     [0, 0, 0]],
+
+    [[0, 160, 0],
+     [160, 160, 0],
+     [160, 0, 0]]
+]
+
+L_BLOCK = [
+    [[0, 24, 0],
+     [0, 24, 0],
+     [0, 24, 24]],
+
+    [[0, 0, 0],
+     [24, 24, 24],
+     [24, 0, 0]],
+
+    [[24, 24, 0],
+     [0, 24, 0],
+     [0, 24, 0]],
+
+    [[0, 0, 24],
+     [24, 24, 24],
+     [0, 0, 0]]
+]
+
+J_BLOCK = [
+    [[0, 72, 0],
+     [0, 72, 0],
+     [72, 72, 0]],
+
+    [[72, 0, 0],
+     [72, 72, 72],
+     [0, 0, 0]],
+
+    [[0, 72, 72],
+     [0, 72, 0],
+     [0, 72, 0]],
+
+    [[0, 0, 0],
+     [72, 72, 72],
+     [0, 0, 72]],
+]
+
+T_BLOCK = [
+    [[0, 128, 0],
+     [128, 128, 128],
+     [0, 0, 0]],
+
+    [[0, 128, 0],
+     [0, 128, 128],
+     [0, 128, 0]],
+
+    [[0, 0, 0],
+     [128, 128, 128],
+     [0, 128, 0]],
+
+    [[0, 128, 0],
+     [128, 128, 0],
+     [0, 128, 0]]
+]
+
+BLOCKS = [O_BLOCK, I_BLOCK, S_BLOCK, Z_BLOCK, L_BLOCK, J_BLOCK, T_BLOCK]
