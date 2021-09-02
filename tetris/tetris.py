@@ -1,7 +1,8 @@
 import pyxel
 import random
 from text import Text
-from constants import *
+from constants import (SCREEN_WIDTH, SCREEN_HEIGHT, STARTING_LEVEL, SCORE, LINES, COMBOS, BLOCKS,
+FALL_SPEED, DOWN, DOWN_LEFT, DOWN_RIGHT, RIGHT, LEFT, ANTICLOCKWISE, CLOCKWISE)
 from board import Board
 from tetromino import Tetrominoes
 
@@ -25,10 +26,12 @@ class Tetris:
         self.combos = COMBOS
         self.is_gameover = False
         self.game_state = "running"
-        self.board = Board()
         self.bag = random.sample(BLOCKS, 7)
-        self.block = Tetrominoes(shape=self.bag.pop())
-        self.next_block = Tetrominoes(shape=self.bag.pop())
+        self.block = Tetrominoes(block=self.bag.pop())
+        self.next_block = Tetrominoes(block=self.bag.pop())
+        self.board = Board(self.block, self.next_block)
+        self.position_x = self.block.position[0]
+        self.position_y = self.block.position[1]
         self.direction = None
         self.rotation = None
 
@@ -49,30 +52,30 @@ class Tetris:
 
         if self.game_state == "running":
 
-            if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
+            if pyxel.frame_count % FALL_SPEED == 0:
+                self.block.block_falling(self.block.get_block_sections(self.block.position), self.board.board)
 
+            if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
+                
                 if pyxel.btnp(pyxel.KEY_DOWN and pyxel.KEY_RIGHT, 10, 2):
                     self.direction = DOWN_RIGHT
+                    self.block.move_block(self.direction, self.board.board)
 
                 elif pyxel.btnp(pyxel.KEY_DOWN and pyxel.KEY_LEFT, 10, 2):
                     self.direction = DOWN_LEFT
+                    self.block.move_block(self.direction, self.board.board)
                     
                 else:
                     self.direction = DOWN
+                    self.block.move_block(self.direction, self.board.board)
 
             elif pyxel.btnp(pyxel.KEY_RIGHT, 10, 2):
                 self.direction = RIGHT
+                self.block.move_block(self.direction, self.board.board)
 
             elif pyxel.btnp(pyxel.KEY_LEFT, 10, 2):
                 self.direction = LEFT
-
-            if self.block.move_block(self.direction, self.board):
-                if self.direction == DOWN or DOWN_LEFT or DOWN_RIGHT:
-                    if self.game_over:
-                        # DO SOMETHING
-                        self.reset()
-                        return
-                    # self.set_block()
+                self.block.move_block(self.direction, self.board.board)
             
             if pyxel.btnp(pyxel.KEY_Z, 10, 2):
                 self.rotation = ANTICLOCKWISE
@@ -87,9 +90,9 @@ class Tetris:
         pyxel.cls(0)
         self.board.draw_border()
         Text.show_text(self)
+        self.board.draw_block(self.position_x, self.position_y)
         self.board.draw_next_block()
-        self.board.draw_block()
-
+        
         if self.game_state == "paused":
             pyxel.text(50, 100, "PAUSED", pyxel.frame_count % 16)
         

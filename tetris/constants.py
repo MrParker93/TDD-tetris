@@ -16,9 +16,6 @@ BOARD_GRID = [[0] * 10 for _ in range(20)]
 BOARD_HEIGHT = len(BOARD_GRID)
 BOARD_WIDTH = len(BOARD_GRID[0])
 
-# Area displaying the next block
-NEXT_GRID = [[4] * 4 for _ in range(6)]
-
 # Set colours for different elements of the game
 BORDER_COLOUR = pyxel.COLOR_NAVY
 BACKGROUND_COLOUR = pyxel.COLOR_BLACK
@@ -80,23 +77,23 @@ I_BLOCK = [
 ]
 
 S_BLOCK = [
-    [[0, 192, 192],
-     [192, 192, 0],
-     [0, 0, 0]],
-
     [[192, 0, 0],
      [192, 192, 0],
-     [0, 192, 0]]
+     [0, 192, 0]],
+
+    [[0, 192, 192],
+     [192, 192, 0],
+     [0, 0, 0]]
 ]
 
 Z_BLOCK = [
-    [[160, 160, 0],
-     [0, 160, 160],
-     [0, 0, 0]],
-
     [[0, 160, 0],
      [160, 160, 0],
-     [160, 0, 0]]
+     [160, 0, 0]],
+
+    [[160, 160, 0],
+     [0, 160, 160],
+     [0, 0, 0]]
 ]
 
 L_BLOCK = [
@@ -137,10 +134,6 @@ J_BLOCK = [
 
 T_BLOCK = [
     [[0, 128, 0],
-     [128, 128, 128],
-     [0, 0, 0]],
-
-    [[0, 128, 0],
      [0, 128, 128],
      [0, 128, 0]],
 
@@ -150,7 +143,11 @@ T_BLOCK = [
 
     [[0, 128, 0],
      [128, 128, 0],
-     [0, 128, 0]]
+     [0, 128, 0]],
+
+    [[0, 128, 0],
+     [128, 128, 128],
+     [0, 0, 0]]
 ]
 
 BLOCKS = [O_BLOCK, I_BLOCK, S_BLOCK, Z_BLOCK, L_BLOCK, J_BLOCK, T_BLOCK]

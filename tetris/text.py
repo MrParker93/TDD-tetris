@@ -1,5 +1,5 @@
 import pyxel
-from constants import *
+from constants import STARTING_LEVEL, SCORE, LINES, COMBOS
 
 class Text:
     def show_text(self):
