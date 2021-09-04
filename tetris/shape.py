@@ -1,4 +1,3 @@
-import pyxel
 import random
 from constants import (SCREEN_WIDTH, SCREEN_HEIGHT, STARTING_LEVEL, SCORE, LINES, COMBOS, BLOCKS,
 FALL_SPEED, DOWN, DOWN_LEFT, DOWN_RIGHT, RIGHT, LEFT, ANTICLOCKWISE, CLOCKWISE)
@@ -13,32 +12,30 @@ class Tetrominoes:
         else:
             self.block = random.sample(BLOCKS, 7).pop()
 
-        self.position = (0, 0)
         self.orientation = random.randint(0, len(self.block) - 1)
 
-    def move_block(self, direction, board):
+    def move_block(self, direction, position, board):
         if direction == None:
             return
 
         if direction == RIGHT:
-            new_position = (self.position[0] + 1, self.position[1])
+            position = (position[0] + 1, position[1])
 
         elif direction == LEFT:
-            new_position = (self.position[0] - 1, self.position[1])
+            position = (position[0] - 1, position[1])
 
         elif direction == DOWN:
-            new_position = (self.position[0], self.position[1] + 1)
+            position = (position[0], position[1] + 1)
 
         elif direction == DOWN_RIGHT:
-            new_position = (self.position[0] + 1, self.position[1] + 1)
+            position = (position[0] + 1, position[1] + 1)
 
         elif direction == DOWN_LEFT:
-            new_position = (self.position[0] - 1, self.position[1] + 1)
+            position = (position[0] - 1, position[1] + 1)
 
-        if self.check_block_collision(self.get_block_sections(new_position), direction, board):
-            self.position = new_position
+        if self.check_block_collision(self.get_block_sections(position), direction, board):
             return True
-
+        
         return False
 
     def get_block_sections(self, position, orientation=0):

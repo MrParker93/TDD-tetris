@@ -340,3 +340,72 @@ class Pieces(Board):
 
 if __name__ == "__main__":
     Tetris()
+
+
+from ctypes import set_last_error
+import pyxel
+import random
+from tetromino import Tetrominoes
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH, BOARD_GRID, BOARD_HEIGHT, BOARD_WIDTH, BLOCKS
+
+
+class Board:
+    def __init__(self, block=None, next_block=None):
+        self.board = BOARD_GRID
+
+        if block != None:
+            self.block = block
+        else:
+            self.block = Tetrominoes(block=random.sample(BLOCKS, 7).pop())
+
+        if next_block != None:
+            self.next_block = next_block
+        else:
+            self.next_block = Tetrominoes(block=random.sample(BLOCKS, 7).pop())
+
+    def draw_board(self):
+        # Main area for gameplay
+        pyxel.rectb(4, 8, 10 * 8, 22 * 7.8, 5)
+
+        # Show next block
+        pyxel.rectb(87, 16, 30, 6 * 8, 5)
+
+        for row in range(len(self.board)):
+            for col in range(len(self.board[row])):
+                if self.board[row][col]:
+                    pyxel.rect((col * 5) + 6, (row * 8) + 10, len(self.board[row]) + 21, len(self.board) - 5, 0)
+                    # pyxel.blt((col * 8) + 6, (row * 8) + 10, 1, 0, 0, 4, 15)
+                    
+    def draw_block(self, position=(0, 0)):
+        current_block = self.block.get_block_sections(position)
+
+        for row in range(len(current_block["block"])):
+            for col in range(len(current_block["block"][row])):
+                block_colour = current_block["block"][row][col]
+                pyxel.blt(col * 8 + position[0], row * 8 + position[1], 0, 0, block_colour, 8, 8)
+                # self.add_block_to_board(position, block_colour)
+
+    def draw_next_block(self):
+        next_block = self.next_block.get_block_sections(position=(0, 0))
+
+        for row in range(len(next_block["block"])):
+            for col in range(len(next_block["block"][row])):
+                if next_block["block"][row][col] != 0:
+                    block_colour = next_block["block"][row][col]
+
+                    if block_colour == 8:
+                        pyxel.blt((col * 8) + 95, (row * 8) + 40, 0, 0, block_colour, 8, 8)                
+
+                    elif block_colour == 88:
+                        pyxel.blt((col * 8) + 87, (row * 8) + 24, 0, 0, block_colour, 8, 8)                
+
+                    elif block_colour == 160 or block_colour == 192 or block_colour == 72:
+                        pyxel.blt((col * 8) + 95, (row * 8) + 32, 0, 0, block_colour, 8, 8)
+
+                    else:
+                        pyxel.blt((col * 8) + 87, (row * 8) + 32, 0, 0, block_colour, 8, 8)
+
+    def add_block_to_board(self, position, colour=0):
+        for row in range(len(self.board)):
+            for col in range(len(self.board[row])):
+                self.board[row][col] = colour
