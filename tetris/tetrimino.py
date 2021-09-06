@@ -1,3 +1,4 @@
+import enum
 import random
 import numpy as np
 from enum import IntEnum
@@ -21,18 +22,36 @@ class Tetrimino:
         self.rotation = 0  # The direction of rotation "-1" for anticlockwise, "1" for clockwise
         self.orientation = Orientation.RIGHT  # The direction the block is facing
 
-    def move_block_left(self, block):
-        pass
+    def get_dimensions_and_position_x_of_block(self):
+        self.block = np.array(self.block)
+        self.w = self.block.max(axis=0).tolist().count(
+            self.colour)  # Gets the width of the current block
+        self.h = self.block.max(axis=1).tolist().count(
+            self.colour)  # Gets the height of the current block
+        self.x = 12
 
+    def move_block_left(self, block):
+        if 0 < self.x:
+            self.x -= 1
+            print(self.x)
+        
     def move_block_right(self, block):
-        pass
+        if self.x < 13:
+            self.x += 1
+            print(self.x)
+
 
     def move_block_down(self, block):
         pass
 
     def rotate_block(self, block):
+        if self.w == 1 and self.h == 1:
+            return block
 
-        pass
+        if self.rotation == 1:
+            self.orientation += self.rotation % 4
+            block = np.rot90(block, self.rotation)
+            return block
 
 
 class TetriminoO(Tetrimino):
@@ -140,18 +159,14 @@ class TetriminoOptions:
             list(range(len(self.tetrimino))), len(self.tetrimino))
 
     def generate(self):
-        tetrimino = self.tetrimino[self.bag.pop()]().block
+        tetrimino = self.tetrimino[self.bag.pop()]()
         return tetrimino
 
 
-# t = TetriminoO()
-# o = np.array(t.block)
+l = TetriminoT()
+i = TetriminoI()
+l = TetriminoL()
+o = TetriminoO()
 
-# for i in range(len(o)):
-#     if 0 == o[i]:
-#         continue
-#     x = i % 4
-#     y = i // 4
-#     print(f"x is: {x} and y is: {y}")
-
-# print(o)
+# o.get_dimensions_and_position_x_of_block()
+# print(o.block, o.w, o.h, o.x, o.colour)

@@ -1,8 +1,8 @@
 import pyxel
 import pytest
-import constants
-from tetris import Tetris
-from tetromino import Tetrominoes
+from tetris import App
+from tetrimino import (Tetrimino, TetriminoO, TetriminoI,
+                        TetriminoS, TetriminoZ, TetriminoL, TetriminoJ, TetriminoT)
 
 
 class TestTetris:
@@ -14,80 +14,69 @@ class TestTetris:
         WHEN the application is running
         THEN check the board width and height are correct.
         """
-        tetris = Tetris()
-        board = (pyxel.width, pyxel.height)
-        assert board == (120, 220)
+        app = App
+        app_width = app.WIDTH
+        app_height = app.HEIGHT
+        assert app_width == 180
+        assert app_height == 220
 
     def test_board_background_colour_is_black(self):
         """
-        GIVEN the applicaion background colour
+        GIVEN the application background colour
         WHEN the application is running
         THEN check the correct background is displayed.
         """
-        background_colour = pyxel.COLOR_BLACK
-        assert background_colour == constants.BACKGROUND_COLOUR
+        pass
 
-    def test_each_shape_exists(self):
+    def test_each_tetrimino_exists(self):
         """"""
-        for blocks in constants.BLOCKS.keys():
-            for _ in constants.BLOCK_NAME:
-                if constants.BLOCK_NAME[0] in blocks:
-                    assert "O_NEUTRAL" or "O_DOWN" or "O_LEFT" or "O_UP" in blocks
-                if constants.BLOCK_NAME[1] in blocks:
-                    assert "I_NEUTRAL" or "I_DOWN" or "I_LEFT" or "I_UP" in blocks
-                if constants.BLOCK_NAME[2] in blocks:
-                    assert "S_NEUTRAL" or "S_DOWN" or "S_LEFT" or "S_UP" in blocks
-                if constants.BLOCK_NAME[3] in blocks:
-                    assert "Z_NEUTRAL" or "Z_DOWN" or "Z_LEFT" or "Z_UP" in blocks
-                if constants.BLOCK_NAME[4] in blocks:
-                    assert "L_NEUTRAL" or "L_DOWN" or "L_LEFT" or "L_UP" in blocks
-                if constants.BLOCK_NAME[5] in blocks:
-                    assert "J_NEUTRAL" or "J_DOWN" or "J_LEFT" or "J_UP" in blocks
-                if constants.BLOCK_NAME[6] in blocks:
-                    assert "T_NEUTRAL" or "T_DOWN" or "T_LEFT" or "T_UP" in blocks
+        block_O = TetriminoO().block
+        block_I = TetriminoI().block
+        block_Z = TetriminoZ().block
+        block_S = TetriminoS().block
+        block_L = TetriminoL().block
+        block_J = TetriminoJ().block
+        block_T = TetriminoT().block
+        assert block_O == [[5,5], [5,5]]
+        assert block_I == [[0, 6, 0 ,0], [0, 6, 0 ,0], [0, 6, 0 ,0], [0, 6, 0 ,0]]
+        assert block_Z == [[8, 8, 0], [0, 8, 8], [0, 0, 0]]
+        assert block_S == [[0 ,10, 10], [10, 10, 0], [0, 0, 0]]
+        assert block_L == [[0, 1, 0], [0, 1, 0], [0, 1, 1]]
+        assert block_J == [[0, 2, 2], [0, 2, 0], [0, 2, 0]]
+        assert block_T == [[0, 9, 0], [0, 9, 9], [0, 9, 0]]
 
     def test_each_direction_moves_each_shape_in_the_correct_coordiantes(self):
         """"""
-        tetris = Tetrominoes()
-        tetris.position = (1, 1)
-        board = []
-        tetris.move_block(direction="right", board=board)
-        assert tetris.position == (2, 1)
-        tetris.move_block(direction="left", board=board)
-        assert tetris.position == (1, 1)
-        tetris.move_block(direction="down", board=board)
-        assert tetris.position == (1, 2)
-        tetris.move_block(direction="downRight", board=board)
-        assert tetris.position == (2, 3)
-        tetris.move_block(direction="downLeft", board=board)
-        assert tetris.position == (1, 4)
+        pass
 
     def test_rotation_for_each_orientation_for_each_shape(self):
-        
-        tetris = Tetrominoes()
-        tetris.orientation = "RIGHT"
-        board = []
-        tetris.rotate(rotation="cw", orientation=tetris.orientation, board=board)
-        assert tetris.orientation == "DOWN"
-        tetris.rotate(rotation="cw", orientation=tetris.orientation, board=board)
-        assert tetris.orientation == "LEFT"
-        tetris.rotate(rotation="cw", orientation=tetris.orientation, board=board)
-        assert tetris.orientation == "UP"
-        tetris.rotate(rotation="cw", orientation=tetris.orientation, board=board)
-        assert tetris.orientation == "RIGHT"
-        tetris.rotate(rotation="acw", orientation=tetris.orientation, board=board)
-        assert tetris.orientation == "UP"
-        tetris.rotate(rotation="acw", orientation=tetris.orientation, board=board)
-        assert tetris.orientation == "LEFT"
-        tetris.rotate(rotation="acw", orientation=tetris.orientation, board=board)
-        assert tetris.orientation == "DOWN"
-        tetris.rotate(rotation="acw", orientation=tetris.orientation, board=board)
-        assert tetris.orientation == "RIGHT"
+        """"""
+        tetrimino = Tetrimino()
+        rotation = tetrimino.rotation
+        orientation = tetrimino.orientation
+        t = TetriminoT()
+        t_block = t.block
+        rotate_block = tetrimino.rotate_block(t_block)
+        if rotate_block:
+            rotation = 1
+            orientation += rotation % 4
+            assert orientation == 2
+            assert rotate_block == [[0, 0, 0], [9, 9, 9], [0, 9, 0]]
+
 
     def test_shapes_are_generated_correctly_after_previous_shape_is_used(self):
         pass
 
-    def test_scoring_system_registers_multiple_row_combos(self):
+    def test_score_is_updated_after_every_clear(self):
+        pass
+
+    def test_level_is_updated_after_reaching_certain_score(self):
+        pass
+
+    def test_lines_are_updated_after_evert_clear(self):
+        pass
+
+    def test_combos_are_updated_after_three_consecutive_clears(self):
         pass
 
     def test_losing_condition_functions_correctly(self):
