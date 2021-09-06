@@ -31,9 +31,10 @@ class Board:
         for row in range(len(self.block)):
             for col in range(len(self.block)):
                 colour = self.block[row][col]
-                x = self.block_x
-                y = self.block_y
-                self.board[row + y][col + x] = colour
+                if colour != 0:
+                    x = self.block_x
+                    y = self.block_y
+                    self.board[row + y][col + x] = colour
 
     def falling_block(self):
         pass
