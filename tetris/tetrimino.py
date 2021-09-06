@@ -50,10 +50,13 @@ class Tetrimino:
         if self.rotation == 1:
             self.orientation += self.rotation % 4
             block = np.rot90(block, self.rotation)
-            print(self.block)
-            self.block = block
-            print(self.block)
-            return self.block
+            return block
+        
+        elif self.rotation == -1:
+            self.orientation += self.rotation % 4
+            block = np.rot90(block, self.rotation)
+            return block
+            
 
 class TetriminoO(Tetrimino):
     def __init__(self):

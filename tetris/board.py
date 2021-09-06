@@ -52,6 +52,12 @@ class Board:
                     self.generate_block.rotation = 1
                     self.block = self.generate_block.rotate_block(self.block)
                     print(self.board)
+            
+            if pyxel.btnp(pyxel.KEY_Z, 10, 2) and not pyxel.btn(pyxel.KEY_X):
+                if not self.check_collisions():
+                    self.generate_block.rotation = -1
+                    self.block = self.generate_block.rotate_block(self.block)
+                    print(self.board)
 
     def draw_board(self):
 
