@@ -1,6 +1,7 @@
 import pyxel
 import random
 import numpy as np
+from gamelogic import GameLogic
 from tetrimino import TetriminoGenerator
 
 
@@ -11,6 +12,7 @@ class Board:
     def __init__(self):
         self.board = np.zeros((Board.WIDTH * Board.HEIGHT)
                               ).reshape(Board.HEIGHT, Board.WIDTH)
+        self.l = GameLogic()
         self.gen = TetriminoGenerator()
         self.generate_block = self.gen.generate()
         self.block = self.generate_block.block
@@ -18,6 +20,38 @@ class Board:
         self.block_x = self.generate_block.x
         self.block_y = self.generate_block.y
         self.next_block = self.gen.next_block.pop(0).block
+        self.game_state = "running"
+        self.is_gameover = False
+        
+    def update(self):
+
+        if pyxel.btn(pyxel.KEY_P):
+            if self.game_state == "running" and not self.is_gameover:
+                self.game_state = "paused"
+            else:
+                self.game_state = "running"
+
+        if self.game_state == "running":
+            if pyxel.frame_count % self.l.fall_speed == 0:
+                self.falling_block()
+
+            if pyxel.btnp(pyxel.KEY_LEFT, 10, 2) and not pyxel.btn(pyxel.KEY_RIGHT):
+                if not self.check_collisions():
+                   self.block_x = self.generate_block.move_block_left(self.block)
+
+            if pyxel.btnp(pyxel.KEY_RIGHT, 10, 2) and not pyxel.btn(pyxel.KEY_LEFT):
+                if not self.check_collisions():
+                    self.block_x = self.generate_block.move_block_right(self.block)
+
+            if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
+                if not self.check_collisions():
+                    self.block_y = self.generate_block.move_block_down(self.block)
+
+            if pyxel.btnp(pyxel.KEY_X, 10, 2) and not pyxel.btn(pyxel.KEY_Z):
+                if not self.check_collisions():
+                    self.generate_block.rotation = 1
+                    self.block = self.generate_block.rotate_block(self.block)
+                    print(self.board)
 
     def draw_board(self):
 

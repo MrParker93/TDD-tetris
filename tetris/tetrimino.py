@@ -28,31 +28,32 @@ class Tetrimino:
             self.colour)  # Gets the width of the current block
         self.h = self.block.max(axis=1).tolist().count(
             self.colour)  # Gets the height of the current block
-        self.x = 12
+        self.x = 6
 
     def move_block_left(self, block):
         if 0 < self.x:
             self.x -= 1
-            print(self.x)
+            return self.x
         
     def move_block_right(self, block):
         if self.x < 13:
             self.x += 1
-            print(self.x)
+            return self.x
 
 
     def move_block_down(self, block):
-        pass
+        if self.y < 23:
+            self.y += 1
+            return self.y
 
     def rotate_block(self, block):
-        if self.w == 1 and self.h == 1:
-            return block
-
         if self.rotation == 1:
             self.orientation += self.rotation % 4
             block = np.rot90(block, self.rotation)
-            return block
-
+            print(self.block)
+            self.block = block
+            print(self.block)
+            return self.block
 
 class TetriminoO(Tetrimino):
     def __init__(self):
