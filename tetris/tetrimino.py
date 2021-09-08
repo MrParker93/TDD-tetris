@@ -2,6 +2,7 @@ import enum
 import random
 import numpy as np
 from enum import IntEnum
+from copy import deepcopy
 
 
 class Orientation(IntEnum):
@@ -12,6 +13,8 @@ class Orientation(IntEnum):
 
 
 class Tetrimino:
+    MOVEMENT_SPEED = 4
+
     def __init__(self):
         self.block = [[]]
         self.x = 0  # Position x of the block
@@ -22,41 +25,55 @@ class Tetrimino:
         self.rotation = 0  # The direction of rotation "-1" for anticlockwise, "1" for clockwise
         self.orientation = Orientation.RIGHT  # The direction the block is facing
 
-    def get_dimensions_and_position_x_of_block(self):
-        self.block = np.array(self.block)
-        self.w = self.block.max(axis=0).tolist().count(
+    def get_width_and_height(self):
+        copy_block = deepcopy(self.block)
+        copy_block = np.array(copy_block)
+
+        self.w = copy_block.max(axis=0).tolist().count(
             self.colour)  # Gets the width of the current block
-        self.h = self.block.max(axis=1).tolist().count(
+        self.h = copy_block.max(axis=1).tolist().count(
             self.colour)  # Gets the height of the current block
-        self.x = 6
 
-    def move_block_left(self, block):
-        if 0 < self.x:
-            self.x -= 1
-            return self.x
-        
-    def move_block_right(self, block):
-        if self.x < 13:
-            self.x += 1
-            return self.x
+    def get_coord_of_each_corner(self):
+        pass
 
+    def move_block_left(self):
+        self.x -= 1
+        return self.x
 
-    def move_block_down(self, block):
-        if self.y < 23:
-            self.y += 1
-            return self.y
+    def move_block_right(self):
+        self.x += Tetrimino.MOVEMENT_SPEED
+        return self.x
+
+    def move_block_down(self):
+        self.y += (self.h + Tetrimino.MOVEMENT_SPEED)
+        return self.y
+
+    def place_block(self):
+        if self.h == 1:
+            self.y += 172 - self.y
+        elif self.h == 2:
+            self.y += 164 - self.y
+        elif self.h == 3:
+            self.y += 156 - self.y
+        else:
+            self.y += 148 - self.y
+        return self.y
 
     def rotate_block(self, block):
+
         if self.rotation == 1:
             self.orientation += self.rotation % 4
             block = np.rot90(block, self.rotation)
-            return block
-        
+            self.w, self.h = self.h, self.w
+            return (block, self.w, self.h)
+
         elif self.rotation == -1:
             self.orientation += self.rotation % 4
             block = np.rot90(block, self.rotation)
-            return block
-            
+            self.w, self.h = self.h, self.w
+            return (block, self.w, self.h)
+
 
 class TetriminoO(Tetrimino):
     def __init__(self):
@@ -73,10 +90,10 @@ class TetriminoI(Tetrimino):
     def __init__(self):
         super().__init__()
         self.block = [
-            [0, 6, 0, 0],
-            [0, 6, 0, 0],
-            [0, 6, 0, 0],
-            [0, 6, 0, 0]
+            [6],
+            [6],
+            [6],
+            [6]
         ]
 
         self.colour = 6
@@ -86,9 +103,9 @@ class TetriminoZ(Tetrimino):
     def __init__(self):
         super().__init__()
         self.block = [
-            [8, 8, 0],
-            [0, 8, 8],
-            [0, 0, 0]
+            [0, 8],
+            [8, 8],
+            [8, 0]
         ]
 
         self.colour = 8
@@ -98,9 +115,9 @@ class TetriminoS(Tetrimino):
     def __init__(self):
         super().__init__()
         self.block = [
-            [0, 10, 10],
-            [10, 10, 0],
-            [0, 0, 0]
+            [10, 0],
+            [10, 10],
+            [0, 10]
         ]
 
         self.colour = 10
@@ -110,9 +127,9 @@ class TetriminoL(Tetrimino):
     def __init__(self):
         super().__init__()
         self.block = [
-            [0, 1, 0],
-            [0, 1, 0],
-            [0, 1, 1]
+            [1, 0],
+            [1, 0],
+            [1, 1]
         ]
 
         self.colour = 1
@@ -122,9 +139,9 @@ class TetriminoJ(Tetrimino):
     def __init__(self):
         super().__init__()
         self.block = [
-            [0, 2, 2],
-            [0, 2, 0],
-            [0, 2, 0]
+            [2, 2],
+            [2, 0],
+            [2, 0]
         ]
 
         self.colour = 2
@@ -134,9 +151,9 @@ class TetriminoT(Tetrimino):
     def __init__(self):
         super().__init__()
         self.block = [
-            [0, 9, 0],
-            [0, 9, 9],
-            [0, 9, 0]
+            [9, 0],
+            [9, 9],
+            [9, 0]
         ]
 
         self.colour = 9
@@ -167,10 +184,34 @@ class TetriminoOptions:
         return tetrimino
 
 
-l = TetriminoT()
-i = TetriminoI()
-l = TetriminoL()
-o = TetriminoO()
+# t = TetriminoT()
+# i = TetriminoI()
+# l = TetriminoL()
+# o = TetriminoO()
+# j = TetriminoJ()
+# t = [
+#     [0, 8],
+#     [8, 8],
+#     [8, 0]
+# ]
+# print(3 % 3 + 1)
 
-# o.get_dimensions_and_position_x_of_block()
-# print(o.block, o.w, o.h, o.x, o.colour)
+# t = np.array(t)
+# print(np.unique(t, axis=0, return_inverse=True,))
+# w = t.max(axis=0).tolist().count(8)
+# h = t.max(axis=1).tolist().count(8)
+# t_90 = np.rot90(t, k=-1)
+# print(t_90)
+# print(np.rot90(t_90, k=-1), w, h)
+
+# i = [
+#     [6],
+#     [6],
+#     [6],
+#     [6]
+# ]
+
+# for row in range(len(i)):
+#     print(i[row])
+#     for col in range(len(i[row])):
+#         print(i[row][col])
