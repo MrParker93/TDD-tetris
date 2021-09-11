@@ -2,7 +2,7 @@ import enum
 import random
 import numpy as np
 from enum import IntEnum
-from copy import deepcopy
+from copy import copy, deepcopy
 
 
 class Orientation(IntEnum):
@@ -17,8 +17,7 @@ class Tetrimino:
 
     def __init__(self):
         self.block = [[]]
-        self.x = 0  # Position x of the block
-        self.y = 0  # Position y of the block
+        self.position = [0, 0]  # The [x, y] coordinates of the block on the board
         self.w = 0  # The width of the block
         self.h = 0  # The height of the block
         self.colour = 0  # The colour of the block using Pyxel.COLOUR_
@@ -26,7 +25,7 @@ class Tetrimino:
         self.orientation = Orientation.RIGHT  # The direction the block is facing
 
     def get_width_and_height(self):
-        copy_block = deepcopy(self.block)
+        copy_block = copy(self.block)
         copy_block = np.array(copy_block)
 
         self.w = copy_block.max(axis=0).tolist().count(
@@ -34,45 +33,31 @@ class Tetrimino:
         self.h = copy_block.max(axis=1).tolist().count(
             self.colour)  # Gets the height of the current block
 
-    def get_coord_of_each_corner(self):
-        pass
-
     def move_block_left(self):
-        self.x -= 1
-        return self.x
+        self.position = [self.position[0] - 1, self.position[1]]
+        return self.position
 
     def move_block_right(self):
-        self.x += Tetrimino.MOVEMENT_SPEED
-        return self.x
+        self.position = [self.position[0] + 1, self.position[1]]
+        return self.position
 
     def move_block_down(self):
-        self.y += (self.h + Tetrimino.MOVEMENT_SPEED)
-        return self.y
+        self.position = [self.position[0], self.position[1] + 1]
+        return self.position
 
     def place_block(self):
-        if self.h == 1:
-            self.y += 172 - self.y
-        elif self.h == 2:
-            self.y += 164 - self.y
-        elif self.h == 3:
-            self.y += 156 - self.y
-        else:
-            self.y += 148 - self.y
-        return self.y
+        pass
+        # return [self.position[0], ]
 
     def rotate_block(self, block):
 
         if self.rotation == 1:
             self.orientation += self.rotation % 4
-            block = np.rot90(block, self.rotation)
-            self.w, self.h = self.h, self.w
-            return (block, self.w, self.h)
+            return np.rot90(block, self.rotation)
 
         elif self.rotation == -1:
             self.orientation += self.rotation % 4
-            block = np.rot90(block, self.rotation)
-            self.w, self.h = self.h, self.w
-            return (block, self.w, self.h)
+            return np.rot90(block, self.rotation)
 
 
 class TetriminoO(Tetrimino):
@@ -201,7 +186,7 @@ class TetriminoOptions:
 # w = t.max(axis=0).tolist().count(8)
 # h = t.max(axis=1).tolist().count(8)
 # t_90 = np.rot90(t, k=-1)
-# print(t_90)
+# print(3 % 4)
 # print(np.rot90(t_90, k=-1), w, h)
 
 # i = [

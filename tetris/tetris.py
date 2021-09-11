@@ -42,10 +42,10 @@ class App:
     def draw_borders(self):
         
         # Create border for board
-        pyxel.rectb(4, 8, 120, 184, 5)
+        pyxel.rectb(4, 8, 128, 192, 5)
         
         # Create border for showing the next block
-        pyxel.rectb(180 * 0.75, 16, 37, 48, 5)
+        pyxel.rectb(186 * 0.75, 16, 37, 48, 5)
 
 if __name__ == "__main__":
     App()
