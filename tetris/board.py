@@ -1,4 +1,5 @@
 import pyxel
+import pprint
 from gamelogic import GameLogic
 from tetrimino import TetriminoGenerator
 
@@ -7,107 +8,56 @@ class Board:
     WIDTH = 10
     HEIGHT = 20
 
-    def __init__(self):
-        self.board = [[0] * Board.WIDTH for _ in range(Board.HEIGHT)]
-        self.l = GameLogic()
-        self.gen = TetriminoGenerator()
-        self.generate_block = self.gen.generate()
-        self.block = self.generate_block.block
-        self.x = self.generate_block.x
-        self.y = self.generate_block.y
-        self.next_block = self.gen.next_block.pop(0).block
-        self.game_state = "running"
-        self.is_gameover = False
-
-    def update(self):
-
-        if pyxel.btn(pyxel.KEY_P):
-            if self.game_state == "running" and not self.is_gameover:
-                self.game_state = "paused"
-            else:
-                self.game_state = "running"
-
-        if self.game_state == "running":
-            if pyxel.frame_count % self.l.fall_speed == 2:
-                if self.any_collisions(self.x, self.y, self.block):
-                    self.falling_block()
-
-            if pyxel.btnp(pyxel.KEY_LEFT, 10, 2) and not pyxel.btn(pyxel.KEY_RIGHT):
-                new_x = self.generate_block.move_block_left()
-                if self.any_collisions(new_x, self.y, self.block):
-                    self.x = new_x
-
-            if pyxel.btnp(pyxel.KEY_RIGHT, 10, 2) and not pyxel.btn(pyxel.KEY_LEFT):
-                new_x = self.generate_block.move_block_right()
-                if self.any_collisions(new_x, self.y, self.block):
-                    self.x = new_x
-
-            if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
-                new_y = self.generate_block.move_block_down()
-                if self.any_collisions(self.x, new_y, self.block):
-                    self.y = new_y
-
-            if pyxel.btn(pyxel.KEY_SPACE):
-                if not self.any_collisions():
-                    self.position = self.generate_block.place_block()
-
-            if pyxel.btnp(pyxel.KEY_X, 10, 2) and not pyxel.btn(pyxel.KEY_Z):
-                self.generate_block.rotation = 1
-                new_block = self.generate_block.rotate_block(self.block)
-                if self.any_collisions(self.x, self.y, new_block) and self.block[0][0] != 5:
-                    self.block = new_block
-
-            if pyxel.btnp(pyxel.KEY_Z, 10, 2) and not pyxel.btn(pyxel.KEY_X):
-                self.generate_block.rotation = -1
-                new_block = self.generate_block.rotate_block(self.block)
-                if self.any_collisions(self.x, self.y, new_block) and self.block[0][0] != 5:
-                    self.block = new_block
+    def __init__(self, block, x, y):
+        self.block = block
+        self.pos_x = x
+        self.pos_y = y 
+        self.board = [[0] * Board.WIDTH for _ in range(Board.HEIGHT)]  # Create the board where the game is played
+        self.board_edge = [[0] * (Board.WIDTH + 2) for _ in range(Board.HEIGHT + 1)]  # Create the boundaries where the game is limited to
+        
+        for row in range(len(self.board_edge)):
+            for col in range(len(self.board_edge[row])):
+                if col == 0 or col == Board.WIDTH + 1 or row == Board.HEIGHT:  # Sets the boundaries of the board to -1
+                    self.board_edge[row][col] = -1
 
     def draw_board(self):
         
         # Draw board where blocks will fall and stack
-        for row in range(len(self.board)):
-            for col in range(len(self.board[row])):
-                pyxel.rect(col * 8 + 4, row * 8 + 8, 8,
-                           8, self.board[row][col])
+        for row in range(len(self.board_edge)):
+            for col in range(len(self.board_edge[row])):
+                if self.board_edge[row][col] != -1:
+                    pyxel.rect(col * 8 + 4, row * 8 + 8, 8,
+                            8, self.board_edge[row][col])
 
     def draw_block(self):
 
         for row in range(len(self.block)):
             for col in range(len(self.block[row])):
-                # if self.block[row][col] != 0:
-                colour = self.block[row][col]
-                self.board[row + self.y][col + self.x] = colour
+                if self.block[row][col] != 0:
+                    colour = self.block[row][col]
+                    self.board_edge[row + self.pos_y][col + self.pos_x] = colour
 
     def stack_block(self):
         for row in range(len()):
             pass    
 
-
     def falling_block(self):
         # self.y += 1
         pass
 
-    def draw_next_block(self):
-        for row in range(len(self.next_block)):
-            for col in range(len(self.next_block[row])):
-                colour = self.next_block[row][col]
-                if colour == 6:
-                    pyxel.rect((col * 8) + 140 * 0.77,
-                               24 + (row * 8), 8, 8, colour)
-                elif colour == 5:
-                    pyxel.rect((col * 8) + 140 * 0.74,
-                               40 + (row * 8), 8, 8, colour)
-                elif colour == 1 or colour == 2 or colour == 9:
-                    pyxel.rect((col * 8) + 140 * 0.75,
-                               32 + (row * 8), 8, 8, colour)
-                else:
-                    pyxel.rect((col * 8) + 140 * 0.74,
-                               32 + (row * 8), 8, 8, colour)
+    def any_collisions(self, x, y, width, height):
+        
+        for row in range(len(self.board_edge)):
+            for col in range(len(self.board_edge[row])):
+                if self.board_edge[row][col + x] == -1 \
+                    or self.board_edge[row][x] == -1 \
+                    or self.board_edge[row + y][col] == -1:
+                        return True
+        return False
+                
 
-    def any_collisions(self, x, y, block):
-        size = self.generate_block.block_size(block)
-        if x < 0 or (x + size[1]) > Board.WIDTH \
-            or y + size[0] > Board.HEIGHT:
-                return False
-        return True
+        # print(x, y)
+        # if x < 0 or (x + size[1]) > Board.WIDTH \
+        #     or y + size[0] > Board.HEIGHT:
+        #         return False
+        # return True

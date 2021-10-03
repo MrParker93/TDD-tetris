@@ -3,11 +3,11 @@ import random
 class Tetrimino:
 
     def __init__(self):
-        self.block = []
-        self.size = []
-        self.x = 4
-        self.y = 0
-        self.colour = 0  # The colour of the block using Pyxel.COLOUR_
+        self.block = []  # Empty list to store the block matrix
+        self.size = []  # Empty list to store the height and width of the block
+        self.x = 0  # The x position of the block
+        self.y = 0  # The y position of the block
+        self.colour = 0  # The colour of the block using Pyxel.COLOUR
         self.rotation = 0  # The direction of rotation "1" for anticlockwise, "-1" for clockwise
 
     def block_size(self, block):
