@@ -5,8 +5,8 @@ from board import Board
 from gamelogic import GameLogic
 
 class App:
-    WIDTH = 180
-    HEIGHT = 220
+    WIDTH = 140
+    HEIGHT = 200
 
     def __init__(self):
         pyxel.init(App.WIDTH, App.HEIGHT, caption="Tetris!", fps=60)
@@ -42,10 +42,10 @@ class App:
     def draw_borders(self):
         
         # Create border for board
-        pyxel.rectb(4, 8, 128, 192, 5)
+        pyxel.rectb(4, 8, self.b.WIDTH * 8, self.b.HEIGHT * 8, 5)
         
         # Create border for showing the next block
-        pyxel.rectb(186 * 0.75, 16, 37, 48, 5)
+        pyxel.rectb(App.WIDTH * 0.66, 16, 37, 48, 5)
 
 if __name__ == "__main__":
     App()
