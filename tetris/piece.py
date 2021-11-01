@@ -8,28 +8,24 @@ class Piece:
         self.board = [[0] * size for _ in range(size)]
 
     def rotate_right(self):
-        return self.rotate(self.block)
+        return self.rotate(self.board)
     
     def rotate_left(self):
-        rotate = self.rotate(self.block)
+        rotate = self.rotate(self.board)
         rotate_again = self.rotate(rotate)
         return self.rotate(rotate_again)
 
     def create_piece(self):
-        new_board =[]
-        for row in range(len(self.board) - 1):
-            new_board.append([])
-            for _ in range(row, len(self.board) - 1):
-                new_board[row].append(0)
-            for col in range(row, -1, -1):
-                new_board[row].append(2)
-                pass
-        return new_board
+        for row in range(len(self.board)):
+            for col in range(len(self.board[row])):
+                if row < self.size - 1 and col == int(len(self.board[row]) / 2):
+                    self.board[row][col] = 2
+        return self.board
 
     def rotate(self, block):
         return list(map(list, zip(*block[::-1])))
 
-p = Piece(3)
-piece = p.create_piece()
-print(p.board)
-print(piece)
+
+p = Piece(5)
+print(*p.board, sep="\n")
+print(*p.create_piece(), sep="\n")
