@@ -38,7 +38,6 @@ class Board:
     def generate_block(self):
         if not self.is_falling():
             block = Block(0, 0, random.choice(["I", "J", "L", "T", "Z", "S", "O"]))
-            # self.block.block = random.choice(["I", "J", "L", "T", "Z", "S", "O"])
             return block
         raise ValueError("Block is already falling")
     
@@ -67,27 +66,3 @@ class Board:
 
     def place_block(self):
         self.board[self.block.row][self.block.col] = self.block.block
-        
-
-# b = Board()
-# b.block = Block(0, 0, "I")
-# print(*b.board, sep="\n")
-
-# print(f"row is: {b.block.row}, col is: {b.block.col}")
-# b.start_falling(b.block)
-# print(f"Are positions of row and col invalid: {b.invalid_position(b.block)}")
-
-# b.falling()
-# print(f"row is: {b.block.row}, col is: {b.block.col}")
-# print(f"Are positions of row and col invalid: {b.invalid_position(b.block)}")
-
-# b.falling()
-# print(f"row is: {b.block.row}, col is: {b.block.col}")
-# print(f"Are positions of row and col invalid: {b.invalid_position(b.block)}")
-
-# b.falling()
-# print(f"row is: {b.block.row}, col is: {b.block.col}")
-# print(f"Are positions of row and col invalid: {b.invalid_position(b.block)}")
-
-# print(*b.generate_block_on_board(), sep="\n")
-# print(*b.board, sep="\n")
