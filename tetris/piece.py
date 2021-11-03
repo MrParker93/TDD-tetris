@@ -1,17 +1,18 @@
 import pyxel
-import random
+from grid import Grid
+from rotatable import Rotatable
 
-class Piece:
-    def __init__(self, blocks, board_size) -> None:
-        self.block = []
-        self.blocks = blocks
-        self.board = [[0] * board_size for _ in range(board_size)]
+class Piece(Grid, Rotatable):
+    def __init__(self, shape=None, size=3):
+        self.shape = shape
+        self.size = size
+        self.board = [[0] * self.size for _ in range(self.size)]
 
     def rotate_right(self):
-        return self.rotate(self.board)
+        return self.rotate(self.shape)
     
     def rotate_left(self):
-        rotate = self.rotate(self.board)
+        rotate = self.rotate(self.shape)
         rotate_again = self.rotate(rotate)
         return self.rotate(rotate_again)
 
@@ -24,9 +25,5 @@ class Piece:
                 self.board[row][i] = 0
         return self.board
 
-    def rotate(self, block):
-        return list(map(list, zip(*block[::-1])))
-
-p = Piece(4, 5)
-p.create_piece()
-print(*p.board,sep="\n")
+    def rotate(self, shape):
+        return list(map(list, zip(*shape[::-1])))
