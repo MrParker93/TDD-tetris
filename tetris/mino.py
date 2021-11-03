@@ -5,11 +5,18 @@ from rotatable import Rotatable
 class Mino(Rotatable):
     def __init__(self):
         super().__init__()
+        self.shape = []
         self.rotation = []
         self.current_rotation = 0
 
     def rotate_right(self):
-        return 
+        self.shape = Piece(self.shape).rotate(self.shape)
+        return self.shape
+
+    def rotate_left(self):
+        self.shape = Piece(self.shape).rotate_left()
+        return self.shape
+        
 class MinoO(Mino):
     def __init__(self):
         super().__init__()
@@ -75,4 +82,5 @@ class MinoI(Mino):
         self.rotation = 2
         self.current_rotation = 1
 
-m = Mino()
+m = MinoO()
+print(m.rotate_left())
