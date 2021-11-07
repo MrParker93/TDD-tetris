@@ -5,132 +5,195 @@ from mino import (Mino, MinoO, MinoS, MinoZ,
 class TestMinoRotation:
     def test_all_minos_exist(self):
         """"""
-        assert MinoO().shape == [[1, 1, 0],
+        assert MinoO().block == [[1, 1, 0],
                                  [1, 1, 0],
                                  [0, 0, 0]]
 
-        assert MinoS().shape == [[0, 1, 1],
+        assert MinoS().block == [[0, 1, 1],
                                  [1, 1, 0],
                                  [0, 0, 0]]
 
-        assert MinoZ().shape == [[1, 1, 0],
+        assert MinoZ().block == [[1, 1, 0],
                                  [0, 1, 1],
                                  [0, 0, 0]]
 
-        assert MinoJ().shape == [[0, 1, 0],
+        assert MinoJ().block == [[0, 1, 0],
                                  [0, 1, 0],
                                  [1, 1, 0]]
 
-        assert MinoL().shape == [[0, 1, 0],
+        assert MinoL().block == [[0, 1, 0],
                                  [0, 1, 0],
                                  [0, 1, 1]]
 
-        assert MinoT().shape == [[0, 1, 0],
+        assert MinoT().block == [[0, 1, 0],
                                  [1, 1, 1],
                                  [0, 0, 0]]
 
-        assert MinoI().shape == [[0, 0, 0, 0, 0],
+        assert MinoI().block == [[0, 0, 0, 0, 0],
                                  [0, 0, 0, 0, 0],
                                  [1, 1, 1, 1, 0],
                                  [0, 0, 0, 0, 0],
                                  [0, 0, 0, 0, 0]]
 
-    def test_J_shape_can_be_rotated_three_times(self):
+    def test_J_block_can_be_rotated_three_times(self):
         """"""
-        shape = MinoJ()
-        block = shape.shape
-        rotated = shape.rotate_right()
-        rotated_twice = shape.rotate_right()
-        rotated_thrice = shape.rotate_right()
-        assert block == [[0, 1, 0],
+        block = MinoJ()
+        shape = block.block
+        curr_rotation = block.current_rotation
+        
+        assert shape == [[0, 1, 0],
                          [0, 1, 0],
                          [1, 1, 0]]
 
-        assert rotated == [[1, 0, 0],
-                           [1, 1, 1],
-                           [0, 0, 0]]
+        rotated = block.rotate_right()
+        assert block.new_block().block == [[1, 0, 0],
+                                           [1, 1, 1],
+                                           [0, 0, 0]]
 
-        assert rotated_twice == [[0, 1, 1],
-                                 [0, 1, 0],
-                                 [0, 1, 0]]
+        rotated_twice = block.rotate_right()
+        assert block.new_block().block == [[0, 1, 1],
+                                           [0, 1, 0],
+                                           [0, 1, 0]]
 
-        assert rotated_thrice == [[0, 0, 0],
-                                  [1, 1, 1],
-                                  [0, 0, 1]]
+        rotated_thrice = block.rotate_right()
+        assert block.new_block().block == [[0, 0, 0],
+                                           [1, 1, 1],
+                                           [0, 0, 1]]
 
-    def test_L_shape_can_be_rotated_three_times(self):
+        rotated_left = block.rotate_left()
+        assert block.new_block().block == [[0, 1, 1],
+                                           [0, 1, 0],
+                                           [0, 1, 0]]
+
+    def test_L_block_can_be_rotated_three_times(self):
         """"""
-        shape = MinoL()
-        block = shape.shape
-        rotated = shape.rotate_right()
-        rotated_twice = shape.rotate_right()
-        rotated_thrice = shape.rotate_right()
-        assert block == [[0, 1, 0],
+        block = MinoL()
+        shape = block.block
+        curr_rotation = block.current_rotation
+        
+        assert shape == [[0, 1, 0],
                          [0, 1, 0],
                          [0, 1, 1]]
 
-        assert rotated == [[0, 0, 0],
-                           [1, 1, 1],
-                           [1, 0, 0]]
+        rotated = block.rotate_right()
+        assert block.new_block().block == [[0, 0, 0],
+                                           [1, 1, 1],
+                                           [1, 0, 0]]
 
-        assert rotated_twice == [[1, 1, 0],
-                                 [0, 1, 0],
-                                 [0, 1, 0]]
+        rotated_twice = block.rotate_right()
+        assert block.new_block().block == [[1, 1, 0],
+                                           [0, 1, 0],
+                                           [0, 1, 0]]
 
-        assert rotated_thrice == [[0, 0, 1],
-                                  [1, 1, 1],
-                                  [0, 0, 0]]
+        rotated_thrice = block.rotate_right()
+        assert block.new_block().block == [[0, 0, 1],
+                                           [1, 1, 1],
+                                           [0, 0, 0]]
 
-    def test_T_shape_can_be_rotated_three_times(self):
+        rotated_left = block.rotate_left()
+        assert block.new_block().block == [[1, 1, 0],
+                                           [0, 1, 0],
+                                           [0, 1, 0]]
+
+    def test_T_block_can_be_rotated_three_times(self):
         """"""
-        shape = MinoT()
-        block = shape.shape
-        rotated = shape.rotate_right()
-        rotated_twice = shape.rotate_right()
-        rotated_thrice = shape.rotate_right()
-
-        assert block == [[0, 1, 0],
+        block = MinoT()
+        shape = block.block
+        curr_rotation = block.current_rotation
+        
+        assert shape == [[0, 1, 0],
                          [1, 1, 1],
                          [0, 0, 0]]
 
-        assert rotated == [[0, 1, 0],
-                           [0, 1, 1],
-                           [0, 1, 0]]
+        rotated = block.rotate_right()
+        assert block.new_block().block == [[0, 1, 0],
+                                           [0, 1, 1],
+                                           [0, 1, 0]]
 
-        assert rotated_twice == [[0, 0, 0],
-                                 [1, 1, 1],
-                                 [0, 1, 0]]
+        rotated_twice = block.rotate_right()
+        assert block.new_block().block == [[0, 0, 0],
+                                           [1, 1, 1],
+                                           [0, 1, 0]]
 
-        assert rotated_thrice == [[0, 1, 0],
-                                  [1, 1, 0],
-                                  [0, 1, 0]]
+        rotated_thrice = block.rotate_right()
+        assert block.new_block().block == [[0, 1, 0],
+                                           [1, 1, 0],
+                                           [0, 1, 0]]
 
-    def test_rotating_J_shape_four_times_results_in_original_shape(self):
+        rotated_left = block.rotate_left()
+        assert block.new_block().block == [[0, 0, 0],
+                                           [1, 1, 1],
+                                           [0, 1, 0]]
+                                
+    def test_rotating_J_block_four_times_results_in_original_block(self):
         """"""
-        shape = MinoJ()
-        block = shape.shape
-        rotated = shape.rotate_right()
-        rotated_twice = shape.rotate_right()
-        rotated_thrice = shape.rotate_right()
-        original_shape = shape.rotate_right()
+        block = MinoJ()
+        shape = block.block
+        rotated = block.rotate_right()
+        rotated_twice = block.rotate_right()
+        rotated_thrice = block.rotate_right()
+        original_block = block.rotate_right()
 
-        assert original_shape == block      
+        assert block.new_block().block == shape      
         
-        rotated = shape.rotate_left()
-        rotated_twice = shape.rotate_left()
-        rotated_thrice = shape.rotate_left()
-        original_shape = shape.rotate_left()
+        rotated = block.rotate_left()
+        rotated_twice = block.rotate_left()
+        rotated_thrice = block.rotate_left()
+        original_block = block.rotate_left()
 
-        assert original_shape == block
+        assert block.new_block().block == shape
 
-    def test_rotating_I_shape_can_only_rotate_right_and_left_once(self):
+    def test_I_block_only_has_two_rotations_(self):
         """"""
-        shape = MinoI()
-        block = shape.shape
-
-        assert block == [[0, 0, 0, 0, 0],
+        block = MinoI()
+        shape = block.block
+        
+        assert shape == [[0, 0, 0, 0, 0],
                          [0, 0, 0, 0, 0],
                          [1, 1, 1, 1, 0],
                          [0, 0, 0, 0, 0],
                          [0, 0, 0, 0, 0]]
-                                  
+
+        rotate_right = block.rotate_right()
+        assert block.new_block().block == [[0, 0, 0, 0, 0],
+                                           [0, 0, 1, 0, 0],
+                                           [0, 0, 1, 0, 0],
+                                           [0, 0, 1, 0, 0],
+                                           [0, 0, 1, 0, 0]]
+
+        rotate_left = block.rotate_left()
+        assert block.new_block().block == shape
+
+    def test_rotating_I_block_two_times_in_any_direction_results_in_the_original_block(self):
+        """"""
+        block = MinoI()
+        shape = block.block
+        block.rotate_right()
+        block.rotate_right()
+        assert block.new_block().block == shape
+        block.rotate_left()
+        block.rotate_left()
+        assert block.new_block().block == shape
+                   
+    def test_O_block_has_same_orientation_when_rotated_in_any_direction(self):
+        """"""
+        block = MinoO()
+        shape = block.block
+
+        assert shape == [[1, 1, 0],
+                         [1, 1, 0],
+                         [0, 0, 0]]
+
+        rotate_right = block.rotate_right()
+        assert block.new_block().block == [[1, 1, 0],
+                                           [1, 1, 0],
+                                           [0, 0, 0]]
+
+        rotate_left = block.rotate_left()
+        assert block.new_block().block == [[1, 1, 0],
+                                           [1, 1, 0],
+                                           [0, 0, 0]]
+        
+        rotate_left = block.rotate_left()
+        rotate_left = block.rotate_left()
+        assert block.new_block().block == shape

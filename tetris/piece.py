@@ -1,29 +1,24 @@
-import pyxel
 from grid import Grid
 from rotatable import Rotatable
 
 class Piece(Grid, Rotatable):
-    def __init__(self, shape=None, size=3):
-        self.shape = shape
-        self.size = size
-        self.board = [[0] * self.size for _ in range(self.size)]
+    def __init__(self, block):
+        self.block = block
 
     def rotate_right(self):
-        return self.rotate(self.shape)
+        return Piece(self.rotate(self.block))
     
     def rotate_left(self):
-        rotate = self.rotate(self.shape)
-        rotate_again = self.rotate(rotate)
-        return self.rotate(rotate_again)
+        return self.rotate_right().rotate_right().rotate_right()
 
-    def create_piece(self):
-        for row in range(len(self.board)):
-            for col in range(len(self.board[row])):
-                if row <= int(len(self.board) / 2) and col <= int(len(self.board[row]) / 2):
-                    self.board[row][col] = 2
-            for i, _ in enumerate(range(row, int(len(self.board) / 2))):
-                self.board[row][i] = 0
-        return self.board
+    def rotate(self, block):
+        return list(map(list, zip(*block[::-1])))
 
-    def rotate(self, shape):
-        return list(map(list, zip(*shape[::-1])))
+    def rows(self):
+        return len(self.block)
+
+    def cols(self):
+        return len(self.block[0])
+
+    def block_position(self, row, col):
+        return self.block[row][col]

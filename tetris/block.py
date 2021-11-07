@@ -1,11 +1,18 @@
-import pyxel
-
 class Block:
     def __init__(self, row, col, block=None):
         self.row = row
         self.col = col
         self.block = block
 
+    def row(self):
+        return self.row
+
+    def col(self):
+        return self.col
+    
+    def block(self):
+        return self.block
+        
     def move_block(self, row, col):
         return Block(row, col, self.block)
 
