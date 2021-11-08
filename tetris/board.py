@@ -1,17 +1,18 @@
 import pyxel
 import random
 from block import Block
+from movable_mino import MovableMino
 
 class Board:
-    def __init__(self, rows, col) -> None:
+    def __init__(self, rows, cols):
         self.rows = rows
-        self.col = col
-        self.board = [[0] * self.col for _ in range(self.rows)]
+        self.cols = cols
+        self.board = [[0] * self.cols for _ in range(self.rows)]
         self.block = None
 
     def generate_block(self):
         if not self.is_falling():
-            block = Block(0, 0, random.choice(["I", "J", "L", "T", "Z", "S", "O"]))
+            block = MovableMino(0, 0, random.choice(["I", "J", "L", "T", "Z", "S", "O"]))
             return block
         raise ValueError("Block is already falling")
 

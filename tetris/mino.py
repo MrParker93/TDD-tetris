@@ -2,10 +2,10 @@ import pyxel
 from grid import Grid
 from piece import Piece
 from rotatable import Rotatable
+from coordinates import Coordinates
 
 class Mino(Rotatable, Grid):
     def __init__(self, max_rotations, current_rotation, block):
-        super().__init__()
         self.block = block
         self.first_rotation = self.first_rotation(Piece(block), current_rotation)
         self.rotations = self.all_rotations(self.first_rotation, max_rotations) 
@@ -42,7 +42,7 @@ class Mino(Rotatable, Grid):
          return self.new_block().cols()
 
     def block_position(self, row, col):
-        return self.new_block().block_position(row, col)  
+        return self.new_block().block_position(Coordinates(row, col))  
 
     def new_block(self):
         return self.rotations[self.current_rotation]

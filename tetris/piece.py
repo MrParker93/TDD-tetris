@@ -1,7 +1,8 @@
 from grid import Grid
 from rotatable import Rotatable
+from coordinates import Coordinates
 
-class Piece(Grid, Rotatable):
+class Piece(Rotatable, Grid):
     def __init__(self, block):
         self.block = block
 
@@ -21,4 +22,4 @@ class Piece(Grid, Rotatable):
         return len(self.block[0])
 
     def block_position(self, row, col):
-        return self.block[row][col]
+        return self.block[Coordinates.ROW][Coordinates.COL]

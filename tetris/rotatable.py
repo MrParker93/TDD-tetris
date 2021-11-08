@@ -1,4 +1,6 @@
-class Rotatable:
+from grid import Grid
+
+class Rotatable(Grid):
     """Rotate tetromino."""
     def rotate_right(self):
         """Rotate the tetromino to the right."""

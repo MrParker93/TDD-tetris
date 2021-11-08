@@ -1,5 +1,5 @@
 import pytest
-from mino import (Mino, MinoO, MinoS, MinoZ,
+from mino import (MinoO, MinoS, MinoZ,
                     MinoJ, MinoL, MinoT, MinoI)
 
 class TestMinoRotation:
