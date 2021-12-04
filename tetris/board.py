@@ -1,75 +1,55 @@
-import pyxel
-import random
-from block import Block
-from movable_mino import MovableMino
+from copy import deepcopy
 
 class Board:
-    def __init__(self, rows, cols):
-        self.rows = rows
-        self.cols = cols
-        self.board = [[0] * self.cols for _ in range(self.rows)]
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.board = [[0] * self.width for _ in range(self.height)]
+        self.grid = deepcopy(self.board)
         self.block = None
+        self.start_position = (int(self.width / 2), 0)
+        self.current_position = self.start_position
 
-    def generate_block(self):
-        if not self.is_falling():
-            block = MovableMino(0, 0, random.choice(["I", "J", "L", "T", "Z", "S", "O"]))
-            return block
-        raise ValueError("Block is already falling")
-
-    def generate_block_on_board(self):
-        new_board = []
-        for row in range(len(self.board)):
-            new_board.append([])
-            for col in range(len(self.board[row])):
-                new_board[row].append(self.check_grid_at(row, col))
-        return new_board
-
-    def start_falling(self):
-        if self.is_falling():
-            self.block = self.block.move_block(0, int(len(self.board[0]) / 2))
-            # self.falling()
-        else:
-            block = self.generate_block()
-            self.block = block.move_block(0, int(len(self.board[0]) / 2))
-            # self.falling()
-    
-    def falling(self):
-        block = self.block.move_block_down()
-        if self.detect_collision(block):
-            self.stop_falling()
-        else:
-            self.block = block
-
+    # Checks if a block on the board is falling
     def is_falling(self):
         return self.block != None
 
-    def check_grid_at(self, row, col):
-        if self.is_falling() and self.block.block_position(row, col):
-            return self.block.block
+    # Generates a new block
+    def generate_block(self, block):
+        # Ensure only one block is generated at a time
+        if self.is_falling():
+            raise Exception("Block already falling")
         else:
-            return self.board[row][col]
-
-    def detect_collision(self, block):
-        return self.invalid_position(block) or self.block_collision(block)
+            self.block = block
     
-    def invalid_position(self, block):
-        return block.row >= self.board_length() or \
-                block.col < 0 or \
-                    block.col >= self.board_width()                    
+    # Drops a block into its starting position on the board
+    def drop_block(self):
+        for row in range(len(self.grid)):
+            for col in range(len(self.grid[row])):
+                if row == self.current_position[1] and col == self.current_position[0] and self.is_falling():
+                    self.grid[row][col] = self.block
+                        
+    # Makes the current block fall
+    def falling(self):
+        if self.detect_collision():
+            self.fix_block()
+        else:
+            self.current_position = (self.current_position[0], self.current_position[1] + 1)
 
-    def block_collision(self, block):
-        return self.board[block.row][block.col] != 0
+    # Checks if current block collides with another block or board boundaries
+    def detect_collision(self):
+        return self.board_collision() or self.block_collision()
+    
+    def board_collision(self):
+        return self.current_position[1] + 1 >= self.height
 
-    def stop_falling(self):
-        self.place_block()
+    def block_collision(self):
+        return self.grid[self.current_position[1] + 1][self.current_position[0]] != 0
+
+    # Fixes the block in the current position and adds to the board
+    def fix_block(self):
+        self.board[self.current_position[1]][self.current_position[0]] = self.block
         self.block = None
-        self.generate_block()
+        self.current_position = self.start_position
 
-    def place_block(self):
-        self.board[self.block.row][self.block.col] = self.block.block
-
-    def rows(self):
-        return len(self.board)
-
-    def cols(self):
-        return len(self.board[0])
+b = Board(3,3)

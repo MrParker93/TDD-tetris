@@ -1,152 +1,146 @@
 import pytest
 from board import Board
-from block import Block
 
 
 class TestFallingBlocks:
-    def test_board_exists_and_is_filled_with_zeros(self):
-        """"""
-        board = Board(3, 3).board
-        assert len(board) == 3
-        assert len(board[0]) == 3
-        assert board == [[0, 0, 0],
-                         [0, 0, 0],
-                         [0, 0, 0]]
-
-    def test_no_block_is_falling(self):
-        """"""
-        b = Board(3, 3)
-        assert b.is_falling() == False
-
-    def test_a_block_starts_falling(self):
-        """"""
-        b = Board(3, 3)
-        b.start_falling()
-        assert b.block.col == int(len(b.board) / 2)
-
-    def test_a_block_is_falling(self):
-        """"""
-        b = Board(3, 3)
-        b.block = Block(0, 0, "I")
-        assert b.is_falling() == True
-
-    def test_the_block_starts_from_the_top_middle(self):
-        """"""
-        b = Board(3, 3)
-        b.block = Block(0, 0, "I")
-        b.start_falling()
-        assert b.generate_block_on_board() == [[0, "I", 0],
-                                               [0, 0, 0],
-                                               [0, 0, 0]]
-        
-    def test_the_block_moves_down_on_board(self):
-        """"""
-        b = Board(3, 3)
-        b.block = Block(0, 0, "I")
-        b.start_falling()
-        b.falling()
-        assert b.generate_block_on_board() == [[0, 0, 0],
-                                               [0, "I", 0],
-                                               [0, 0, 0]]
-
-    def test_one_block_can_fall_at_a_time(self):
-        """"""
-        b = Board(3, 3)
-        b.block = Block(0, 0, "I")
-        with pytest.raises(ValueError):
-            b.generate_block()
-
-    def test_the_block_falls_to_the_last_row(self):
-        """"""
-        b = Board(3, 3)
-        b.block = Block(0, 0, "I")
-        b.start_falling()
-        b.falling()
-        b.falling()
-        assert b.generate_block_on_board() == [[0, 0, 0],
-                                               [0, 0, 0],
-                                               [0, "I", 0]]
-
-    def test_the_block_continues_to_fall_on_the_last_row(self):
-        """"""
-        b = Board(3, 3)
-        b.block = Block(0, 0, "I")
-        b.start_falling()
-        b.falling()
-        b.falling()
-        assert b.generate_block_on_board() == [[0, 0, 0],
-                                               [0, 0, 0],
-                                               [0, "I", 0]]
-        assert b.is_falling() == True
-
-    def test_the_block_continues_to_fall_and_stops_on_the_last_row(self):
-        """"""
-        b = Board(3, 3)
-        b.block = Block(0, 0, "I")
-        b.start_falling()
-        b.falling()
-        b.falling()
-        assert b.is_falling() == True
-        b.falling()
-        assert b.board == [[0, 0, 0],
-                           [0, 0, 0],
-                           [0, "I", 0]]
-        assert b.is_falling() == False
-
-    def test_the_next_block_is_generated_after_the_previous_one_is_placed_on_the_board(self):
-        """"""
-        b = Board(3, 3)
-        b.block = Block(0, 0, "I")
-        b.start_falling()
-        b.falling()
-        b.falling()
-        b.falling()
-        assert b.is_falling() == False
-        b.generate_block()
-        b.block = Block(0, 0, "J")
-        b.start_falling()
-        assert b.is_falling() == True
-        assert b.generate_block_on_board() == [[0, "J", 0],
-                                               [0, 0, 0],
-                                               [0, "I", 0]]
+    @pytest.fixture
+    def board(self):
+        board = Board(3, 3)
+        yield board
     
-    def test_the_new_block_continues_to_fall_to_the_last_row(self):
-        """"""
-        b = Board(3, 3)
-        b.block = Block(0, 0, "I")
-        b.start_falling()
-        b.falling()
-        b.falling()
-        b.falling()
-        assert b.is_falling() == False
-        b.generate_block()
-        b.block = Block(0, 0, "J")
-        b.start_falling()
-        b.falling()
-        assert b.generate_block_on_board() == [[0, 0, 0],
-                                               [0, "J", 0],
-                                               [0, "I", 0]]
+    def test_board_class_is_type_Board(self, board):
+        assert type(board) == Board
+    
+    def test_board_exists_and_is_empty(self, board):
+        assert len(board.grid) == 3
+        assert len(board.grid[0]) == 3
+        assert board.grid == [[0, 0, 0],
+                              [0, 0, 0],
+                              [0, 0, 0]]
+    
+    def test_no_block_is_currently_falling(self, board):
+        assert board.is_falling() == False
+        assert board.grid == [[0, 0, 0],
+                              [0, 0, 0],
+                              [0, 0, 0]]
+                            
+    def test_block_generates_to_the_top_middle_of_the_board(self, board):
+        board.generate_block(1)
+        board.drop_block()
+        board.is_falling()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 1, 0],
+                              [0, 0, 0],
+                              [0, 0, 0]]
+    
+    def test_block_fall_one_row_each_time_falling_is_called(self, board):
+        board.generate_block(1)
+        board.falling()
+        board.drop_block()
+        board.is_falling()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 0, 0],
+                              [0, 1, 0],
+                              [0, 0, 0]]
+                               
+    def test_only_one_block_can_be_falling_at_a_time(self, board):
+        board.generate_block(1)
+        board.falling()
+        board.drop_block()
+        board.is_falling()
+        before = board.grid
+        assert board.is_falling() == True
+        with pytest.raises(Exception):
+            assert board.generate_block(2) == "Block already falling"
+        assert board.grid == before
+    
+    def test_block_continues_falling_when_it_reaches_the_last_row(self, board):
+        board.generate_block(1)
+        board.falling()
+        board.falling()
+        board.drop_block()
+        board.is_falling()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 0, 0],
+                              [0, 0, 0],
+                              [0, 1, 0]]
+        assert board.is_falling() == True
+    
+    def test_block_stops_falling_when_it_hits_the_bottom_of_the_board(self, board):
+        board.generate_block(1)
+        board.falling()
+        board.falling()
+        board.drop_block()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 0, 0],
+                              [0, 0, 0],
+                              [0, 1, 0]]
+        board.falling()
+        assert board.grid == board.board
+        assert board.is_falling() == False
 
-    def test_the_block_stops_when_it_detects_another_block(self):
-        """"""
-        b = Board(3, 3)
-        b.block = Block(0, 0, "I")
-        b.start_falling()
-        b.falling()
-        b.falling()
-        b.falling()
-        assert b.is_falling() == False
-        b.generate_block()
-        b.block = Block(0, 0, "J")
-        b.start_falling()
-        b.falling()
-        assert b.is_falling() == True
-        b.falling()
-        assert b.generate_block_on_board() == [[0, 0, 0],
-                                               [0, "J", 0],
-                                               [0, "I", 0]]
-        assert b.board == [[0, 0, 0],
-                           [0, "J", 0],
-                           [0, "I", 0]]
-                           
-        assert b.is_falling() == False
+    def test_new_block_generates_to_the_top_middle_on_updated_board(self, board):
+        board.generate_block(1)
+        board.falling()
+        board.falling()
+        board.drop_block()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 0, 0],
+                              [0, 0, 0],
+                              [0, 1, 0]]
+        board.falling()
+        assert board.grid == board.board
+        assert board.is_falling() == False
+        board.generate_block(2)
+        assert board.is_falling() == True
+        board.drop_block()
+        assert board.grid == [[0, 2, 0],
+                              [0, 0, 0],
+                              [0, 1, 0]]
+
+    def test_block_continues_falling_when_it_lands_on_another_block(self, board):
+        board.generate_block(1)
+        board.falling()
+        board.falling()
+        board.drop_block()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 0, 0],
+                              [0, 0, 0],
+                              [0, 1, 0]]
+        board.falling()
+        assert board.grid == board.board
+        assert board.is_falling() == False
+        board.generate_block(2)
+        board.falling()
+        board.drop_block()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 0, 0],
+                              [0, 2, 0],
+                              [0, 1, 0]]
+        assert board.is_falling() == True
+    
+    def test_block_stops_falling_when_it_hits_another_block(self, board):
+        board.generate_block(1)
+        board.falling()
+        board.falling()
+        board.drop_block()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 0, 0],
+                              [0, 0, 0],
+                              [0, 1, 0]]
+        board.falling()
+        assert board.grid == board.board
+        assert board.is_falling() == False
+        board.generate_block(2)
+        print(f"{board.current_position}")
+        board.falling()
+        print(f"{board.current_position}")
+        board.drop_block()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 0, 0],
+                              [0, 2, 0],
+                              [0, 1, 0]]
+        board.falling()
+        print(f"{board.current_position}")
+        assert board.is_falling() == False
+        
