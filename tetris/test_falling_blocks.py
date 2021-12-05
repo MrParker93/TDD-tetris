@@ -132,15 +132,12 @@ class TestFallingBlocks:
         assert board.grid == board.board
         assert board.is_falling() == False
         board.generate_block(2)
-        print(f"{board.current_position}")
         board.falling()
-        print(f"{board.current_position}")
         board.drop_block()
         assert board.is_falling() == True
         assert board.grid == [[0, 0, 0],
                               [0, 2, 0],
                               [0, 1, 0]]
         board.falling()
-        print(f"{board.current_position}")
         assert board.is_falling() == False
         

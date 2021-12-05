@@ -51,5 +51,3 @@ class Board:
         self.board[self.current_position[1]][self.current_position[0]] = self.block
         self.block = None
         self.current_position = self.start_position
-
-b = Board(3,3)
