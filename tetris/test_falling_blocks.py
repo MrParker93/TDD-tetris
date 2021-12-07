@@ -25,7 +25,7 @@ class TestFallingBlocks:
                               [0, 0, 0]]
                             
     def test_block_generates_to_the_top_middle_of_the_board(self, board):
-        board.generate_block(1)
+        board.block = [[1]]
         board.drop_block()
         board.is_falling()
         assert board.is_falling() == True
@@ -34,7 +34,7 @@ class TestFallingBlocks:
                               [0, 0, 0]]
     
     def test_block_fall_one_row_each_time_falling_is_called(self, board):
-        board.generate_block(1)
+        board.block = [[1]]
         board.falling()
         board.drop_block()
         board.is_falling()
@@ -44,7 +44,7 @@ class TestFallingBlocks:
                               [0, 0, 0]]
                                
     def test_only_one_block_can_be_falling_at_a_time(self, board):
-        board.generate_block(1)
+        board.block = [[1]]
         board.falling()
         board.drop_block()
         board.is_falling()
@@ -55,7 +55,7 @@ class TestFallingBlocks:
         assert board.grid == before
     
     def test_block_continues_falling_when_it_reaches_the_last_row(self, board):
-        board.generate_block(1)
+        board.block = [[1]]
         board.falling()
         board.falling()
         board.drop_block()
@@ -67,7 +67,7 @@ class TestFallingBlocks:
         assert board.is_falling() == True
     
     def test_block_stops_falling_when_it_hits_the_bottom_of_the_board(self, board):
-        board.generate_block(1)
+        board.block = [[1]]
         board.falling()
         board.falling()
         board.drop_block()
@@ -80,7 +80,7 @@ class TestFallingBlocks:
         assert board.is_falling() == False
 
     def test_new_block_generates_to_the_top_middle_on_updated_board(self, board):
-        board.generate_block(1)
+        board.block = [[1]]
         board.falling()
         board.falling()
         board.drop_block()
@@ -91,7 +91,7 @@ class TestFallingBlocks:
         board.falling()
         assert board.grid == board.board
         assert board.is_falling() == False
-        board.generate_block(2)
+        board.block = [[2]]
         assert board.is_falling() == True
         board.drop_block()
         assert board.grid == [[0, 2, 0],
@@ -99,7 +99,7 @@ class TestFallingBlocks:
                               [0, 1, 0]]
 
     def test_block_continues_falling_when_it_lands_on_another_block(self, board):
-        board.generate_block(1)
+        board.block = [[1]]
         board.falling()
         board.falling()
         board.drop_block()
@@ -110,7 +110,7 @@ class TestFallingBlocks:
         board.falling()
         assert board.grid == board.board
         assert board.is_falling() == False
-        board.generate_block(2)
+        board.block = [[2]]
         board.falling()
         board.drop_block()
         assert board.is_falling() == True
@@ -120,7 +120,7 @@ class TestFallingBlocks:
         assert board.is_falling() == True
     
     def test_block_stops_falling_when_it_hits_another_block(self, board):
-        board.generate_block(1)
+        board.block = [[1]]
         board.falling()
         board.falling()
         board.drop_block()
@@ -131,7 +131,7 @@ class TestFallingBlocks:
         board.falling()
         assert board.grid == board.board
         assert board.is_falling() == False
-        board.generate_block(2)
+        board.block = [[2]]
         board.falling()
         board.drop_block()
         assert board.is_falling() == True
