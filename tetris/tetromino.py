@@ -1,8 +1,9 @@
 from random import randint
+from block import Block
 from rotate import Rotate
 
 
-class Tetromino(Rotate):
+class Tetromino(Rotate, Block):
     O_MINO = {
         "block": [[1, 1, 0],
                   [1, 1, 0],
@@ -58,15 +59,10 @@ class Tetromino(Rotate):
         self.tetrominos = [self.O_MINO, self.S_MINO, self.Z_MINO, self.J_MINO, self.L_MINO, self.T_MINO, self.I_MINO]
         self.mino = self.tetrominos[generator]
         self.block = self.mino["block"]
-        self.width = len(self.block)
-        self.height = len(self.block[0])
         self.rotations = self.mino["rotations"]
         self.current_orientation = 0
         self.orientations = self.get_orientations()
-
-    # def generate_mino(self, mino):
-    #     self.mino = self.tetrominos[mino]
-
+        
     def get_orientations(self):
         orientation = [
             self.block,
@@ -83,3 +79,9 @@ class Tetromino(Rotate):
     def rotate_left(self):
         self.current_orientation -= 1
         return self.orientations[self.current_orientation % self.rotations]
+
+    def width(self):
+        return super().width()
+
+    def height(self):
+        return super().height()
