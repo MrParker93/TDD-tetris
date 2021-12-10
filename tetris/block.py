@@ -7,6 +7,3 @@ class Block:
 
     def height(self):
         return len(self.block)
-
-    def grid_position(self, row, col):
-        return self.block[row][col]

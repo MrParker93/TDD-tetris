@@ -47,11 +47,7 @@ class Tetromino(Rotate, Block):
         }
 
     I_MINO = {
-        "block" : [[0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0],
-                   [7, 7, 7, 7, 0],
-                   [0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0]],
+        "block" : [[7, 7, 7, 7]],
         "rotations": 2
         }
     
@@ -79,9 +75,3 @@ class Tetromino(Rotate, Block):
     def rotate_left(self):
         self.current_orientation -= 1
         return self.orientations[self.current_orientation % self.rotations]
-
-    def width(self):
-        return super().width()
-
-    def height(self):
-        return super().height()

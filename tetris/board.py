@@ -30,15 +30,17 @@ class Board(Tetromino):
         for row in range(len(self.block)):
             for col in range(len(self.block[0])):
                 if self.block[row][col] != 0:
-                    self.grid[row + self.current_position[1]][col + self.current_position[0] 
+                    self.grid[self.current_position[1] + row][col + self.current_position[0] 
                     - int(len(self.block[0]) / 2)] = self.block[row][col]
                         
     # Makes the current block fall
     def falling(self):
+        self.current_position = (self.current_position[0], self.current_position[1] + 1)
         if self.detect_collision():
+            self.current_position = (self.current_position[0], self.current_position[1] - 1)
             self.fix_block()
         else:
-            self.current_position = (self.current_position[0], self.current_position[1] + 1)
+            self.current_position = (self.current_position[0], self.current_position[1])
 
     # Checks if current block collides with another block or board boundaries
     def detect_collision(self):
@@ -46,8 +48,7 @@ class Board(Tetromino):
     
     def board_collision(self):
         return self.current_position[1] + int(len(self.block) / 2) >= self.height \
-                or (self.current_position[0] - int(len(self.block[0]) / 2)) < 0 \
-                    or self.current_position[0] + int(len(self.block) / 2) >= self.width
+                or (self.current_position[0] - int(len(self.block[0]) / 2)) < 0 or self.current_position[0] + int(len(self.block) / 2) >= self.width
 
     def block_collision(self):
         return self.grid[self.current_position[1]][self.current_position[0]] != 0
@@ -58,5 +59,5 @@ class Board(Tetromino):
             for col in range(len(self.board[0])):
                 if self.grid[row][col] != 0:
                     self.board[row][col] = self.grid[row][col]
-        self.current_position = self.start_position
         self.block = None
+        self.current_position = self.start_position

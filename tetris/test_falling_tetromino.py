@@ -64,6 +64,7 @@ class TestFallingTetromino:
         board.falling()
         assert board.grid == board.board
         assert board.is_falling() == False
+        
         board.block = Tetromino(5).block
         assert board.is_falling() == True
         for _ in range(2):
