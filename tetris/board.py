@@ -1,17 +1,13 @@
-import math
 from random import randint
 from copy import deepcopy
-from tetromino import Tetromino
 
-class Board(Tetromino):
+class Board:
     def __init__(self, width, height):
         self.width = width
         self.height = height
         self.board = [[0] * self.width for _ in range(self.height)]
         self.grid = deepcopy(self.board)
         self.block = None
-        self.start_position = (int(self.width / 2), 0)
-        self.current_position = self.start_position
 
     # Checks if a block on the board is falling
     def is_falling(self):
@@ -23,35 +19,35 @@ class Board(Tetromino):
         if self.is_falling():
             raise Exception("Block already falling")
         else:
-            self.mino = Tetromino(5)
+            pass
     
     # Drops a block into its starting position on the board
     def drop_block(self):
-        for row in range(len(self.block)):
-            for col in range(len(self.block[0])):
-                if self.block[row][col] != 0:
-                    self.grid[self.current_position[1] + row][col + self.current_position[0] 
-                    - int(len(self.block[0]) / 2)] = self.block[row][col]
-                        
+        for row in range(len(self.block.block)):
+            for col in range(len(self.block.block[0])):
+                if self.block.block[row][col] == 7:
+                    self.grid[row + self.block.y - 1][col + self.block.x] = self.block.block[row][col]
+                elif self.block.block[row][col] != 0:
+                    self.grid[row + self.block.y][col + self.block.x] = self.block.block[row][col]
     # Makes the current block fall
     def falling(self):
-        self.current_position = (self.current_position[0], self.current_position[1] + 1)
-        if self.detect_collision():
-            self.current_position = (self.current_position[0], self.current_position[1] - 1)
+        if self.detect_collision(y=1):
             self.fix_block()
         else:
-            self.current_position = (self.current_position[0], self.current_position[1])
+            self.block.y += 1
 
     # Checks if current block collides with another block or board boundaries
-    def detect_collision(self):
+    def detect_collision(self, y=0):
         return self.board_collision() or self.block_collision()
     
-    def board_collision(self):
-        return self.current_position[1] + int(len(self.block) / 2) >= self.height \
-                or (self.current_position[0] - int(len(self.block[0]) / 2)) < 0 or self.current_position[0] + int(len(self.block) / 2) >= self.width
+    def board_collision(self, y=0):
+        return self.block.y + y >= self.height
 
-    def block_collision(self):
-        return self.grid[self.current_position[1]][self.current_position[0]] != 0
+    def block_collision(self, y=0):
+        for row in range(len(self.block.block)):
+            for col in range(len(self.block.block[0])):
+                if self.block.block[row][col] != 0:
+                    return self.grid[row + self.block.y + y][col + self.block.x] != 0
 
     # Fixes the block in the current position and adds to the board
     def fix_block(self):
@@ -59,5 +55,6 @@ class Board(Tetromino):
             for col in range(len(self.board[0])):
                 if self.grid[row][col] != 0:
                     self.board[row][col] = self.grid[row][col]
+        self.block.x = self.width // 2 - self.block.width // 2
+        self.block.y = 0
         self.block = None
-        self.current_position = self.start_position
