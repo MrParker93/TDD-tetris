@@ -29,6 +29,7 @@ class Board:
                     self.grid[row + self.block.y - 1][col + self.block.x] = self.block.block[row][col]
                 elif self.block.block[row][col] != 0:
                     self.grid[row + self.block.y][col + self.block.x] = self.block.block[row][col]
+                    
     # Makes the current block fall
     def falling(self):
         if self.detect_collision(y=1):
@@ -37,17 +38,24 @@ class Board:
             self.block.y += 1
 
     # Checks if current block collides with another block or board boundaries
-    def detect_collision(self, y=0):
-        return self.board_collision() or self.block_collision()
+    def detect_collision(self, y=1):
+        return self.board_collision(y) or self.block_collision(y)
     
-    def board_collision(self, y=0):
+    def board_collision(self, y=1):
         return self.block.y + y >= self.height
 
-    def block_collision(self, y=0):
+    def block_collision(self, y=1):
         for row in range(len(self.block.block)):
             for col in range(len(self.block.block[0])):
-                if self.block.block[row][col] != 0:
-                    return self.grid[row + self.block.y + y][col + self.block.x] != 0
+                if self.block.block[row][col] == 7:
+                    print(f"row: {row}, col: {col}")
+                    print(f"x: {self.block.x}, y: {self.block.y}")
+                    if self.grid[row + self.block.y][col + self.block.x] != 0:
+                        return True
+                elif self.block.block[row][col] != 0:
+                    if self.grid[row + self.block.y + y][col + self.block.x] != 0:
+                        return True
+        return False
 
     # Fixes the block in the current position and adds to the board
     def fix_block(self):

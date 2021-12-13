@@ -83,11 +83,25 @@ class TestFallingTetromino:
 
     def test_I_tetromino_generates_to_the_top_middle_of_the_board(self, board):
         board.block = Tetromino(6)
+        for _ in range(5):
+            board.falling()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 0, 0, 7, 7, 7, 7, 0, 0, 0],
+        board.falling()
+        assert board.grid == board.board
+        assert board.is_falling() == False
+
+        board.block = Tetromino(6)
+        for _ in range(4):
+            board.falling()
+        board.drop_block()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+                              [0, 0, 0, 7, 7, 7, 7, 0, 0, 0],
+                              [0, 0, 0, 7, 7, 7, 7, 0, 0, 0]]
+        board.falling()
+        assert board.grid == board.board
+        assert board.is_falling() == False
