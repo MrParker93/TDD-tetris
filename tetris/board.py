@@ -29,6 +29,7 @@ class Board:
                     self.grid[row + self.block.y - 1][col + self.block.x] = self.block.block[row][col]
                 elif self.block.block[row][col] != 0:
                     self.grid[row + self.block.y][col + self.block.x] = self.block.block[row][col]
+                    print(f"row: {row + self.block.y}, col: {col + self.block.x}")
                     
     # Makes the current block fall
     def falling(self):
@@ -48,8 +49,6 @@ class Board:
         for row in range(len(self.block.block)):
             for col in range(len(self.block.block[0])):
                 if self.block.block[row][col] == 7:
-                    print(f"row: {row}, col: {col}")
-                    print(f"x: {self.block.x}, y: {self.block.y}")
                     if self.grid[row + self.block.y][col + self.block.x] != 0:
                         return True
                 elif self.block.block[row][col] != 0:

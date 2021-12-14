@@ -103,3 +103,9 @@ class Tetromino(Rotate, Block):
 
     def height(self):
         return self.mino["height"]
+
+    def get_wallkicks(self, generator): 
+        if generator != 6:
+            wallkicks = [
+                
+            ]
