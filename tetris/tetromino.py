@@ -72,6 +72,7 @@ class Tetromino(Rotate, Block):
         self.mino = self.tetrominos[generator]
         self.block = self.mino["block"]
         self.rotations = self.mino["rotations"]
+        self.wallkicks = self.get_wallkicks(generator)
         self.x = constants.BOARDWIDTH // 2 - self.width() // 2
         self.y = 0
         self.width = self.width()
@@ -107,5 +108,24 @@ class Tetromino(Rotate, Block):
     def get_wallkicks(self, generator): 
         if generator != 6:
             wallkicks = [
-                
+                [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 0 orientation: 0
+                [(0, 0), (-1, 0), (-1, -1), (0, 2), (-1, 2)],  # 0 -> R  orientation: 1
+                [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 2 orientation: 2
+                [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 2 -> L orientation: 3
+                [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 0 orientation: 0
+                [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 0 -> L orientation: -1
+                [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 2 orientation: -2
+                [(0, 0), (-1, 0), (-1, 1), (0, 2), (-1, 2)]  # 2 -> R orientation: -3
             ]
+        else:
+            wallkicks = [
+                [(0, 0), (1, 0), (-2, 0), (1, 2), (-2, -1)],  # L -> 0 
+                [(0, 0), (-2, 0), (1, 0), (-2, 1), (1, -2)],  # 0 -> R 
+                [(0, 0), (-1, 0), (2, 0), (-1, -2), (2, 1)],  # R -> 2 
+                [(0, 0), (2, 0), (-1, 0), (2, -1), (-1, 2)],  # 2 -> L 
+                [(0, 0), (2, 0), (-1, 0), (2, -1), (-1, 2)],  # R -> 0 
+                [(0, 0), (-1, 0), (2, 0), (-1, -2), (2, 1)],  # 0 -> L 
+                [(0, 0), (-2, 0), (1, 0), (-2, 1), (1, -2)],  # L -> 2 
+                [(0, 0), (1, 0), (-2, 0), (1, 2), (-2, -1)]  # 2 -> R 
+            ]
+        return wallkicks

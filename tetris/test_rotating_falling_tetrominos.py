@@ -62,8 +62,8 @@ class TestRotatingFallingTetrominos:
         for _ in range(10):
             board.block.y = move_T.move_down()
         board.block.block = move_T.rotate_right()
-        print(f"x: {board.block.x}, y: {board.block.y}")
-        print(f"w: {board.block.width}, h: {board.block.height}")
+        # print(f"x: {board.block.x}, y: {board.block.y}")
+        # print(f"w: {board.block.width}, h: {board.block.height}")
         board.drop_block()
         assert board.is_falling() == True
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

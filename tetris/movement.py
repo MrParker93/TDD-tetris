@@ -4,6 +4,7 @@ class Move:
         self.block = self.mino.block
         self.block_width = self.mino.width
         self.block_height = self.mino.height
+        self.wallkicks = self.mino.wallkicks
         self.board = board
         self.board_width = len(self.board[0])
         self.board_height = len(self.board)
@@ -29,22 +30,17 @@ class Move:
         return self.y
 
     def rotate_right(self):
-
         self.block = self.mino.rotate_right()
-
         if self.can_rotate_right(self.block):
             return self.block
-
-        self.block = self.mino.rotate_left()
+        # self.block = self.mino.rotate_left()
         return self.block
     
     def rotate_left(self):
-        
         self.block = self.mino.rotate_left()
 
         if self.can_rotate_left(self.block):
             return self.block
-
         self.block = self.mino.rotate_right()
         return self.block
 
@@ -71,373 +67,45 @@ class Move:
         return False
 
     def can_rotate_right(self, block):
-        if self.mino.rotations == 4:
-            for row in range(len(block)):
-                for col in range(len(block[0])):
-                    if block[row][col] != 0:
-
-                        if self.mino.current_orientation % self.mino.rotations == 0:
-
-                            # Wall Kick Test 1 (x:0, y:0)
-                            if self.board[row + self.y][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y):  # and not self.block_collision(block):
-
-                                return True
-                                
-                            # Wall Kick Test 2 (x:-1, y:0)
-                            elif self.board[row + self.y][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1, row + self.y):  # and not self.block_collision(block, x=-1):
-
-                                print("dont get here1")
-                                self.x -= 1
-                                return True
-                                
-                            # Wall Kick Test 3 (x:-1, y:1)
-                            elif self.board[row + self.y + 1][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1, row + self.y + 1 + self.block_height - 1):  # and not self.block_collision(block, x=-1, y=1):
-
-                                print("dont get here2")
-                                self.y += 1
-                                self.x -= 1
-                                return True
-                                
-                            # Wall Kick Test 4 (x:0, y:-2)
-                            elif self.board[row + self.y - 2][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y - 2):  # and not self.block_collision(block, y=-2):
-
-                                print("dont get here3")
-                                self.y -= 2
-                                return True
-                                
-                            # Wall Kick Test 4 (x:-1, y:-2)
-                            elif self.board[row + self.y - 2][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1, row + self.y - 2):  # and not self.block_collision(block, x=-1, y=-2):
-
-                                print("dont get here4")
-                                self.y -= 2
-                                self.x -= 1
-                                return True
-
-                            print("dont get here5")
-                            return False
-                            
-                        elif self.mino.current_orientation % self.mino.rotations == 1:
-
-                            # Wall Kick Test 1 (x:0, y:0)
-                            if self.board[row + self.y][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y):  # and not self.block_collision(block):
-
-                                return True
-
-                            # Wall Kick Test 2 (x:-1, y:0)
-                            elif self.board[row + self.y][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1, row + self.y):  # and not self.block_collision(block, x=-1):
-
-                                print("dont get here1 mod 1")
-                                self.x -= 1
-                                return True
-
-                            # Wall Kick Test 3 (x:-1, y:-1)
-                            elif self.board[row + self.y - 1][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1, row + self.y - 1):  # and not self.block_collision(block, x=-1, y=-1):
-
-                                print(f"w: {self.block_width}, h: {self.block_height}")
-                                self.y -= 1
-                                self.x -= 1
-                                return True
-
-                            # Wall Kick Test 4 (x:0, y:2)
-                            elif self.board[row + self.y + 2][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y + 2 + self.block_height - 1):  # and not self.block_collision(block, y=2):
-
-                                print("dont get here3 mod 1")
-                                self.y += 2
-                                return True
-
-                            # Wall Kick Test 5 (x:-1, y:2)
-                            elif self.board[row + self.y + 2][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1, row + self.y + 2 + self.block_height - 1):  # and not self.block_collision(block, x=-1, y=2):
-
-                                print("dont get here4 mod 1")
-                                self.y += 2
-                                self.x -= 1
-                                return True
-
-                            print("dont get here5 mod 1")
-                            return False
-
-                        elif self.mino.current_orientation % self.mino.rotations == 2:
-
-                            # Wall Kick Test 1 (x:0, y:0)
-                            if self.board[row + self.y][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y):  # and not self.block_collision(block):
-
-                                return True
-
-                            # Wall Kick Test 2 (x:1, y:0)
-                            elif self.board[row + self.y][col + self.x + 1] == 0 and \
-                                self.on_grid(col + self.x + 1 + self.block_width - 1, row + self.y):  # and not self.block_collision(block, x=1):
-
-                                print("dont get here1 mod 2")
-                                self.x += 1
-                                return True
-
-                            # Wall Kick Test 3 (x:1, y:1)
-                            elif self.board[row + self.y + 1][col + self.x + 1] == 0 and \
-                                self.on_grid(col + self.x + 1 + self.block_width - 1, row + self.y + 1 + self.block_height - 1):  # and not self.block_collision(block, x=1, y=1):
-
-                                print("dont get here2 mod 2")
-                                self.y += 1
-                                self.x += 1
-                                return True
-
-                            # Wall Kick Test 4 (x:0, y:-2)
-                            elif self.board[row + self.y - 2][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y - 2):  # and not self.block_collision(block, y=-2):
-
-                                print("dont get here3 mod 2")
-                                self.y -= 2
-                                return True
-
-                            # Wall Kick Test 5 (x:1, y:-2)
-                            elif self.board[row + self.y - 2][col + self.x + 1] == 0 and \
-                                self.on_grid(col + self.x + 1 + self.block_width - 1, row + self.y - 2):  # and not self.block_collision(block, x=1, y=-2):
-
-                                print("dont get here4 mod 2")
-                                self.y -= 2
-                                self.x += 1
-                                return True
-
-                            print("dont get here5 mod 2")
-                            return False
-
-                        elif self.mino.current_orientation % self.mino.rotations == 3:
-
-                            # Wall Kick Test 1 (x:0, y:0)
-                            if self.board[row + self.y][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y):  # and not self.block_collision(block):
-
-                                return True
-
-                            # Wall Kick Test 2 (x:1, y:0)
-                            elif self.board[row + self.y][col + self.x + 1] == 0 and \
-                                self.on_grid(col + self.x + 1 + self.block_width - 1, row + self.y):  # and not self.block_collision(block, x=1):
-
-                                print("dont get here1 mod 3")
-                                self.x += 1
-                                return True
-
-                            # Wall Kick Test 3 (x:1, y:-1)
-                            elif self.board[row + self.y - 1][col + self.x + 1] == 0 and \
-                                self.on_grid(col + self.x + 1 + self.block_width - 1, row + self.y - 1):  # and not self.block_collision(block, x=1, y=-1):
-
-                                print("dont get here2 mod 3")
-                                self.y -= 1
-                                self.x += 1
-                                return True
-
-                            # Wall Kick Test 4 (x:0, y:2)
-                            elif self.board[row + self.y + 2][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y + 2 + self.block_height - 1):  # and not self.block_collision(block, y=2):
-
-                                print("dont get here3 mod 3")
-                                self.y += 2
-                                return True
-
-                            # Wall Kick Test 5 (x:1, y:2)
-                            elif self.board[row + self.y + 2][col + self.x + 1] == 0 and \
-                                self.on_grid(col + self.x + 1 + self.block_width - 1, row + self.y + 2 + self.block_height - 1):  # and not self.block_collision(block, x=1, y=2):
-
-                                print("dont get here4 mod 3")
-                                self.y += 2
-                                self.x += 1
-                                return True
-
-                            print("dont get here5 mod 3")
-                            return False
+        wallkicks = self.wallkicks[:4]
+        rotation = self.mino.current_orientation % self.mino.rotations
+        each_variation = self.test_each_rotation_position(wallkicks, rotation)
+        # variation_possible = False
+        for row in range(len(block)):
+            for col in range(len(block[0])):
+                if block[row][col] != 0:
+                    for x, y in each_variation:
+                        if self.block_collision(block, x, y):
+                            print(f"if collision x: {x}, y: {y}")
+                            continue
+                        elif self.on_grid(col + self.x + x + self.block_width - 1, row + self.y + y + self.block_height - 1):
+                            print(f"if no collision x: {x}, y: {y}")
+                            print("TRUE")
+                            self.x + x
+                            self.y + y
+                            return True
+            # if self.on_grid(col + self.x + x + self.block_width - 1, row + self.y + y + self.block_height - 1) and \
+            #     not self.block_collision(block, x, y):
+            #     variation_possible = True
+            #     print(self.x, self.y)
+            # else:
+            #     variation_possible = False
+            #     print(self.x, self.y)
 
     def can_rotate_left(self, block):
-        if self.mino.rotations == 4:
-            for row in range(len(block)):
-                for col in range(len(block[0])):
-                    if block[row][col] != 0:
+        wallkicks = self.wallkicks[4:]
+        rotation = self.mino.current_orientation % self.mino.rotations
+        each_variation = self.test_each_rotation_position(wallkicks, rotation)
 
-                        if self.mino.current_orientation % self.mino.rotations == 0:
+        for row in range(len(block)):
+            for col in range(len(block[0])):
+                if block[row][col] != 0:
+                    for x, y in each_variation:
+                        if self.on_grid(col + self.x + x + self.block_width - 1, row + self.y + y + self.block_height - 1) and \
+                            self.board[row + self.y + y][col + self.x + x] == 0:
+                            return True
+        return False
 
-                            # Wall Kick Test 1 (x:0, y:0)
-                            if self.board[row + self.y][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y):  # and not self.block_collision(block):
-
-                                return True
-
-                            # Wall Kick Test 2 (x:-1, y:0)
-                            elif self.board[row + self.y][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1 + self.block_width - 1, row + self.y):  # and not self.block_collision(block, x=1):
-
-                                print("dont get here1 mod 2")
-                                self.x -= 1
-                                return True
-
-                            # Wall Kick Test 3 (x:-1, y:1)
-                            elif self.board[row + self.y + 1][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1 + self.block_width - 1, row + self.y + 1 + self.block_height - 1):  # and not self.block_collision(block, x=1, y=1):
-
-                                print("dont get here2 mod 2")
-                                self.y += 1
-                                self.x -= 1
-                                return True
-
-                            # Wall Kick Test 4 (x:0, y:-2)
-                            elif self.board[row + self.y - 2][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y - 2):  # and not self.block_collision(block, y=-2):
-
-                                print("dont get here3 mod 2")
-                                self.y -= 2
-                                return True
-
-                            # Wall Kick Test 5 (x:-1, y:-2)
-                            elif self.board[row + self.y - 2][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1 + self.block_width - 1, row + self.y - 2):  # and not self.block_collision(block, x=1, y=-2):
-
-                                print("dont get here4 mod 2")
-                                self.y -= 2
-                                self.x -= 1
-                                return True
-
-                            print("dont get here5 mod 2")
-                            return False
-
-                        elif self.mino.current_orientation % self.mino.rotations == 1:
-                            
-                            # Wall Kick Test 1 (x:0, y:0)
-                            if self.board[row + self.y][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y):  # and not self.block_collision(block):
-
-                                return True
-                                
-                            # Wall Kick Test 2 (x:-1, y:0)
-                            elif self.board[row + self.y][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1 + self.block_width - 1, row + self.y):  # and not self.block_collision(block, x=1):
-
-                                print("dont get here1")
-                                self.x -= 1
-                                return True
-                                
-                            # Wall Kick Test 3 (x:-1, y:-1)
-                            elif self.board[row + self.y - 1][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1 + self.block_width - 1, row + self.y - 1):  # and not self.block_collision(block, x=1, y=-1):
-
-                                print("dont get here2")
-                                self.y -= 1
-                                self.x -= 1
-                                return True
-                                
-                            # Wall Kick Test 4 (x:0, y:2)
-                            elif self.board[row + self.y + 2][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y + 2 + self.block_height - 1):  # and not self.block_collision(block, y=2):
-
-                                print("dont get here3")
-                                self.y += 2
-                                return True
-                                
-                            # Wall Kick Test 5 (x:-1, y:2)
-                            elif self.board[row + self.y + 2][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1 + self.block_width - 1, row + self.y + 2 + self.block_height - 1):  # and not self.block_collision(block, x=1, y=2):
-                                
-                                print("dont get here4")
-                                self.y += 2
-                                self.x -= 1
-                                return True
-
-                            print("dont get here5")
-                            return False
-                        
-                        elif self.mino.current_orientation % self.mino.rotations == 2:
-
-                            # Wall Kick Test 1 (x:0, y:0)
-                            if self.board[row + self.y][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y):  # and not self.block_collision(block):
-
-                                return True
-
-                            # Wall Kick Test 2 (x:-1, y:0)
-                            elif self.board[row + self.y][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1, row + self.y):  # and not self.block_collision(block, x=-1):
-
-                                print("dont get here1")
-                                self.x -= 1
-                                return True
-
-                            # Wall Kick Test 3 (x:-1, y:1)
-                            elif self.board[row + self.y + 1][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1, row + self.y + 1 + self.block_height - 1):  # and not self.block_collision(block, x=-1, y=1):
-
-                                print("dont get here2")
-                                self.y += 1
-                                self.x -= 1
-                                return True
-
-                            # Wall Kick Test 4 (x:0, y:-2)
-                            elif self.board[row + self.y - 2][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y - 2):  # and not self.block_collision(block, y=-2):
-
-                                print("dont get here3")
-                                self.y -= 2
-                                return True
-                                
-                            # Wall Kick Test 4 (x:-1, y:-2)
-                            elif self.board[row + self.y - 2][col + self.x - 1] == 0 and \
-                                self.on_grid(col + self.x - 1, row + self.y - 2):  # and not self.block_collision(block, x=-1, y=-2):
-
-                                print("dont get here4")
-                                self.y -= 2
-                                self.x -= 1
-                                return True
-
-                            print("dont get here5")
-                            return False
-                           
-                        elif self.mino.current_orientation % self.mino.rotations == 3:
-
-                            # Wall Kick Test 1 (x:0, y:0)
-                            if self.board[row + self.y][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y):  # and not self.block_collision(block):
-
-                                return True
-
-                            # Wall Kick Test 2 (x:1, y:0)
-                            elif self.board[row + self.y][col + self.x + 1] == 0 and \
-                                self.on_grid(col + self.x + 1, row + self.y):  # and not self.block_collision(block, x=-1):
-
-                                print("dont get here1 mod 1")
-                                self.x += 1
-                                return True
-
-                            # Wall Kick Test 3 (x:1, y:-1)
-                            elif self.board[row + self.y - 1][col + self.x + 1] == 0 and \
-                                self.on_grid(col + self.x + 1, row + self.y - 1):  # and not self.block_collision(block, x=-1, y=-1):
-
-                                print("dont get here2 mod 1")
-                                self.y -= 1
-                                self.x += 1
-                                return True
-
-                            # Wall Kick Test 4 (x:0, y:2)
-                            elif self.board[row + self.y + 2][col + self.x] == 0 and \
-                                self.on_grid(col + self.x, row + self.y + 2 + self.block_height - 1):  # and not self.block_collision(block, y=2):
-
-                                print("dont get here3 mod 1")
-                                self.y += 2
-                                return True
-
-                            # Wall Kick Test 5 (x:1, y:2)
-                            elif self.board[row + self.y + 2][col + self.x + 1] == 0 and \
-                                self.on_grid(col + self.x + 1, row + self.y + 2 + self.block_height - 1):  # and not self.block_collision(block, x=-1, y=2):
-
-                                print("dont get here4 mod 1")
-                                self.y += 2
-                                self.x += 1
-                                return True
-
-                            print("dont get here5 mod 1")
-                            return False
+    def test_each_rotation_position(self, wallkicks, curr_rotation):
+        for _ in range(len(wallkicks)):
+            return wallkicks[curr_rotation]
