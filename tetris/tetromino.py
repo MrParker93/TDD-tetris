@@ -10,7 +10,9 @@ class Tetromino(Rotate, Block):
                   [1, 1]],
         "rotations": 1,
         "width": 2,
-        "height": 2
+        "height": 2,
+        "x": (constants.BOARDWIDTH // 2 - 2 // 2),
+        "y": 0
         }
     
     S_MINO = {
@@ -19,7 +21,9 @@ class Tetromino(Rotate, Block):
                   [0, 0, 0]],
         "rotations": 2,
         "width": 3,
-        "height": 2
+        "height": 2,
+        "x": (constants.BOARDWIDTH // 2 - 3 // 2) - 1,
+        "y": 0
         }
 
     Z_MINO = {
@@ -28,34 +32,42 @@ class Tetromino(Rotate, Block):
                   [0, 0, 0]],
         "rotations": 2,
         "width": 3,
-        "height": 2
+        "height": 2,
+        "x": (constants.BOARDWIDTH // 2 - 3 // 2) - 1,
+        "y": 0
         }
 
     J_MINO = {
-        "block": [[0, 4, 0],
-                  [0, 4, 0],
-                  [4, 4, 0]],
+        "block": [[0, 0, 0],
+                  [4, 4, 4],
+                  [0, 0, 4]],
         "rotations": 4,
         "width": 2,
-        "height": 3
+        "height": 3,
+        "x": (constants.BOARDWIDTH // 2 - 3 // 2) - 1,
+        "y": -1
         }
 
     L_MINO = {
-        "block": [[0, 5, 0],
-                  [0, 5, 0],
-                  [0, 5, 5]],
+        "block": [[0, 0, 0],
+                  [5, 5, 5],
+                  [5, 0, 0]],
         "rotations": 4,
         "width": 2,
-        "height": 3
+        "height": 3,
+        "x": (constants.BOARDWIDTH // 2 - 3 // 2) - 1,
+        "y": -1
         }
 
     T_MINO = {
-        "block": [[0, 6, 0],
+        "block": [[0, 0, 0],
                   [6, 6, 6],
-                  [0, 0, 0]],
+                  [0, 6, 0]],
         "rotations": 4,
         "width": 3,
-        "height": 2
+        "height": 2,
+        "x": (constants.BOARDWIDTH // 2 - 3 // 2) - 1,
+        "y": -1
         }
 
     I_MINO = {
@@ -64,7 +76,9 @@ class Tetromino(Rotate, Block):
                    [0, 0, 0, 0]],
         "rotations": 2,
         "width": 4,
-        "height": 1
+        "height": 1,
+        "x": (constants.BOARDWIDTH // 2 - 4 // 2),
+        "y": -1
         }
     
     def __init__(self, generator):
@@ -73,8 +87,8 @@ class Tetromino(Rotate, Block):
         self.block = self.mino["block"]
         self.rotations = self.mino["rotations"]
         self.wallkicks = self.get_wallkicks(generator)
-        self.x = constants.BOARDWIDTH // 2 - self.width() // 2
-        self.y = 0
+        self.x = self.mino["x"]
+        self.y = self.mino["y"]
         self.width = self.width()
         self.height = self.height()
         self.current_orientation = 0
@@ -91,12 +105,10 @@ class Tetromino(Rotate, Block):
 
     def rotate_right(self):
         self.current_orientation += 1
-        self.width, self.height = self.height, self.width
         return self.orientations[self.current_orientation % self.rotations]
     
     def rotate_left(self):
         self.current_orientation -= 1
-        self.width, self.height = self.height, self.width
         return self.orientations[self.current_orientation % self.rotations]
 
     def width(self):

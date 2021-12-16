@@ -20,18 +20,18 @@ class TestTetrominoRotation:
         yield mino
 
     def test_initial_orientation_of_T_tetromino(self, t_mino):
-        assert t_mino.block == [[0, 6, 0],
+        assert t_mino.block == [[0, 0, 0],
                                 [6, 6, 6],
-                                [0, 0, 0]]
+                                [0, 6, 0]]
     
     def test_T_tetromino_can_be_rotated_right(self, t_mino):
         assert t_mino.rotate_right() == [[0, 6, 0],
-                                         [0, 6, 6],
+                                         [6, 6, 0],
                                          [0, 6, 0]]
     
     def test_T_tetromino_can_be_rotated_left(self, t_mino):
         assert t_mino.rotate_left() == [[0, 6, 0],
-                                        [6, 6, 0],
+                                        [0, 6, 6],
                                         [0, 6, 0]]
                                 
     def test_T_tetromino_has_four_orientations(self, t_mino):
