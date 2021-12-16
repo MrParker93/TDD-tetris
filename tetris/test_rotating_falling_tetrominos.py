@@ -1,4 +1,3 @@
-from copy import deepcopy
 import pytest
 from board import Board
 from movement import Move

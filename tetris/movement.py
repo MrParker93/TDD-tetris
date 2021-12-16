@@ -78,21 +78,15 @@ class Move:
                     for x, y in each_variation:
                         if col + self.x + x < 0 or col + self.x + x >= self.board_width \
                              or row + new_y + y >= self.board_height:
-                            print("-------------------------------------EACH EDGE-------------------------------------")
-                            print(f"Invalid position ({x}, {y}), out of bounds. Either {col + self.x + x} < 0 or {col + self.x + x} >= {self.board_width} or {row + new_y + y} >= {self.board_height}")
-                            print()
                             continue
+
                         if self.block_collision(block, x, y):
-                            print(f"Invalid position ({x}, {y}), block collision detected at ({col + self.x + x}, {row + new_y + y}), ({col + self.x + x}, {row + new_y + y + 1}), ({col + self.x + x + 1}, {row + new_y + y + 1}), ({col + self.x + x}, {row + new_y + y + 2})")
-                            print()
                             continue
+
                         if 0 <= col + self.x + x < self.board_width and row + new_y + y < self.board_height:
-                            print(f"Valid position ({x}, {y}), block can rotate right. 0 <= {col + self.x + x} < {self.board_width} and {row + new_y + y} < {self.board_height}")
                             self.mino.x += x
                             self.mino.y = new_y + y
                             return True
-
-        print("Block cannot rotate right.")
         return False
 
     def can_rotate_left(self, block):
@@ -110,21 +104,15 @@ class Move:
                     for x, y in each_variation:
                         if col + self.x + x < 0 or col + self.x + x >= self.board_width \
                              or row + new_y + y >= self.board_height:
-                            print("-------------------------------------EACH EDGE-------------------------------------")
-                            print(f"Invalid position ({x}, {y}), out of bounds. Either {col + self.x + x} < 0 or {col + self.x + x} >= {self.board_width} or {row + new_y + y} >= {self.board_height}")
-                            print()
                             continue
+
                         if self.block_collision(block, x, y):
-                            print(f"Invalid position ({x}, {y}), block collision detected at ({col + self.x + x}, {row + new_y + y}), ({col + self.x + x}, {row + new_y + y + 1}), ({col + self.x + x + 1}, {row + new_y + y + 1}), ({col + self.x + x}, {row + new_y + y + 2})")
-                            print()
                             continue
+
                         if 0 <= col + self.x + x < self.board_width and row + new_y + y < self.board_height:
-                            print(f"Valid position ({x}, {y}), block can rotate right. 0 <= {col + self.x + x} < {self.board_width} and {row + new_y + y} < {self.board_height}")
                             self.mino.x += x
                             self.mino.y = new_y + y
                             return True
-
-        print("Block cannot rotate right.")
         return False
 
     def get_each_rotation_position(self, wallkicks, curr_rotation):

@@ -32,9 +32,6 @@ class Board:
         for row in range(len(self.block.block)):
             for col in range(len(self.block.block[0])):
                 if self.block.block[row][col] != 0:
-                    print(f"y: {self.block.y}, x: {self.block.x}")
-                    print(f"row: {row + self.block.y}, col: {col + self.block.x}")
-                    print()
                     self.grid[row + self.block.y][col + self.block.x] = self.block.block[row][col]
                     
     # Makes the current block fall
@@ -47,9 +44,6 @@ class Board:
     # Checks if current block collides with another block or board boundaries
     def detect_collision(self, x=0, y=0):
         return self.block_collision(x, y)
-    
-    # def board_collision(self, x=0, y=0):
-    #     return self.block.y + y >= self.height or 0 > self.block.x + x > self.width
 
     def block_collision(self, x=0, y=0):
         for row in range(len(self.block.block)):
@@ -67,10 +61,18 @@ class Board:
             for col in range(len(self.block.block[0])):
                 if self.block.block[row][col] != 0:
                     self.board[row + self.block.y][col + self.block.x] = self.block.block[row][col]
-        # for row in range(len(self.board)):
-        #     for col in range(len(self.board[0])):
-        #         if self.grid[row][col] != 0:
-        #             self.board[row][col] = self.grid[row][col]
+
+        self.clear_lines()
         self.block.x = self.start_pos_x
         self.block.y = self.start_pos_y
         self.block = None
+
+    def clear_lines(self):
+        lines_to_clear = []
+        for index, row in enumerate(range(self.height)):
+            if self.board[row].count(0) == 0:
+                lines_to_clear.append(index)
+            
+        for index in range(len(lines_to_clear)):
+            self.board.pop(lines_to_clear[index])
+            self.board.insert(0, [0] * self.width)
