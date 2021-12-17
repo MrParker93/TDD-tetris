@@ -254,3 +254,44 @@ class TestGameLogic:
                                     [0, 0, 0, 0, 0],
                                     [0, 1, 1, 0, 7],
                                     [0, 1, 1, 0, 7]]
+
+    
+    def test_points_are_added_to_total_score_when_lines_cleared(self, long_board):
+        long_board.generate_block(6)
+        long_board.block.x = long_board.width // 2 - long_board.block.width // 2
+        move = Move(long_board.block, long_board.board)
+        for _ in range(10):
+            long_board.block.y = move.move_down()
+        long_board.drop_block()
+        long_board.falling()
+        assert long_board.is_falling() == False
+        assert long_board.grid == [[0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [7, 7, 7, 7, 0]]
+
+        long_board.generate_block(3)
+        long_board.block.x = (long_board.width // 2 - long_board.block.width // 2) - 1
+        move = Move(long_board.block, long_board.board)
+        for _ in range(10):
+            long_board.block.y = move.move_down()
+            long_board.block.x = move.move_right()
+        long_board.drop_block()
+        long_board.falling()
+        assert long_board.is_falling() == False
+        assert long_board.grid == [[0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0],
+                                   [0, 0, 4, 4, 4],
+                                   [7, 7, 7, 7, 4]]

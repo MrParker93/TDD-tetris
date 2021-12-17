@@ -12,6 +12,7 @@ class Board:
         self.block = None
         self.start_pos_x = None
         self.start_pos_y = None
+        self.cleared_lines = None
 
     # Checks if a block on the board is falling
     def is_falling(self):
@@ -72,7 +73,11 @@ class Board:
         for index, row in enumerate(range(self.height)):
             if self.board[row].count(0) == 0:
                 lines_to_clear.append(index)
+
+        if len(lines_to_clear) > 0:
+            for index in range(len(lines_to_clear)):
+                self.board.pop(lines_to_clear[index])
+                self.board.insert(0, [0] * self.width)
             
-        for index in range(len(lines_to_clear)):
-            self.board.pop(lines_to_clear[index])
-            self.board.insert(0, [0] * self.width)
+            self.cleared_lines = len(lines_to_clear)
+    

@@ -27,6 +27,16 @@ class Move:
             return self.y
         return self.y
 
+    def hard_drop(self):
+        for row in range(len(self.block)):
+            for col in range(len(self.block[0])):
+                if self.block[row][col] != 0:
+                    drop = (self.board_height - 1 - row)
+                    if not self.block_collision(self.block, y=drop):
+                        self.y += drop
+                        return self.y
+        return self.y
+
     def rotate_right(self):
         self.block = self.mino.rotate_right()
         if self.can_rotate_right(self.block):

@@ -1,6 +1,7 @@
 import pytest 
 from board import Board
 from movement import Move
+from copy import deepcopy
 from tetromino import Tetromino
 
 
@@ -323,7 +324,21 @@ class TestTetrominoMovement:
                               [0, 0, 0, 7, 7, 7, 7, 0, 0, 0],
                               [0, 0, 0, 7, 7, 7, 7, 0, 0, 0]]
         board.falling()
-        # board.falling()
-        # board.falling()
         assert board.board == board.grid
         assert board.is_falling() == False
+    
+    def test_T_mino_hard_drops_to_bottom_of_the_board_and_stops_when_it_hits_the_floor(self, board):
+        board.generate_block(5)
+        move = Move(board.block, board.board)
+        board.block.y = move.hard_drop()
+        board.drop_block()
+        assert board.is_falling() == True
+        assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                              [0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0]]
+        board.falling()
+        assert board.is_falling() == False
+        assert board.board == board.grid
