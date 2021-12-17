@@ -1,9 +1,15 @@
 BOARDWIDTH = 10
 BOARDHEIGHT = 20
 
-SCORE = 0
 LEVEL = 1
 FALL_SPEED = 4
+SCORE = 0
+POINTS = {
+    "1": 40,
+    "2": 100,
+    "3": 300,
+    "4": 1200
+}
 LINES = 0 
 COMBOS = 0
 SPINS = 0

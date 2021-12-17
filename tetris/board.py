@@ -13,6 +13,7 @@ class Board:
         self.start_pos_x = None
         self.start_pos_y = None
         self.cleared_lines = None
+        self.consecutive_clears = -1
 
     # Checks if a block on the board is falling
     def is_falling(self):
@@ -80,4 +81,7 @@ class Board:
                 self.board.insert(0, [0] * self.width)
             
             self.cleared_lines = len(lines_to_clear)
-    
+            self.consecutive_clears += 1
+        else:
+            self.consecutive_clears = -1
+        self.grid = deepcopy(self.board)
