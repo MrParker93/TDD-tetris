@@ -103,7 +103,7 @@ class TestRotatingFallingTetrominos:
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
     def test_T_mino_performs_wallkick_into_valid_position_when_blocks_on_board_occupy_other_valid_positions(self, board):
-        board.generate_block(4)
+        board.generate_block(4, 1)
         move = Move(board.block, board.board)
         for _ in range(10):
             board.block.y = move.move_down()
@@ -119,7 +119,7 @@ class TestRotatingFallingTetrominos:
         board.falling()
         assert board.is_falling() == False
         
-        board.generate_block(3)
+        board.generate_block(3, 1)
         move = Move(board.block, board.board)
         board.block.block = move.rotate_right()
         for _ in range(10):
@@ -137,7 +137,7 @@ class TestRotatingFallingTetrominos:
         board.falling()
         assert board.is_falling() == False
         
-        board.generate_block(3)
+        board.generate_block(3, 1)
         move = Move(board.block, board.board)
         for _ in range(1):
             board.block.x = move.move_right()
@@ -153,7 +153,7 @@ class TestRotatingFallingTetrominos:
         board.falling()
         assert board.is_falling() == False
 
-        board.generate_block(5)
+        board.generate_block(5, 1)
         move = Move(board.block, board.board)
         for _ in range(3):
             board.block.x = move.move_right()

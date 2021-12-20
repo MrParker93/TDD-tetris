@@ -113,7 +113,7 @@ class TestTetrominoMovement:
         assert board.board == board.grid
         assert board.is_falling() == False
 
-        board.generate_block(5)
+        board.generate_block(5, 1)
         move_T = Move(board.block, board.board)
         for _ in range(2):
             board.block.x = move_T.move_right()
@@ -138,7 +138,7 @@ class TestTetrominoMovement:
         assert board.board == board.grid
         assert board.is_falling() == False
 
-        board.generate_block(5)
+        board.generate_block(5, 1)
         move_T = Move(board.block, board.board)
         for _ in range(2):
             board.block.x = move_T.move_left()
@@ -163,7 +163,7 @@ class TestTetrominoMovement:
         assert board.board == board.grid
         assert board.is_falling() == False
 
-        board.generate_block(5)
+        board.generate_block(5, 1)
         move_T = Move(board.block, board.board)
         for _ in range(10):
             board.block.y = move_T.move_down()
@@ -259,7 +259,7 @@ class TestTetrominoMovement:
         assert board.board == board.grid
         assert board.is_falling() == False
 
-        board.generate_block(6)
+        board.generate_block(6, 1)
         move_T = Move(board.block, board.board)
         for _ in range(3):
             board.block.x = move_I.move_right()
@@ -286,7 +286,7 @@ class TestTetrominoMovement:
         assert board.board == board.grid
         assert board.is_falling() == False
 
-        board.generate_block(6)
+        board.generate_block(6, 1)
         move_T = Move(board.block, board.board)
         for _ in range(3):
             board.block.x = move_I.move_left()
@@ -311,7 +311,7 @@ class TestTetrominoMovement:
         assert board.board == board.grid
         assert board.is_falling() == False
 
-        board.generate_block(6)
+        board.generate_block(6, 1)
         move_I = Move(board.block, board.board)
         for _ in range(10):
             board.block.y = move_I.move_down()
@@ -328,7 +328,7 @@ class TestTetrominoMovement:
         assert board.is_falling() == False
     
     def test_T_mino_hard_drops_to_bottom_of_the_board_and_stops_when_it_hits_the_floor(self, board):
-        board.generate_block(5)
+        board.generate_block(5, 1)
         move = Move(board.block, board.board)
         board.block.y = move.hard_drop()
         board.drop_block()

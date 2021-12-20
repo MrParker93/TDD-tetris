@@ -1,5 +1,7 @@
+import pyxel
 from copy import deepcopy
 from random import randint
+from constants import GRID_SIZE
 from tetromino import Tetromino
 
 
@@ -10,6 +12,7 @@ class Board:
         self.board = [[0] * self.width for _ in range(self.height)]
         self.grid = deepcopy(self.board)
         self.block = None
+        self.next_block = None
         self.start_pos_x = None
         self.start_pos_y = None
         self.cleared_lines = None
@@ -20,12 +23,13 @@ class Board:
         return self.block != None
 
     # Generates a new block
-    def generate_block(self, generator):
+    def generate_block(self, gen, gen2):
         # Ensure only one block is generated at a time
         if self.is_falling():
             raise Exception("Block already falling")
         else:
-            self.block = Tetromino(generator)
+            self.block = Tetromino(gen)
+            self.next_block = Tetromino(gen2)
             self.start_pos_x = deepcopy(self.block.x)
             self.start_pos_y = deepcopy(self.block.y)
     
@@ -35,13 +39,27 @@ class Board:
             for col in range(len(self.block.block[0])):
                 if self.block.block[row][col] != 0:
                     self.grid[row + self.block.y][col + self.block.x] = self.block.block[row][col]
+    
+    def draw_board(self):
+        # pyxel.cls(0)
+        for row in range(self.height):
+            for col in range(self.width):
+                if self.board[row][col] != 0:
+                    pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 12, 12, self.board[row][col])
+                else:
+                    pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 12, 12, self.grid[row][col])
+        
+        for row in range(len(self.block.block)):
+            for col in range(len(self.block.block[0])):
+                if self.block.block[row][col] != 0:
+                    pyxel.rect(col * GRID_SIZE + 1 + self.block.x, row * GRID_SIZE + 9 + self.block.y, 12, 12, self.block.block[row][col])
                     
     # Makes the current block fall
     def falling(self):
         if self.detect_collision(y=1):
             self.fix_block()
         else:
-            self.block.y += 1
+            self.block.y += GRID_SIZE
 
     # Checks if current block collides with another block or board boundaries
     def detect_collision(self, x=0, y=0):

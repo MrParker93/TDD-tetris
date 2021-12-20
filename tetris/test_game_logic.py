@@ -21,7 +21,7 @@ class TestGameLogic:
         yield scores
         
     def test_the_game_logic_clears_a_single_line_when_a_block_lands_and_completes_a_line_and_adds_the_same_number_of_lines_cleared_to_beginning_of_the_board(self, board):
-        board.generate_block(6)
+        board.generate_block(6, 1)
         move = Move(board.block, board.board)
         for _ in range(6):
             board.block.x = move.move_left()
@@ -38,7 +38,7 @@ class TestGameLogic:
 
         assert board.is_falling() == False
 
-        board.generate_block(0)
+        board.generate_block(0, 1)
         move = Move(board.block, board.board)
         for _ in range(6):
             board.block.x = move.move_right()
@@ -62,7 +62,7 @@ class TestGameLogic:
                                [0, 0, 0, 0, 1, 1]]
     
     def test_the_game_logic_clears_four_lines_when_a_block_completes_a_tetris_and_adds_four_lines_to_the_beginning_of_the_board(self, long_board):
-        long_board.generate_block(6)
+        long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -81,7 +81,7 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [7, 7, 7, 7, 0]]
                                    
-        long_board.generate_block(6)
+        long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -100,7 +100,7 @@ class TestGameLogic:
                                    [7, 7, 7, 7, 0],
                                    [7, 7, 7, 7, 0]]
 
-        long_board.generate_block(6)
+        long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -119,7 +119,7 @@ class TestGameLogic:
                                    [7, 7, 7, 7, 0],
                                    [7, 7, 7, 7, 0]]
 
-        long_board.generate_block(6)
+        long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -138,7 +138,7 @@ class TestGameLogic:
                                    [7, 7, 7, 7, 0],
                                    [7, 7, 7, 7, 0]]
 
-        long_board.generate_block(6)
+        long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
         move = Move(long_board.block, long_board.board)
         long_board.block.block = move.rotate_left()
@@ -171,7 +171,7 @@ class TestGameLogic:
                                     [0, 0, 0, 0, 0]]
 
     def test_the_game_logic_clears_two_separate_lines_independently_and_drops_the_uncleared_lines_down_the_correct_distance(self, long_board):
-        long_board.generate_block(6)
+        long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -190,7 +190,7 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [7, 7, 7, 7, 0]]
 
-        long_board.generate_block(0)
+        long_board.generate_block(0, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -209,7 +209,7 @@ class TestGameLogic:
                                    [0, 1, 1, 0, 0],
                                    [7, 7, 7, 7, 0]]
 
-        long_board.generate_block(6)
+        long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -228,7 +228,7 @@ class TestGameLogic:
                                    [0, 1, 1, 0, 0],
                                    [7, 7, 7, 7, 0]]
                                    
-        long_board.generate_block(6)
+        long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
         move = Move(long_board.block, long_board.board)
         long_board.block.block = move.rotate_left()
@@ -263,7 +263,7 @@ class TestGameLogic:
 
     
     def test_points_are_added_to_total_score_when_lines_cleared(self, long_board, scores):
-        long_board.generate_block(6)
+        long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -282,7 +282,7 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [7, 7, 7, 7, 0]]
 
-        long_board.generate_block(3)
+        long_board.generate_block(3, 1)
         long_board.block.x = (long_board.width // 2 - long_board.block.width // 2) - 1
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -316,7 +316,7 @@ class TestGameLogic:
         scores.score = scores.points(long_board.cleared_lines)
         assert scores.score == 80
         
-        long_board.generate_block(4)
+        long_board.generate_block(4, 1)
         long_board.block.x = (long_board.width // 2 - long_board.block.width // 2) - 1
         move = Move(long_board.block, long_board.board)
         long_board.block.block = move.rotate_right()
@@ -338,7 +338,7 @@ class TestGameLogic:
         long_board.falling()
         assert long_board.is_falling() == False
         
-        long_board.generate_block(1)
+        long_board.generate_block(1, 1)
         long_board.block.x = (long_board.width // 2 - long_board.block.width // 2) - 1
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -359,7 +359,7 @@ class TestGameLogic:
         assert long_board.is_falling() == False
         assert scores.score == 80
 
-        long_board.generate_block(0)
+        long_board.generate_block(0, 1)
         long_board.block.x = (long_board.width // 2 - long_board.block.width // 2)
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -393,7 +393,7 @@ class TestGameLogic:
         assert scores.score == 280
 
     def test_combos_and_lines_are_counted_and_added_to_score_when_lines_are_cleared_consecutively(self, long_board, scores): 
-        long_board.generate_block(4)
+        long_board.generate_block(4, 1)
         long_board.block.x = (long_board.width // 2 - long_board.block.width // 2) - 1
         move = Move(long_board.block, long_board.board)
         long_board.block.block = move.rotate_right()
@@ -415,7 +415,7 @@ class TestGameLogic:
         long_board.falling()
         assert long_board.is_falling() == False
         
-        long_board.generate_block(1)
+        long_board.generate_block(1, 1)
         long_board.block.x = (long_board.width // 2 - long_board.block.width // 2) - 1
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -437,7 +437,7 @@ class TestGameLogic:
         assert scores.score == 0
         assert long_board.consecutive_clears == -1
 
-        long_board.generate_block(0)
+        long_board.generate_block(0, 1)
         long_board.block.x = (long_board.width // 2 - long_board.block.width // 2)
         move = Move(long_board.block, long_board.board)
         for _ in range(10):
@@ -471,7 +471,7 @@ class TestGameLogic:
         assert scores.score == 200
         assert long_board.consecutive_clears == 0
 
-        long_board.generate_block(4)
+        long_board.generate_block(4, 1)
         long_board.block.x = (long_board.width // 2 - long_board.block.width // 2) - 1
         move = Move(long_board.block, long_board.board)
         long_board.block.block = move.rotate_right()

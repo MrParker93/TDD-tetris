@@ -6,8 +6,8 @@ from random import randint
 
 class Tetromino(Rotate, Block):
     O_MINO = {
-        "block": [[1, 1],
-                  [1, 1]],
+        "block": [[5, 5],
+                  [5, 5]],
         "rotations": 1,
         "width": 2,
         "height": 2,
@@ -16,8 +16,8 @@ class Tetromino(Rotate, Block):
         }
     
     S_MINO = {
-        "block": [[0, 2, 2],
-                  [2, 2, 0],
+        "block": [[0, 4, 4],
+                  [4, 4, 0],
                   [0, 0, 0]],
         "rotations": 2,
         "width": 3,
@@ -27,8 +27,8 @@ class Tetromino(Rotate, Block):
         }
 
     Z_MINO = {
-        "block": [[3, 3, 0],
-                  [0, 3, 3],
+        "block": [[14, 14, 0],
+                  [0, 14, 14],
                   [0, 0, 0]],
         "rotations": 2,
         "width": 3,
@@ -39,8 +39,8 @@ class Tetromino(Rotate, Block):
 
     J_MINO = {
         "block": [[0, 0, 0],
-                  [4, 4, 4],
-                  [0, 0, 4]],
+                  [8, 8, 8],
+                  [0, 0, 8]],
         "rotations": 4,
         "width": 2,
         "height": 3,
@@ -50,8 +50,8 @@ class Tetromino(Rotate, Block):
 
     L_MINO = {
         "block": [[0, 0, 0],
-                  [5, 5, 5],
-                  [5, 0, 0]],
+                  [10, 10, 10],
+                  [10, 0, 0]],
         "rotations": 4,
         "width": 2,
         "height": 3,
@@ -61,8 +61,8 @@ class Tetromino(Rotate, Block):
 
     T_MINO = {
         "block": [[0, 0, 0],
-                  [6, 6, 6],
-                  [0, 6, 0]],
+                  [9, 9, 9],
+                  [0, 9, 0]],
         "rotations": 4,
         "width": 3,
         "height": 2,
@@ -72,7 +72,7 @@ class Tetromino(Rotate, Block):
 
     I_MINO = {
         "block" : [[0, 0, 0, 0],
-                   [7, 7, 7, 7],
+                   [12, 12, 12, 12],
                    [0, 0, 0, 0]],
         "rotations": 2,
         "width": 4,
