@@ -35,7 +35,6 @@ class App:
         self.t = Tetromino()
         self.b = Board()
         self.s = Score()
-        self.m = Move(self.t.wallkicks)
 
         self.state = "running"
         self.is_gameover = False
@@ -44,6 +43,7 @@ class App:
         self.next_block = self.t.next_block
         self.x = self.t.x
         self.y = self.t.y
+        self.m = Move(self.b.board, self.t, self.x, self.y)
 
     def update(self):
         if pyxel.btn(pyxel.KEY_Q):
@@ -62,28 +62,32 @@ class App:
         if self.state == "running":
 
             if pyxel.btnp(pyxel.KEY_LEFT, 10, 2) and not pyxel.btn(pyxel.KEY_RIGHT):
-                new_x = self.x - GRID_SIZE
-                if self.m.move_left(self.t.mino, new_x):
-                    self.x = new_x
+                self.x = self.m.move_left()
 
             if pyxel.btnp(pyxel.KEY_RIGHT, 10, 2) and not pyxel.btn(pyxel.KEY_LEFT):
-                new_x = self.x + GRID_SIZE
-                if self.m.move_right(self.t.mino, new_x):
-                    self.x = new_x
+                self.x = self.m.move_right()
 
             if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
-                new_y = self.y + GRID_SIZE
-                if self.m.move_down(self.t.mino, new_y):
-                    self.y = new_y
+                self.y = self.m.move_down()
+            
+            if pyxel.btnp(pyxel.KEY_SPACE, 10, 2):
+                self.y = self.m.hard_drop()
+            
+            if pyxel.btnp(pyxel.KEY_X, 10, 2) and not pyxel.btn(pyxel.KEY_Z):
+                self.block = self.m.rotate_right()
+
+            if pyxel.btnp(pyxel.KEY_Z, 10, 2) and not pyxel.btn(pyxel.KEY_X):
+                self.block = self.m.rotate_left()
 
     def draw(self):
         pyxel.cls(0)
         Text().text()
-        Board().draw_grid()
-        Board().draw_block(self.block, self.x, self.y)
+        self.b.draw_grid()
+        self.b.draw_block(self.block, self.x, self.y)
         self.draw_grid()
         self.draw_borders()
-        print(self.x, self.y)
+        # print(f"x: {self.x // GRID_SIZE}, y: {self.y // GRID_SIZE}")
+
         if self.state == "paused":
             pyxel.text(WINDOWWIDTH // 2 - 20, WINDOWHEIGHT // 2 - 12, "PAUSED", pyxel.frame_count % 16)
 
@@ -106,7 +110,7 @@ class Tetromino:
         "rotations": 1,
         "width": 2,
         "height": 2,
-        "x": ((WINDOWWIDTH - (WINDOWWIDTH - BOARDWIDTH * GRID_SIZE)) - ((BOARDWIDTH * GRID_SIZE) // 2) - (2 - (2 // 2)) - 6),
+        "x": (BOARDWIDTH * GRID_SIZE // 2) - (2 * GRID_SIZE // 2),
         "y": 0
         }
     
@@ -118,7 +122,7 @@ class Tetromino:
         "rotations": 2,
         "width": 3,
         "height": 2,
-        "x": ((WINDOWWIDTH - (WINDOWWIDTH - BOARDWIDTH * GRID_SIZE)) - ((BOARDWIDTH * GRID_SIZE) // 2) - (2 - (3 // 2)) - 6) - GRID_SIZE,
+        "x": (BOARDWIDTH * GRID_SIZE // 2) - (2 * GRID_SIZE // 2) - GRID_SIZE,
         "y": 0
         }
 
@@ -130,7 +134,7 @@ class Tetromino:
         "rotations": 2,
         "width": 3,
         "height": 2,
-        "x": ((WINDOWWIDTH - (WINDOWWIDTH - BOARDWIDTH * GRID_SIZE)) - ((BOARDWIDTH * GRID_SIZE) // 2) - (2 - (3 // 2)) - 6) - GRID_SIZE,
+        "x": (BOARDWIDTH * GRID_SIZE // 2) - (2 * GRID_SIZE // 2) - GRID_SIZE,
         "y": 0
         }
 
@@ -140,9 +144,9 @@ class Tetromino:
                   [8, 8, 8],
                   [0, 0, 8]],
         "rotations": 4,
-        "width": 2,
-        "height": 3,
-        "x": ((WINDOWWIDTH - (WINDOWWIDTH - BOARDWIDTH * GRID_SIZE)) - ((BOARDWIDTH * GRID_SIZE) // 2) - (2 - (3 // 2)) - 6) - GRID_SIZE,
+        "width": 3,
+        "height": 2,
+        "x": (BOARDWIDTH * GRID_SIZE // 2) - (2 * GRID_SIZE // 2) - GRID_SIZE,
         "y": 0
         }
 
@@ -152,9 +156,9 @@ class Tetromino:
                   [10, 10, 10],
                   [10, 0, 0]],
         "rotations": 4,
-        "width": 2,
-        "height": 3,
-        "x": ((WINDOWWIDTH - (WINDOWWIDTH - BOARDWIDTH * GRID_SIZE)) - ((BOARDWIDTH * GRID_SIZE) // 2) - (2 - (3 // 2)) - 6) - GRID_SIZE,
+        "width": 3,
+        "height": 2,
+        "x": (BOARDWIDTH * GRID_SIZE // 2) - (2 * GRID_SIZE // 2) - GRID_SIZE,
         "y": 0
         }
 
@@ -166,7 +170,7 @@ class Tetromino:
         "rotations": 4,
         "width": 3,
         "height": 2,
-        "x": ((WINDOWWIDTH - (WINDOWWIDTH - BOARDWIDTH * GRID_SIZE)) - ((BOARDWIDTH * GRID_SIZE) // 2) - (2 - (3 // 2)) - 6) - GRID_SIZE,
+        "x": (BOARDWIDTH * GRID_SIZE // 2) - (2 * GRID_SIZE // 2) - GRID_SIZE,
         "y": 0
         }
 
@@ -178,7 +182,7 @@ class Tetromino:
         "rotations": 2,
         "width": 4,
         "height": 1,
-        "x": ((WINDOWWIDTH - (WINDOWWIDTH - BOARDWIDTH * GRID_SIZE)) - ((BOARDWIDTH * GRID_SIZE) // 2) - (2 - (4 // 2)) - 7),
+        "x": (BOARDWIDTH * GRID_SIZE // 2) - (2 * GRID_SIZE // 2),
         "y": 0
         }
 
@@ -194,6 +198,8 @@ class Tetromino:
         self.wallkicks = self.get_wallkicks(self.mino)
         self.x = self.mino["x"]
         self.y = self.mino["y"]
+        self.width = self.width()
+        self.height = self.height()
         self.current_orientation = 0
         self.orientations = self.get_orientations(self.block)
 
@@ -204,6 +210,7 @@ class Tetromino:
             Rotate(block).rotate().rotate_right(),
             Rotate(block).rotate().rotate().rotate_right()
         ]
+        if block[1][0] == 4: orientation[1], orientation[3] = orientation[3], orientation[1]
         return orientation[:self.rotations]
 
     def rotate_right(self):
@@ -221,101 +228,209 @@ class Tetromino:
         return self.mino["height"]
 
     def get_wallkicks(self, mino): 
-        if mino["width"] != 4:
+        if mino["shape"] != "I":
             wallkicks = [
-                [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 0 orientation: 0
-                [(0, 0), (-1, 0), (-1, -1), (0, 2), (-1, 2)],  # 0 -> R  orientation: 1
-                [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 2 orientation: 2
-                [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 2 -> L orientation: 3
-                [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 0 orientation: 0
-                [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 0 -> L orientation: -1
-                [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 2 orientation: -2
-                [(0, 0), (-1, 0), (-1, 1), (0, 2), (-1, 2)]  # 2 -> R orientation: -3
+                [(0, 0), (-GRID_SIZE, 0), (-GRID_SIZE, GRID_SIZE), (0, -(GRID_SIZE * 2)), (-GRID_SIZE, -(GRID_SIZE * 2))],  # L -> 0 orientation: 0
+                [(0, 0), (-GRID_SIZE, 0), (-GRID_SIZE, -GRID_SIZE), (0, (GRID_SIZE * 2)), (-GRID_SIZE, (GRID_SIZE * 2))],  # 0 -> R  orientation: 1
+                [(0, 0), (GRID_SIZE, 0), (GRID_SIZE, GRID_SIZE), (0, -(GRID_SIZE * 2)), (GRID_SIZE, -(GRID_SIZE * 2))],  # R -> 2 orientation: 2
+                [(0, 0), (GRID_SIZE, 0), (GRID_SIZE, -GRID_SIZE), (0, (GRID_SIZE * 2)), (GRID_SIZE, (GRID_SIZE * 2))],  # 2 -> L orientation: 3
+                [(0, 0), (GRID_SIZE, 0), (GRID_SIZE, GRID_SIZE), (0, -(GRID_SIZE * 2)), (GRID_SIZE, -(GRID_SIZE * 2))],  # R -> 0 orientation: 0
+                [(0, 0), (GRID_SIZE, 0), (GRID_SIZE, -GRID_SIZE), (0, (GRID_SIZE * 2)), (GRID_SIZE, (GRID_SIZE * 2))],  # 0 -> L orientation: -1
+                [(0, 0), (-GRID_SIZE, 0), (-GRID_SIZE, GRID_SIZE), (0, -(GRID_SIZE * 2)), (-GRID_SIZE, -(GRID_SIZE * 2))],  # L -> (GRID_SIZE * 2) orientation: -2
+                [(0, 0), (-GRID_SIZE, 0), (-GRID_SIZE, GRID_SIZE), (0, (GRID_SIZE * 2)), (-GRID_SIZE, (GRID_SIZE * 2))]  # 2 -> R orientation: -3
             ]
         else:
             wallkicks = [
-                [(0, 0), (1, 0), (-2, 0), (1, 2), (-2, -1)],  # L -> 0 
-                [(0, 0), (-2, 0), (1, 0), (-2, 1), (1, -2)],  # 0 -> R 
-                [(0, 0), (-1, 0), (2, 0), (-1, -2), (2, 1)],  # R -> 2 
-                [(0, 0), (2, 0), (-1, 0), (2, -1), (-1, 2)],  # 2 -> L 
-                [(0, 0), (2, 0), (-1, 0), (2, -1), (-1, 2)],  # R -> 0 
-                [(0, 0), (-1, 0), (2, 0), (-1, -2), (2, 1)],  # 0 -> L 
-                [(0, 0), (-2, 0), (1, 0), (-2, 1), (1, -2)],  # L -> 2 
-                [(0, 0), (1, 0), (-2, 0), (1, 2), (-2, -1)]  # 2 -> R 
+                [(0, 0), (GRID_SIZE, 0), (-(GRID_SIZE * 2), 0), (GRID_SIZE, (GRID_SIZE * 2)), (-(GRID_SIZE * 2), -GRID_SIZE)],  # L -> 0 
+                [(0, 0), (-(GRID_SIZE * 2), 0), (GRID_SIZE, 0), (-(GRID_SIZE * 2), GRID_SIZE), (GRID_SIZE, -(GRID_SIZE * 2))],  # 0 -> R 
+                [(0, 0), (-GRID_SIZE, 0), ((GRID_SIZE * 2), 0), (-GRID_SIZE, -(GRID_SIZE * 2)), ((GRID_SIZE * 2), GRID_SIZE)],  # R -> 2 
+                [(0, 0), ((GRID_SIZE * 2), 0), (-GRID_SIZE, 0), ((GRID_SIZE * 2), -GRID_SIZE), (-GRID_SIZE, (GRID_SIZE * 2))],  # 2 -> L 
+                [(0, 0), ((GRID_SIZE * 2), 0), (-GRID_SIZE, 0), ((GRID_SIZE * 2), -GRID_SIZE), (-GRID_SIZE, (GRID_SIZE * 2))],  # R -> 0 
+                [(0, 0), (-GRID_SIZE, 0), ((GRID_SIZE * 2), 0), (-GRID_SIZE, -(GRID_SIZE * 2)), ((GRID_SIZE * 2), GRID_SIZE)],  # 0 -> L 
+                [(0, 0), (-(GRID_SIZE * 2), 0), (GRID_SIZE, 0), (-(GRID_SIZE * 2), GRID_SIZE), (GRID_SIZE, -(GRID_SIZE * 2))],  # L -> 2 
+                [(0, 0), (GRID_SIZE, 0), (-(GRID_SIZE * 2), 0), (GRID_SIZE, (GRID_SIZE * 2)), (-(GRID_SIZE * 2), -GRID_SIZE)]  # 2 -> R 
             ]
         return wallkicks
-
+            # wallkicks = [
+            #                 [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 0 orientation: 0
+            #                 [(0, 0), (-1, 0), (-1, -1), (0, 2), (-1, 2)],  # 0 -> R  orientation: 1
+            #                 [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 2 orientation: 2
+            #                 [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 2 -> L orientation: 3
+            #                 [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 0 orientation: 0
+            #                 [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 0 -> L orientation: -1
+            #                 [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 2 orientation: -2
+            #                 [(0, 0), (-1, 0), (-1, 1), (0, 2), (-1, 2)]  # 2 -> R orientation: -3
+            #             ]
+            #         else:
+            #             wallkicks = [
+            #                 [(0, 0), (1, 0), (-2, 0), (1, 2), (-2, -1)],  # L -> 0 
+            #                 [(0, 0), (-2, 0), (1, 0), (-2, 1), (1, -2)],  # 0 -> R 
+            #                 [(0, 0), (-1, 0), (2, 0), (-1, -2), (2, 1)],  # R -> 2 
+            #                 [(0, 0), (2, 0), (-1, 0), (2, -1), (-1, 2)],  # 2 -> L 
+            #                 [(0, 0), (2, 0), (-1, 0), (2, -1), (-1, 2)],  # R -> 0 
+            #                 [(0, 0), (-1, 0), (2, 0), (-1, -2), (2, 1)],  # 0 -> L 
+            #                 [(0, 0), (-2, 0), (1, 0), (-2, 1), (1, -2)],  # L -> 2 
+            #                 [(0, 0), (1, 0), (-2, 0), (1, 2), (-2, -1)]  # 2 -> R 
+            #             ]
+            #         return wallkicks
+        
 class Move:
-    def __init__(self, wallkicks):
-        self.wallkicks = wallkicks
+    def __init__(self, board, mino, x, y):
+        self.board = board
+        self.mino = mino
+        self.block = self.mino.block
+        self.width = self.mino.width
+        self.height = self.mino.height
+        self.wallkicks = self.mino.wallkicks
+        self.x = x // GRID_SIZE
+        self.y = y // GRID_SIZE
 
-    def move_left(self, mino, x):
-        return self.block_collision(mino, x=x)
+    def move_left(self):
+        print(f"x before: {self.x}")
+        w = self.width
+        h = self.height
+        if not self.board_collision(w, h, x=-1):
+            self.x -= 1
+            print(f"x after: {self.x}")
+            return self.x * GRID_SIZE 
+        return self.x * GRID_SIZE
 
-    def move_right(self, mino, x):
-       return self.block_collision(mino, x=x)
+    def move_right(self):
+        print(f"x before: {self.x}")
+        w = self.width
+        h = self.height
+        if not self.board_collision(w, h, x=1):
+            self.x += 1
+            print(f"x after: {self.x}")
+            return self.x * GRID_SIZE
+        return self.x * GRID_SIZE
 
-    def move_down(self, mino, y):
-        return self.block_collision(mino, y=y)
+    def move_down(self):
+        print(f"y before: {self.y}")
+        w = self.width
+        h = self.height
+        if not self.board_collision(w, h, y=1,):
+            self.y += 1
+            print(f"y after: {self.y}")
+            return self.y * GRID_SIZE
+        return self.y * GRID_SIZE
 
-    def block_collision(self, mino, x=0, y=0):
-        collision = False
-        block = mino["block"]
-        width = mino["width"]
-        height = mino["height"]
-        return x >= 0 and x + (width * GRID_SIZE) < 125 and y + (height * GRID_SIZE) < 248
-        # for row in range(len(block)):
-        #     for col in range(len(block[0])):
+    def hard_drop(self):
+        for row in range(len(self.block)):
+            for col in range(len(self.block[0])):
+                if self.block[row][col] != 0:
+                    drop = BOARDHEIGHT - 1 - 1 - self.y if self.block[row][col] != 12 else BOARDHEIGHT - 1 - self.y
+                    if not self.board_collision(y=drop):
+                        self.y += drop
+                        return self.y * GRID_SIZE
+        return self.y * GRID_SIZE
 
-        #         is_above_board = row + y < 0
-        #         if is_above_board:
-        #             continue
+    def rotate_right(self):
+        self.block = self.mino.rotate_right()
+        self.width, self.height = self.height, self.width
+        if not self.board_collision(self.width, self.height):
+            return self.block
+        # if self.can_rotate_right(self.block):
+        self.block = self.mino.rotate_left()
+        self.width, self.height = self.height, self.width
+        return self.block
 
-        #         if block[row][col] != 0:
-        #             if col + x < 0 or col + x + width >= BOARDWIDTH * GRID_SIZE:
-        #                 collision = True
+    
+    def rotate_left(self):
+        self.block = self.mino.rotate_left()
+        self.width, self.height = self.height, self.width
+        if not self.board_collision(self.width, self.height):
+            return self.block
+        # if self.can_rotate_left(self.block):
+        self.block = self.mino.rotate_right()
+        self.width, self.height = self.height, self.width
+        return self.block 
 
-        #             if row + y + height >= BOARDHEIGHT * GRID_SIZE:
-        #                 collision = True
-        #             # try:
-        #             #     if self.board[row][col] != 0:
-        #             #         collision = True
-        #             # except IndexError:
-        #             #     collision = True
-        # if collision:
-        #     return True
-        # return False
+        # return self.block
+
+    def block_collision(self, block, x=0, y=0):
+        for row in range(len(block)):
+            for col in range(len(block[0])):
+                is_above_board = row + self.y + y < 0
+                if is_above_board:
+                    continue
+                if block[row][col] != 0:
+                    print(f"row: {row}, col: {col}, self.y: {self.y}, curr y: {row+self.y+y} >= {BOARDHEIGHT}")
+                    if col + self.x + x < 0 or col + self.x + x > BOARDWIDTH:
+                        print("Collision: Outside left/right boundary")
+                        return True
+
+                    if row + self.y + y > BOARDHEIGHT - 1:
+                        print(f"curr y: {row+self.y+y} >= {BOARDHEIGHT}")
+                        print("Collision: Outside bottom boundary")
+                        return True
+
+                    try:
+                        if self.board[row + self.y + y][col + self.x + x] != 0:
+                            print("Collision: Block in space")
+                            return True
+                    except IndexError:
+                        return True
+
+        print("No collisions")
+        return False
+    
+    def board_collision(self, w, h, x=0, y=0):
+        return self.x + x < 0 or self.x + x + w - 1 >= BOARDWIDTH or self.y + y + h - 1 >= BOARDHEIGHT
+    
+    # def can_rotate_right(self, block):
+    #     wallkicks = self.wallkicks[4:]
+    #     rotation = self.mino.current_orientation % self.mino.rotations
+    #     each_variation = self.get_each_rotation_position(wallkicks, rotation)
+    #     if self.mino.y < 0:
+    #         new_y = self.mino.y + 1
+    #     else:
+    #         new_y = self.mino.y
+            
+    #     for row in range(len(block)):
+    #         for col in range(len(block[0])):
+    #             if block[row][col] != 0:
+    #                 for x, y in each_variation:
+    #                     if col + self.x + x < 0 or col + self.x + x >= self.board_width \
+    #                          or row + new_y + y >= self.board_height:
+    #                         continue
+
+    #                     if self.block_collision(block, x, y):
+    #                         continue
+
+    #                     if 0 <= col + self.x + x < self.board_width and row + new_y + y < self.board_height:
+    #                         self.mino.x += x
+    #                         self.mino.y = new_y + y
+    #                         return True
+    #     return False
+
+    def get_each_rotation_position(self, wallkicks, curr_rotation):
+        for _ in range(len(wallkicks)):
+            return wallkicks[curr_rotation]
 
 class Board:
     def __init__(self):
-        self.height = BOARDHEIGHT
-        self.width = BOARDWIDTH
-        self.board = [[0] * self.width for _ in range(self.height)]
+        self.board = [[0] * BOARDWIDTH for _ in range(BOARDHEIGHT)]
         self.grid = deepcopy(self.board)
 
     def is_falling(self, block):
         return block != None
     
     def draw_block(self, block, x, y):
-
         for row in range(len(block)):
             for col in range(len(block[0])):
-                if block[row][col] == 4 or block[row][col] == 5 or block[row][col] == 14:
-                    pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 11, 11, block[row][col])
-                elif block[row][col] != 0:
-                    pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE - 4, 11, 11, block[row][col])
-    
-    def draw_grid(self):
-        for row in range(self.height):
-            for col in range(self.width):
-                # if row == 7 and col == 5:
-                #     self.grid[row][col] = 9
-                if self.board[row][col] != 0:
-                    pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 12, 12, self.board[row][col])
-                else:
-                    pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 12, 12, 0)
-        
+                if block[row][col] != 0:
+                    if block[row][col] == 4 or block[row][col] == 5 or block[row][col] == 14:
+                        pyxel.rect(col * GRID_SIZE + 4 + x, row * GRID_SIZE + 8 + y, 11, 11, block[row][col])
+                    else:
+                        pyxel.rect(col * GRID_SIZE + 4 + x, row * GRID_SIZE - 4 + y, 11, 11, block[row][col])
 
+    def draw_grid(self):
+        for row in range(BOARDHEIGHT):
+            for col in range(BOARDWIDTH):
+                colour = 7 if self.board[row][col] == 0 else self.board[row][col]
+                pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 12, 12, colour)
+        
 class Rotate:
     def __init__(self, block):
         self.block = block
