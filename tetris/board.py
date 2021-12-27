@@ -1,7 +1,7 @@
 import pyxel
 from copy import deepcopy
 from random import randint
-from constants import GRID_SIZE
+from constants import GRID_SIZE, WINDOWWIDTH
 from tetromino import Tetromino
 
 
@@ -39,27 +39,33 @@ class Board:
             for col in range(len(self.block.block[0])):
                 if self.block.block[row][col] != 0:
                     self.grid[row + self.block.y][col + self.block.x] = self.block.block[row][col]
-    
+
     def draw_board(self):
-        # pyxel.cls(0)
         for row in range(self.height):
             for col in range(self.width):
-                if self.board[row][col] != 0:
-                    pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 12, 12, self.board[row][col])
-                else:
+                if self.grid[row][col] != 0:
                     pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 12, 12, self.grid[row][col])
-        
-        for row in range(len(self.block.block)):
-            for col in range(len(self.block.block[0])):
-                if self.block.block[row][col] != 0:
-                    pyxel.rect(col * GRID_SIZE + 1 + self.block.x, row * GRID_SIZE + 9 + self.block.y, 12, 12, self.block.block[row][col])
+
+    def draw_next(self):
+        for row in range(len(self.next_block.block)):
+            for col in range(len(self.next_block.block[0])):
+                if self.next_block.block[row][col] != 0:
+                    if self.next_block.block[row][col]  == 4 or self.next_block.block[row][col]  == 14:
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 42 + 6 + self.next_block.x, row * GRID_SIZE + 18 + GRID_SIZE + self.next_block.y, 12, 12, self.next_block.block[row][col])
+                    elif self.next_block.block[row][col] == 5:
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 42 + GRID_SIZE + self.next_block.x, row * GRID_SIZE + 18 + GRID_SIZE + self.next_block.y, 12, 12, self.next_block.block[row][col])
+                    elif self.next_block.block[row][col] == 12:
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 42 + self.next_block.x, row * GRID_SIZE + 20 + self.next_block.y, 12, 12, self.next_block.block[row][col])
+                    else:
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 42 + 6 + self.next_block.x, row * GRID_SIZE + 18 + self.next_block.y, 12, 12, self.next_block.block[row][col])
+                    
                     
     # Makes the current block fall
     def falling(self):
         if self.detect_collision(y=1):
             self.fix_block()
         else:
-            self.block.y += GRID_SIZE
+            self.block.y += 1
 
     # Checks if current block collides with another block or board boundaries
     def detect_collision(self, x=0, y=0):

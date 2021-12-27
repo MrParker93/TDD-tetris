@@ -43,9 +43,9 @@ class TestRotatingFallingTetrominos:
         board.drop_block()
         assert board.is_falling() == True
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 6, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 6, 6, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 6, 0, 0, 0, 0, 0, 0, 0],
+                              [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+                              [0, 9, 9, 0, 0, 0, 0, 0, 0, 0],
+                              [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
@@ -57,9 +57,9 @@ class TestRotatingFallingTetrominos:
         board.drop_block()
         assert board.is_falling() == True
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 6, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 6, 6, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 6, 0, 0, 0, 0, 0, 0, 0],
+                              [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+                              [0, 0, 9, 9, 0, 0, 0, 0, 0, 0],
+                              [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
@@ -67,9 +67,9 @@ class TestRotatingFallingTetrominos:
         board.block.block = move_T.rotate_right()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 0, 0, 0, 6, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0],
+        assert board.grid == [[0, 0, 0, 0, 9, 0, 0, 0, 0, 0],
+                              [0, 0, 0, 9, 9, 0, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
@@ -81,8 +81,8 @@ class TestRotatingFallingTetrominos:
         board.block.block = move_T.rotate_right()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 6, 0],
-                              [0, 0, 0, 0, 0, 0, 0, 6, 6, 6],
+        assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 9, 0],
+                              [0, 0, 0, 0, 0, 0, 0, 9, 9, 9],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -95,8 +95,8 @@ class TestRotatingFallingTetrominos:
         board.block.block = move_T.rotate_left()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 6, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [6, 6, 6, 0, 0, 0, 0, 0, 0, 0],
+        assert board.grid == [[0, 9, 0, 0, 0, 0, 0, 0, 0, 0],
+                              [9, 9, 9, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -113,9 +113,9 @@ class TestRotatingFallingTetrominos:
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 5, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 5, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 5, 5, 0, 0, 0]]
+                              [0, 0, 0, 0, 0, 10, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 0, 10, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 0, 10, 10, 0, 0, 0]]
         board.falling()
         assert board.is_falling() == False
         
@@ -130,9 +130,9 @@ class TestRotatingFallingTetrominos:
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 5, 0, 0, 0, 4],
-                              [0, 0, 0, 0, 0, 5, 0, 0, 0, 4],
-                              [0, 0, 0, 0, 0, 5, 5, 0, 4, 4]]
+                              [0, 0, 0, 0, 0, 10, 0, 0, 0, 8],
+                              [0, 0, 0, 0, 0, 10, 0, 0, 0, 8],
+                              [0, 0, 0, 0, 0, 10, 10, 0, 8, 8]]
                               
         board.falling()
         assert board.is_falling() == False
@@ -146,10 +146,10 @@ class TestRotatingFallingTetrominos:
         board.drop_block()
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 4, 4, 4, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 5, 4, 0, 0, 4],
-                              [0, 0, 0, 0, 0, 5, 0, 0, 0, 4],
-                              [0, 0, 0, 0, 0, 5, 5, 0, 4, 4]]
+                              [0, 0, 0, 0, 8, 8, 8, 0, 0, 0],
+                              [0, 0, 0, 0, 0, 10, 8, 0, 0, 8],
+                              [0, 0, 0, 0, 0, 10, 0, 0, 0, 8],
+                              [0, 0, 0, 0, 0, 10, 10, 0, 8, 8]]
         board.falling()
         assert board.is_falling() == False
 
@@ -166,9 +166,9 @@ class TestRotatingFallingTetrominos:
         board.drop_block()
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 4, 4, 4, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 5, 4, 0, 0, 4],
-                              [0, 0, 0, 0, 0, 5, 6, 6, 6, 4],
-                              [0, 0, 0, 0, 0, 5, 5, 6, 4, 4]]
+                              [0, 0, 0, 0, 8, 8, 8, 0, 0, 0],
+                              [0, 0, 0, 0, 0, 10, 8, 0, 0, 8],
+                              [0, 0, 0, 0, 0, 10, 9, 9, 9, 8],
+                              [0, 0, 0, 0, 0, 10, 10, 9, 8, 8]]
         board.falling()
         assert board.is_falling() == False

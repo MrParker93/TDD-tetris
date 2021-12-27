@@ -60,6 +60,10 @@ class App:
                 self.state = "running"
 
         if self.state == "running":
+            if pyxel.frame_count % 60 == 0:
+                print("HERE")
+                self.y = self.b.falling(self.block, self.x, self.y)
+                self.b.grid = deepcopy(self.b.board)
 
             if pyxel.btnp(pyxel.KEY_LEFT, 10, 2) and not pyxel.btn(pyxel.KEY_RIGHT):
                 self.x = self.m.move_left()
@@ -339,8 +343,15 @@ class Move:
     def rotate_right(self):
         self.block = self.mino.rotate_right()
         self.width, self.height = self.height, self.width
-        # if not self.board_collision(self.width, self.height):
-        if self.can_rotate_right(self.block):
+        if self.board_collision(self.width, self.height):
+        # if self.can_rotate_right(self.block, self.width, self.height):
+            if 0 < self.x < BOARDWIDTH // 2:
+                self.x + 1
+                return self.block
+            else:
+                self.x - 1
+                return self.block
+        else:
             return self.block
         self.block = self.mino.rotate_left()
         self.width, self.height = self.height, self.width
@@ -390,7 +401,7 @@ class Move:
             return self.x + x + 1 < 0 or self.x + x + w >= BOARDWIDTH or self.y - 1 + y + h - 1 >= BOARDHEIGHT
         return self.x + x < 0 or self.x + x + w - 1 >= BOARDWIDTH or self.y + y + h - 1 >= BOARDHEIGHT
     
-    def can_rotate_right(self, block):
+    def can_rotate_right(self, block, w ,h):
         wallkicks = self.wallkicks[4:]
         rotation = self.mino.current_orientation % self.mino.rotations
         each_variation = self.get_each_rotation_position(wallkicks, rotation)
@@ -400,7 +411,7 @@ class Move:
                     for x, y in each_variation:
                         print("-----------------------------")
                         print(f"Test x: {x}, Test y: {y}")
-                        if self.board_collision(self.width, self.height, x=x, y=y):
+                        if self.board_collision(w, h, x=x, y=y):
                             print(f"Board collision: {x}, {y}")
                             continue
 
@@ -408,13 +419,11 @@ class Move:
                             print(f"Block collision: {x}, {y}")
                             continue
                             
-                        if self.x < 0:
-                            self.x += x + 1
+                        # if self.x < 0:
+                        #     self.x += x + 1
                         else:
-                            self.x += x
-                        self.y += y
-                        print(f"No collision: {x}, {y}")
-                        return True
+                            print(f"No collision: {x}, {y}")
+                            return True
         print(f"Can't rotate")
         return False
 
@@ -431,16 +440,17 @@ class Board:
         return block != None
 
     def draw_block_to_grid(self, block, x, y):
-        for row in range(len(block)):
-            for col in range(len(block[0])):
-                if block[row][col] != 0:
-                    if block[row][col] == 4 or block[row][col] == 5 or block[row][col] == 14:
-                        self.grid[row + y][col + x] = block[row][col]
-                    else:
-                        self.grid[row + y - 1][col + x] = block[row][col]
-                        #     pyxel.rect(col * GRID_SIZE + 4 + x, row * GRID_SIZE + 8 + y, 11, 11, block[row][col])
-                    # else:
-                    #     pyxel.rect(col * GRID_SIZE + 4 + x, row * GRID_SIZE - 4 + y, 11, 11, block[row][col])
+        if self.is_falling(block):
+            for row in range(len(block)):
+                for col in range(len(block[0])):
+                    if block[row][col] != 0:
+                        if block[row][col] == 4 or block[row][col] == 5 or block[row][col] == 14:
+                            self.grid[row + y][col + x] = block[row][col]
+                        else:
+                            self.grid[row + y - 1][col + x] = block[row][col]
+                            #     pyxel.rect(col * GRID_SIZE + 4 + x, row * GRID_SIZE + 8 + y, 11, 11, block[row][col])
+                        # else:
+                        #     pyxel.rect(col * GRID_SIZE + 4 + x, row * GRID_SIZE - 4 + y, 11, 11, block[row][col])
 
     def draw_grid(self):
         for row in range(BOARDHEIGHT):
@@ -449,7 +459,41 @@ class Board:
                     pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 12, 12, self.grid[row][col])
                 # colour = 7 if self.board[row][col] == 0 else self.board[row][col]
                 # pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 12, 12, colour)
-        
+    
+    def falling(self, block, x, y):
+        if self.is_falling(block):
+            if self.block_collision(block, x, y):
+                self.fix_block(block, x, y)
+            else:
+                y += 1
+                return y
+    
+    def block_collision(self, block, x=0, y=1):
+        for row in range(len(block)):
+            for col in range(len(block[0])):
+                is_above_board = row + y + 1 < 0
+                if is_above_board:
+                    continue
+                if block[row][col] != 0:
+                    if row + y + 1 >= BOARDHEIGHT:
+                        return True
+                    try:
+                        if block[row][col] == 4 or block[row][col] == 5 or block[row][col] == 14:
+                            if self.board[row + y + 1][col + x] != 0:
+                                return True
+                        else:
+                            if self.board[row + y + 1 - 1][col + x] != 0:
+                                return True
+                    except IndexError:
+                        return True
+        return False
+    
+    def fix_block(self, block, x, y):
+        for row in range(len(block)):
+            for col in range(len(block[0])):
+                if block[row][col] != 0:
+                    self.board[row + y][col + x] = block[row][col]
+
 class Rotate:
     def __init__(self, block):
         self.block = block

@@ -34,7 +34,7 @@ class TestGameLogic:
                                [0, 0, 0, 0, 0, 0],
                                [0, 0, 0, 0, 0, 0],
                                [0, 0, 0, 0, 0, 0],
-                               [7, 7, 7, 7, 0, 0]]
+                               [12, 12, 12, 12, 0, 0]]
 
         assert board.is_falling() == False
 
@@ -49,8 +49,8 @@ class TestGameLogic:
                               [0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 1, 1],
-                              [7, 7, 7, 7, 1, 1]]
+                              [0, 0, 0, 0, 5, 5],
+                              [12, 12, 12, 12, 5, 5]]
         board.falling()
 
         assert board.is_falling() == False
@@ -59,7 +59,7 @@ class TestGameLogic:
                                [0, 0, 0, 0, 0, 0],
                                [0, 0, 0, 0, 0, 0],
                                [0, 0, 0, 0, 0, 0],
-                               [0, 0, 0, 0, 1, 1]]
+                               [0, 0, 0, 0, 5, 5]]
     
     def test_the_game_logic_clears_four_lines_when_a_block_completes_a_tetris_and_adds_four_lines_to_the_beginning_of_the_board(self, long_board):
         long_board.generate_block(6, 1)
@@ -79,7 +79,7 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [7, 7, 7, 7, 0]]
+                                   [12, 12, 12, 12, 0]]
                                    
         long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
@@ -97,8 +97,8 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [7, 7, 7, 7, 0],
-                                   [7, 7, 7, 7, 0]]
+                                   [12, 12, 12, 12, 0],
+                                   [12, 12, 12, 12, 0]]
 
         long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
@@ -115,9 +115,9 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [7, 7, 7, 7, 0],
-                                   [7, 7, 7, 7, 0],
-                                   [7, 7, 7, 7, 0]]
+                                   [12, 12, 12, 12, 0],
+                                   [12, 12, 12, 12, 0],
+                                   [12, 12, 12, 12, 0]]
 
         long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
@@ -133,10 +133,10 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [7, 7, 7, 7, 0],
-                                   [7, 7, 7, 7, 0],
-                                   [7, 7, 7, 7, 0],
-                                   [7, 7, 7, 7, 0]]
+                                   [12, 12, 12, 12, 0],
+                                   [12, 12, 12, 12, 0],
+                                   [12, 12, 12, 12, 0],
+                                   [12, 12, 12, 12, 0]]
 
         long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
@@ -153,10 +153,10 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [7, 7, 7, 7, 7],
-                                   [7, 7, 7, 7, 7],
-                                   [7, 7, 7, 7, 7],
-                                   [7, 7, 7, 7, 7]]
+                                   [12, 12, 12, 12, 12],
+                                   [12, 12, 12, 12, 12],
+                                   [12, 12, 12, 12, 12],
+                                   [12, 12, 12, 12, 12]]
         long_board.falling()
         assert long_board.is_falling() == False
         assert long_board.board == [[0, 0, 0, 0, 0],
@@ -188,7 +188,7 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [7, 7, 7, 7, 0]]
+                                   [12, 12, 12, 12, 0]]
 
         long_board.generate_block(0, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
@@ -205,9 +205,9 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [0, 1, 1, 0, 0],
-                                   [0, 1, 1, 0, 0],
-                                   [7, 7, 7, 7, 0]]
+                                   [0, 5, 5, 0, 0],
+                                   [0, 5, 5, 0, 0],
+                                   [12, 12, 12, 12, 0]]
 
         long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
@@ -223,10 +223,10 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [7, 7, 7, 7, 0],
-                                   [0, 1, 1, 0, 0],
-                                   [0, 1, 1, 0, 0],
-                                   [7, 7, 7, 7, 0]]
+                                   [12, 12, 12, 12, 0],
+                                   [0, 5, 5, 0, 0],
+                                   [0, 5, 5, 0, 0],
+                                   [12, 12, 12, 12, 0]]
                                    
         long_board.generate_block(6, 1)
         long_board.block.x = long_board.width // 2 - long_board.block.width // 2
@@ -243,10 +243,10 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [7, 7, 7, 7, 7],
-                                   [0, 1, 1, 0, 7],
-                                   [0, 1, 1, 0, 7],
-                                   [7, 7, 7, 7, 7]]
+                                   [12, 12, 12, 12, 12],
+                                   [0, 5, 5, 0, 12],
+                                   [0, 5, 5, 0, 12],
+                                   [12, 12, 12, 12, 12]]
 
         long_board.falling()
         assert long_board.is_falling() == False
@@ -258,8 +258,8 @@ class TestGameLogic:
                                     [0, 0, 0, 0, 0],
                                     [0, 0, 0, 0, 0],
                                     [0, 0, 0, 0, 0],
-                                    [0, 1, 1, 0, 7],
-                                    [0, 1, 1, 0, 7]]
+                                    [0, 5, 5, 0, 12],
+                                    [0, 5, 5, 0, 12]]
 
     
     def test_points_are_added_to_total_score_when_lines_cleared(self, long_board, scores):
@@ -280,7 +280,7 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [7, 7, 7, 7, 0]]
+                                   [12, 12, 12, 12, 0]]
 
         long_board.generate_block(3, 1)
         long_board.block.x = (long_board.width // 2 - long_board.block.width // 2) - 1
@@ -297,8 +297,8 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [0, 0, 4, 4, 4],
-                                   [7, 7, 7, 7, 4]]
+                                   [0, 0, 8, 8, 8],
+                                   [12, 12, 12, 12, 8]]
         long_board.falling()
         assert long_board.is_falling() == False
         assert long_board.board == [[0, 0, 0, 0, 0],
@@ -310,7 +310,7 @@ class TestGameLogic:
                                     [0, 0, 0, 0, 0],
                                     [0, 0, 0, 0, 0],
                                     [0, 0, 0, 0, 0],
-                                    [0, 0, 4, 4, 4]]
+                                    [0, 0, 8, 8, 8]]
         assert long_board.board == long_board.grid
         
         scores.score = scores.points(long_board.cleared_lines)
@@ -332,9 +332,9 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [0, 0, 0, 0, 5],
-                                   [0, 0, 5, 5, 5],
-                                   [0, 0, 4, 4, 4]]
+                                   [0, 0, 0, 0, 10],
+                                   [0, 0, 10, 10, 10],
+                                   [0, 0, 8, 8, 8]]
         long_board.falling()
         assert long_board.is_falling() == False
         
@@ -351,10 +351,10 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [0, 0, 0, 2, 2],
-                                   [0, 0, 2, 2, 5],
-                                   [0, 0, 5, 5, 5],
-                                   [0, 0, 4, 4, 4]]
+                                   [0, 0, 0, 4, 4],
+                                   [0, 0, 4, 4, 10],
+                                   [0, 0, 10, 10, 10],
+                                   [0, 0, 8, 8, 8]]
         long_board.falling()
         assert long_board.is_falling() == False
         assert scores.score == 80
@@ -372,10 +372,10 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [0, 0, 0, 2, 2],
-                                   [0, 0, 2, 2, 5],
-                                   [1, 1, 5, 5, 5],
-                                   [1, 1, 4, 4, 4]]
+                                   [0, 0, 0, 4, 4],
+                                   [0, 0, 4, 4, 10],
+                                   [5, 5, 10, 10, 10],
+                                   [5, 5, 8, 8, 8]]
         long_board.falling()
         assert long_board.is_falling() == False
         assert long_board.board == [[0, 0, 0, 0, 0],
@@ -386,8 +386,8 @@ class TestGameLogic:
                                     [0, 0, 0, 0, 0],
                                     [0, 0, 0, 0, 0],
                                     [0, 0, 0, 0, 0],
-                                    [0, 0, 0, 2, 2],
-                                    [0, 0, 2, 2, 5]]
+                                    [0, 0, 0, 4, 4],
+                                    [0, 0, 4, 4, 10]]
         assert long_board.board == long_board.grid
         scores.score = scores.points(long_board.cleared_lines)
         assert scores.score == 280
@@ -410,8 +410,8 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [0, 0, 0, 0, 5],
-                                   [0, 0, 5, 5, 5]]
+                                   [0, 0, 0, 0, 10],
+                                   [0, 0, 10, 10, 10]]
         long_board.falling()
         assert long_board.is_falling() == False
         
@@ -429,9 +429,9 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [0, 0, 0, 2, 2],
-                                   [0, 0, 2, 2, 5],
-                                   [0, 0, 5, 5, 5]]
+                                   [0, 0, 0, 4, 4],
+                                   [0, 0, 4, 4, 10],
+                                   [0, 0, 10, 10, 10]]
         long_board.falling()
         assert long_board.is_falling() == False
         assert scores.score == 0
@@ -451,9 +451,9 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [0, 0, 0, 2, 2],
-                                   [1, 1, 2, 2, 5],
-                                   [1, 1, 5, 5, 5]]
+                                   [0, 0, 0, 4, 4],
+                                   [5, 5, 4, 4, 10],
+                                   [5, 5, 10, 10, 10]]
         long_board.falling()
         assert long_board.is_falling() == False
         assert long_board.board == [[0, 0, 0, 0, 0],
@@ -465,7 +465,7 @@ class TestGameLogic:
                                     [0, 0, 0, 0, 0],
                                     [0, 0, 0, 0, 0],
                                     [0, 0, 0, 0, 0],
-                                    [0, 0, 0, 2, 2]]
+                                    [0, 0, 0, 4, 4]]
         assert long_board.board == long_board.grid
         scores.score = scores.points(long_board.cleared_lines)
         assert scores.score == 200
@@ -488,8 +488,8 @@ class TestGameLogic:
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
                                    [0, 0, 0, 0, 0],
-                                   [0, 0, 5, 0, 0],
-                                   [5, 5, 5, 2, 2]]
+                                   [0, 0, 10, 0, 0],
+                                   [10, 10, 10, 4, 4]]
         long_board.falling()
         assert long_board.is_falling() == False
         assert long_board.board == [[0, 0, 0, 0, 0],
@@ -501,7 +501,7 @@ class TestGameLogic:
                                     [0, 0, 0, 0, 0],
                                     [0, 0, 0, 0, 0],
                                     [0, 0, 0, 0, 0],
-                                    [0, 0, 5, 0, 0]]
+                                    [0, 0, 10, 0, 0]]
         assert long_board.board == long_board.grid
         assert long_board.consecutive_clears == 1
         scores.combos = long_board.consecutive_clears

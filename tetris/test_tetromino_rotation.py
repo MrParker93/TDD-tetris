@@ -21,53 +21,53 @@ class TestTetrominoRotation:
 
     def test_initial_orientation_of_T_tetromino(self, t_mino):
         assert t_mino.block == [[0, 0, 0],
-                                [6, 6, 6],
-                                [0, 6, 0]]
+                                [9, 9, 9],
+                                [0, 9, 0]]
     
     def test_T_tetromino_can_be_rotated_right(self, t_mino):
-        assert t_mino.rotate_right() == [[0, 6, 0],
-                                         [6, 6, 0],
-                                         [0, 6, 0]]
+        assert t_mino.rotate_right() == [[0, 9, 0],
+                                         [9, 9, 0],
+                                         [0, 9, 0]]
     
     def test_T_tetromino_can_be_rotated_left(self, t_mino):
-        assert t_mino.rotate_left() == [[0, 6, 0],
-                                        [0, 6, 6],
-                                        [0, 6, 0]]
+        assert t_mino.rotate_left() == [[0, 9, 0],
+                                        [0, 9, 9],
+                                        [0, 9, 0]]
                                 
     def test_T_tetromino_has_four_orientations(self, t_mino):
         assert len(t_mino.orientations) == 4
 
     def test_initial_orientation_of_O_tetromino(self, o_mino):
-        assert o_mino.block == [[1, 1],
-                                [1, 1]]
+        assert o_mino.block == [[5, 5],
+                                [5, 5]]
     
     def test_O_tetromino_can_be_rotated_right(self, o_mino):
-        assert o_mino.rotate_right() == [[1, 1],
-                                         [1, 1]]
+        assert o_mino.rotate_right() == [[5, 5],
+                                         [5, 5]]
     
     def test_O_tetromino_can_be_rotated_left(self, o_mino):
-        assert o_mino.rotate_left() == [[1, 1],
-                                        [1, 1]]
+        assert o_mino.rotate_left() == [[5, 5],
+                                        [5, 5]]
                                 
     def test_O_tetromino_has_one_orientations(self, o_mino):
         assert len(o_mino.orientations) == 1
 
     def test_initial_orientation_of_I_tetromino(self, i_mino):
         assert i_mino.block == [[0, 0, 0, 0],
-                                [7, 7, 7, 7],
+                                [12, 12, 12, 12],
                                 [0, 0, 0, 0]]
     
     def test_I_tetromino_can_be_rotated_right(self, i_mino):
-        assert i_mino.rotate_right() == [[0, 7, 0],
-                                         [0, 7, 0],
-                                         [0, 7, 0],
-                                         [0, 7, 0]]
+        assert i_mino.rotate_right() == [[0, 12, 0],
+                                         [0, 12, 0],
+                                         [0, 12, 0],
+                                         [0, 12, 0]]
     
     def test_I_tetromino_can_be_rotated_left(self, i_mino):
-        assert i_mino.rotate_left() == [[0, 7, 0],
-                                        [0, 7, 0],
-                                        [0, 7, 0],
-                                        [0, 7, 0]]
+        assert i_mino.rotate_left() == [[0, 12, 0],
+                                        [0, 12, 0],
+                                        [0, 12, 0],
+                                        [0, 12, 0]]
                                 
     def test_I_tetromino_has_one_orientations(self, i_mino):
         assert len(i_mino.orientations) == 2

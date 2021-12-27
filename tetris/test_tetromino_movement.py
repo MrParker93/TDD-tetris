@@ -35,8 +35,8 @@ class TestTetrominoMovement:
         board.block.x = move_T.move_left()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+        assert board.grid == [[0, 0, 9, 9, 9, 0, 0, 0, 0, 0],
+                              [0, 0, 0, 9, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -46,8 +46,8 @@ class TestTetrominoMovement:
         board.block.x = move_T.move_right()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 0, 0, 0, 6, 6, 6, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 6, 0, 0, 0, 0],
+        assert board.grid == [[0, 0, 0, 0, 9, 9, 9, 0, 0, 0],
+                              [0, 0, 0, 0, 0, 9, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -58,8 +58,8 @@ class TestTetrominoMovement:
         board.drop_block()
         assert board.is_falling() == True
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0],
+                              [0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
@@ -69,8 +69,8 @@ class TestTetrominoMovement:
             board.block.x = move_T.move_left()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[6, 6, 6, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 6, 0, 0, 0, 0, 0, 0, 0, 0],
+        assert board.grid == [[9, 9, 9, 0, 0, 0, 0, 0, 0, 0],
+                              [0, 9, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -81,8 +81,8 @@ class TestTetrominoMovement:
             board.block.x = move_T.move_right()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 6, 6, 6],
-                              [0, 0, 0, 0, 0, 0, 0, 0, 6, 0],
+        assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 9, 9, 9],
+                              [0, 0, 0, 0, 0, 0, 0, 0, 9, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -98,8 +98,8 @@ class TestTetrominoMovement:
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0]]
+                              [0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0]]
         board.falling()
         assert board.board == board.grid
         assert board.is_falling() == False
@@ -125,9 +125,9 @@ class TestTetrominoMovement:
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 6, 6, 6, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 6, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0]]
+                              [0, 0, 0, 0, 0, 9, 9, 9, 0, 0],
+                              [0, 0, 0, 9, 9, 9, 9, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0]]
         
     def test_T_tetromino_cannot_move_right_through_another_block(self, board, move_T, t_mino):
         for _ in range(10):
@@ -150,9 +150,9 @@ class TestTetrominoMovement:
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 6, 6, 6, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 6, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0]]
+                              [0, 9, 9, 9, 0, 0, 0, 0, 0, 0],
+                              [0, 0, 9, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0]]
 
     def test_T_tetromino_cannot_move_down_through_another_block_and_stops_falling_once_it_stops(self, board, move_T, t_mino):
         for _ in range(10):
@@ -171,10 +171,10 @@ class TestTetrominoMovement:
         assert board.is_falling() == True
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0]]
+                              [0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0],
+                              [0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0]]
         board.falling()
         assert board.is_falling() == False
 
@@ -182,7 +182,7 @@ class TestTetrominoMovement:
         board.block.x = move_I.move_left()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 0, 7, 7, 7, 7, 0, 0, 0, 0],
+        assert board.grid == [[0, 0, 12, 12, 12, 12, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -193,7 +193,7 @@ class TestTetrominoMovement:
         board.block.x = move_I.move_right()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 0, 0, 0, 7, 7, 7, 7, 0, 0],
+        assert board.grid == [[0, 0, 0, 0, 12, 12, 12, 12, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -205,7 +205,7 @@ class TestTetrominoMovement:
         board.drop_block()
         assert board.is_falling() == True
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 7, 7, 7, 7, 0, 0, 0],
+                              [0, 0, 0, 12, 12, 12, 12, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -216,7 +216,7 @@ class TestTetrominoMovement:
             board.block.x = move_I.move_left()
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[7, 7, 7, 7, 0, 0, 0, 0, 0, 0],
+        assert board.grid == [[12, 12, 12, 12, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -229,7 +229,7 @@ class TestTetrominoMovement:
         print(board.block.x, board.block.y)
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 0, 0, 0, 0, 0, 7, 7, 7, 7],
+        assert board.grid == [[0, 0, 0, 0, 0, 0, 12, 12, 12, 12],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -246,7 +246,7 @@ class TestTetrominoMovement:
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 7, 7, 7, 7, 0, 0, 0]]
+                              [0, 0, 0, 12, 12, 12, 12, 0, 0, 0]]
         board.falling()
         assert board.is_falling() == False
 
@@ -273,8 +273,8 @@ class TestTetrominoMovement:
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 7, 7, 7, 7],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0]]
+                              [0, 0, 0, 9, 9, 9, 12, 12, 12, 12],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0]]
         
     def test_I_tetromino_cannot_move_right_through_another_block(self, board, move_I, move_T, t_mino, i_mino):
         board.block.x = move_T.move_right()
@@ -299,8 +299,8 @@ class TestTetrominoMovement:
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [7, 7, 7, 7, 6, 6, 6, 0, 0, 0],
-                              [0, 0, 0, 0, 0, 6, 0, 0, 0, 0]]
+                              [12, 12, 12, 12, 9, 9, 9, 0, 0, 0],
+                              [0, 0, 0, 0, 0, 9, 0, 0, 0, 0]]
 
     def test_I_tetromino_cannot_move_down_through_another_block_and_stops_falling_once_it_stops(self, board, move_I, i_mino):
         for _ in range(10):
@@ -321,8 +321,8 @@ class TestTetrominoMovement:
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 7, 7, 7, 7, 0, 0, 0],
-                              [0, 0, 0, 7, 7, 7, 7, 0, 0, 0]]
+                              [0, 0, 0, 12, 12, 12, 12, 0, 0, 0],
+                              [0, 0, 0, 12, 12, 12, 12, 0, 0, 0]]
         board.falling()
         assert board.board == board.grid
         assert board.is_falling() == False
@@ -337,8 +337,8 @@ class TestTetrominoMovement:
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0]]
+                              [0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0]]
         board.falling()
         assert board.is_falling() == False
         assert board.board == board.grid

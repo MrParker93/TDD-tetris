@@ -28,13 +28,12 @@ class Move:
         return self.y
 
     def hard_drop(self):
-        for row in range(len(self.block)):
-            for col in range(len(self.block[0])):
-                if self.block[row][col] != 0:
-                    drop = (self.board_height - 1 - row)
-                    if not self.block_collision(self.block, y=drop):
-                        self.y += drop
-                        return self.y
+        for row in reversed(range(self.board_height)):
+            print(f"y: {self.y}")
+            drop = row - self.y if self.y >=0 else row + self.y
+            if not self.block_collision(self.block, y=drop):
+                self.y += drop
+                return self.y
         return self.y
 
     def rotate_right(self):
@@ -52,7 +51,6 @@ class Move:
         return self.block
 
     def block_collision(self, block, x=0, y=0):
-        collision = False
         for row in range(len(block)):
             for col in range(len(block[0])):
                 is_above_board = row + self.y + y < 0
@@ -60,27 +58,25 @@ class Move:
                     continue
                 if block[row][col] != 0:
                     if col + self.x + x < 0 or col + self.x + x >= self.board_width:
-                        collision = True
+                        return True
 
                     if row + self.y + y >= self.board_height:
-                        collision = True
+                        return True
                     try:
                         if self.board[row + self.y + y][col + self.x + x] != 0:
-                            collision = True
+                            return True
                     except IndexError:
-                        collision = True
-        if collision:
-            return True
+                        return True
         return False
 
     def can_rotate_right(self, block):
         wallkicks = self.wallkicks[4:]
         rotation = self.mino.current_orientation % self.mino.rotations
         each_variation = self.get_each_rotation_position(wallkicks, rotation)
-        if self.mino.y < 0:
-            new_y = self.mino.y + 1
+        if self.y < 0:
+            new_y = self.y + 1
         else:
-            new_y = self.mino.y
+            new_y = self.y
             
         for row in range(len(block)):
             for col in range(len(block[0])):
@@ -94,13 +90,13 @@ class Move:
                             continue
 
                         if 0 <= col + self.x + x < self.board_width and row + new_y + y < self.board_height:
-                            self.mino.x += x
-                            self.mino.y = new_y + y
+                            self.x += x
+                            self.y = new_y + y
                             return True
         return False
 
     def can_rotate_left(self, block):
-        wallkicks = self.wallkicks[:4]
+        wallkicks = self.wallkicks[4:]
         rotation = self.mino.current_orientation % self.mino.rotations
         each_variation = self.get_each_rotation_position(wallkicks, rotation)
         if self.mino.y < 0:

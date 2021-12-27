@@ -13,8 +13,8 @@ class TestFallingTetromino:
         board.block = Tetromino(5)
         board.drop_block()
         assert board.is_falling() == True
-        assert board.grid == [[0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0],
+        assert board.grid == [[0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -30,8 +30,8 @@ class TestFallingTetromino:
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0]]
+                              [0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0]]
         board.falling()
         assert board.grid == board.board
         assert board.is_falling() == False
@@ -49,12 +49,12 @@ class TestFallingTetromino:
         board.block = Tetromino(5)
         assert board.is_falling() == True
         board.drop_block()
-        assert board.grid == [[0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0],
+        assert board.grid == [[0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0]]
+                              [0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0]]
 
     def test_new_T_tetromino_stops_when_it_hits_another_block(self, board):
         board.block = Tetromino(5)
@@ -74,10 +74,10 @@ class TestFallingTetromino:
         assert board.is_falling() == True
         assert board.grid == [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 6, 6, 6, 0, 0, 0, 0],
-                              [0, 0, 0, 0, 6, 0, 0, 0, 0, 0]]
+                              [0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0],
+                              [0, 0, 0, 9, 9, 9, 0, 0, 0, 0],
+                              [0, 0, 0, 0, 9, 0, 0, 0, 0, 0]]
         board.falling()
         assert board.is_falling() == False
 
@@ -100,8 +100,8 @@ class TestFallingTetromino:
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                              [0, 0, 0, 7, 7, 7, 7, 0, 0, 0],
-                              [0, 0, 0, 7, 7, 7, 7, 0, 0, 0]]
+                              [0, 0, 0, 12, 12, 12, 12, 0, 0, 0],
+                              [0, 0, 0, 12, 12, 12, 12, 0, 0, 0]]
         board.falling()
         assert board.grid == board.board
         assert board.is_falling() == False
