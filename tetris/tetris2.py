@@ -1,15 +1,20 @@
 import pyxel
 import random
-from constants import *
 from copy import deepcopy
 
 BOARDWIDTH = 10
-BOARDHEIGHT = 20
+BOARDHEIGHT = 30
 WINDOWWIDTH = 256
 WINDOWHEIGHT = 256
 
 GRID_SIZE = 12
 BAG = [_ for _ in range(7)]
+LEVEL = 1
+FALL_SPEED = 2
+SCORE = 0
+LINES = 0 
+COMBOS = 0
+SPINS = 0
 POINTS = {
     "0": 0,
     "1": 40,
@@ -20,163 +25,170 @@ POINTS = {
 
 class Tetromino:
     O_MINO = {
+        "shape": "O",
         "block": [
-            [[0, 5, 5, 0],
-             [0, 5, 5, 0],
+            [[0, 10, 10, 0],
+             [0, 10, 10, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
              
-            [[0, 5, 5, 0],
-             [0, 5, 5, 0],
+            [[0, 10, 10, 0],
+             [0, 10, 10, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
 
-            [[0, 5, 5, 0],
-             [0, 5, 5, 0],
+            [[0, 10, 10, 0],
+             [0, 10, 10, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
 
-            [[0, 5, 5, 0],
-             [0, 5, 5, 0],
+            [[0, 10, 10, 0],
+             [0, 10, 10, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]]
         ],
         "x": BOARDWIDTH // 2 - 4 // 2,
-        "y": 0
+        "y": -2
         }
     
     S_MINO = {
+        "shape": "S",
         "block": [
-            [[0, 4, 4, 0],
-             [4, 4, 0, 0],
+            [[0, 3, 3, 0],
+             [3, 3, 0, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
 
-            [[0, 4, 0, 0],
-             [0, 4, 4, 0],
-             [0, 0, 4, 0],
+            [[0, 3, 0, 0],
+             [0, 3, 3, 0],
+             [0, 0, 3, 0],
              [0, 0, 0, 0]],
 
             [[0, 0, 0, 0],
-             [0, 4, 4, 0],
-             [4, 4, 0, 0],
+             [0, 3, 3, 0],
+             [3, 3, 0, 0],
              [0, 0, 0, 0]],
 
-            [[4, 0, 0, 0],
-             [4, 4, 0, 0],
-             [0, 4, 0, 0],
+            [[3, 0, 0, 0],
+             [3, 3, 0, 0],
+             [0, 3, 0, 0],
              [0, 0, 0, 0]]
         ],
         "x": BOARDWIDTH // 2 - 4 // 2,
-        "y": 0
+        "y": -2
         }
 
     Z_MINO = {
+        "shape": "Z",
         "block": [
-            [[14, 14, 0, 0],
-             [0, 14, 14, 0],
+            [[8, 8, 0, 0],
+             [0, 8, 8, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
 
-            [[0, 0, 14, 0],
-             [0, 14, 14, 0],
-             [0, 14, 0, 0],
+            [[0, 0, 8, 0],
+             [0, 8, 8, 0],
+             [0, 8, 0, 0],
              [0, 0, 0, 0]],
 
             [[0, 0, 0, 0],
-             [14, 14, 0, 0],
-             [0, 14, 14, 0],
-             [0, 0, 0, 0]],
-
-            [[0, 14, 0, 0],
-             [14, 14, 0, 0],
-             [14, 0, 0, 0],
-             [0, 0, 0, 0]]
-        ],
-        "x": BOARDWIDTH // 2 - 4 // 2,
-        "y": 0
-        }
-
-    J_MINO = {
-        "block": [
-            [[0, 0, 0, 0],
-             [8, 8, 8, 0],
-             [0, 0, 8, 0],
+             [8, 8, 0, 0],
+             [0, 8, 8, 0],
              [0, 0, 0, 0]],
 
             [[0, 8, 0, 0],
-             [0, 8, 0, 0],
              [8, 8, 0, 0],
-             [0, 0, 0, 0]],
-
-            [[8, 0, 0, 0],
-             [8, 8, 8, 0],
-             [0, 0, 0, 0],
-             [0, 0, 0, 0]],
-
-            [[0, 8, 8, 0],
-             [0, 8, 0, 0],
-             [0, 8, 0, 0],
+             [8, 0, 0, 0],
              [0, 0, 0, 0]]
         ],
         "x": BOARDWIDTH // 2 - 4 // 2,
-        "y": 0
+        "y": -2
+        }
+
+    J_MINO = {
+        "shape": "J",
+        "block": [
+            [[5, 0, 0, 0],
+             [5, 5, 5, 0],
+             [0, 0, 0, 0],
+             [0, 0, 0, 0]],
+
+            [[0, 5, 5, 0],
+             [0, 5, 0, 0],
+             [0, 5, 0, 0],
+             [0, 0, 0, 0]],
+
+            [[0, 0, 0, 0],
+             [5, 5, 5, 0],
+             [0, 0, 5, 0],
+             [0, 0, 0, 0]],
+
+            [[0, 5, 0, 0],
+             [0, 5, 0, 0],
+             [5, 5, 0, 0],
+             [0, 0, 0, 0]]
+        ],
+        "x": BOARDWIDTH // 2 - 4 // 2,
+        "y": -2
         }
 
     L_MINO = {
+        "shape": "L",
         "block": [
-            [[0, 0, 0, 0],
-             [10, 10, 10, 0],
-             [10, 0, 0, 0],
-             [0, 0, 0, 0]],
-
-            [[10, 10, 0, 0],
-             [0, 10, 0, 0],
-             [0, 10, 0, 0],
-             [0, 0, 0, 0]],
-
-            [[0, 0, 10, 0],
-             [10, 10, 10, 0],
+            [[0, 0, 9, 0],
+             [9, 9, 9, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
 
-            [[0, 10, 0, 0],
-             [0, 10, 0, 0],
-             [0, 10, 10, 0],
+            [[0, 9, 0, 0],
+             [0, 9, 0, 0],
+             [0, 9, 9, 0],
+             [0, 0, 0, 0]],
+
+            [[0, 0, 0, 0],
+             [9, 9, 9, 0],
+             [9, 0, 0, 0],
+             [0, 0, 0, 0]],
+
+            [[9, 9, 0, 0],
+             [0, 9, 0, 0],
+             [0, 9, 0, 0],
              [0, 0, 0, 0]]
         ],
         "x": BOARDWIDTH // 2 - 4 // 2,
-        "y": 0
+        "y": -2
         }
 
     T_MINO = {
+        "shape": "T",
         "block": [
-            [[0, 0, 0, 0],
-             [9, 9, 9, 0],
-             [0, 9, 0, 0],
-             [0, 0, 0, 0]],
-
-            [[0, 9, 0, 0],
-             [9, 9, 0, 0],
-             [0, 9, 0, 0],
-             [0, 0, 0, 0]],
-
-            [[0, 9, 0, 0],
-             [9, 9, 9, 0],
+            [[0, 2, 0, 0],
+             [2, 2, 2, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
 
-            [[0, 9, 0, 0],
-             [0, 9, 9, 0],
-             [0, 9, 0, 0],
+            [[0, 2, 0, 0],
+             [0, 2, 2, 0],
+             [0, 2, 0, 0],
+             [0, 0, 0, 0]],
+
+            [[0, 0, 0, 0],
+             [2, 2, 2, 0],
+             [0, 2, 0, 0],
+             [0, 0, 0, 0]],
+
+            [[0, 2, 0, 0],
+             [2, 2, 0, 0],
+             [0, 2, 0, 0],
              [0, 0, 0, 0]]
         ],
         "x": BOARDWIDTH // 2 - 4 // 2,
-        "y": 0
+        "y": -2
         }
 
     I_MINO = {
-        "block" : [
+        "shape": "I",
+        "block": [
             [[0, 0, 0, 0],
              [12, 12, 12, 12],
              [0, 0, 0, 0],
@@ -197,8 +209,8 @@ class Tetromino:
              [0, 12, 0, 0],
              [0, 12, 0, 0]]
         ],
-        "x": BOARDWIDTH // 2 - 4 // 2,
-        "y": 0
+        "x": BOARDWIDTH // 2 - 4 // 2 + 1,
+        "y": -2
         }
     
     def __init__(self, generator):
@@ -210,7 +222,7 @@ class Tetromino:
         self.orientations = self.get_orientations()
         self.x = self.mino["x"]
         self.y = self.mino["y"]
-        self.wallkicks = self.get_wallkicks(generator)
+        self.wallkicks = self.get_wallkicks()
         
     def get_orientations(self):
         orientation = [
@@ -229,13 +241,13 @@ class Tetromino:
         self.current_orientation -= 1
         return self.orientations[self.current_orientation % self.rotations]
 
-    def get_wallkicks(self, generator): 
-        if generator != 6:
+    def get_wallkicks(self): 
+        if self.mino["shape"] != "I":
             wallkicks = [
+                [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 0 orientation: 0
                 [(0, 0), (-1, 0), (-1, -1), (0, 2), (-1, 2)],  # 0 -> R  orientation: 1
                 [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 2 orientation: 2
                 [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 2 -> L orientation: 3
-                [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 0 orientation: 0
                 [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 0 orientation: 0
                 [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 0 -> L orientation: -1
                 [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 2 orientation: -2
@@ -262,35 +274,29 @@ class Board:
         self.grid = deepcopy(self.board)
         self.cleared_lines = 0
         self.consecutive_clears = -1
-
-    # Checks if a block on the board is falling
-    def is_falling(self):
-        return self.block != None
-
-    # Generates a new block
-    def generate_block(self, gen, gen2):
-        # Ensure only one block is generated at a time
-        # if self.is_falling():
-        #     raise Exception("Block already falling")
-        # else:
-        block = Tetromino(gen)
-        next_block = Tetromino(gen2)
-        return [block, next_block]
     
-    # Drops a block into its starting position on the board
     def drop_block(self, x, y, mino, orientation):
         block = mino["block"][orientation]
+        shape = mino["shape"]
 
         temp_x, temp_y = x, y
 
         while not self.detect_collision(temp_x, temp_y, mino, orientation):
             temp_y += 1
         
-        for row in range(4):
-            for col in range(4):
-                if block[row][col] != 0:
-                    self.grid[row + temp_y][col + temp_x] = 1
-        
+        if shape != "I":
+            if y > -1:
+                for row in range(4):
+                    for col in range(4):
+                        if block[row][col] != 0:
+                            self.grid[row + temp_y][col + temp_x] = 1
+        else:
+            if y > -2:
+                for row in range(4):
+                    for col in range(4):
+                        if block[row][col] != 0:
+                            self.grid[row + temp_y][col + temp_x] = 1
+
         for row in range(4):
             for col in range(4):
                 if block[row][col] != 0:
@@ -302,57 +308,53 @@ class Board:
                 if self.grid[row][col] != 0:
                     pyxel.rect(col * GRID_SIZE + 4, row * GRID_SIZE + 8, 12, 12, self.grid[row][col])
 
-    def draw_next(self, x, y, mino, orientation):
-        block = mino["block"][orientation]
+    def draw_next(self, mino):
+        block = mino["block"][0]
+        shape = mino["shape"]
+        
         for row in range(4):
             for col in range(4):
                 if block[row][col] != 0:
-                    if block[row][col]  == 4 or block[row][col]  == 14:
-                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 68, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
-                    elif block[row][col] == 5:
-                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 62, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
-                    elif block[row][col] == 12:
-                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 62, row * GRID_SIZE + 20, 12, 12, block[row][col])
-                    else:
-                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 68, row * GRID_SIZE + 18, 12, 12, block[row][col])
-
-    def draw_hold(self, mino, orientation):
-        block = mino["block"][orientation]
-        for row in range(4):
-            for col in range(4):
-                if block[row][col] != 0:
-                    if block[row][col]  == 4 or block[row][col]  == 14:
-                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 8, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
-                    elif block[row][col] == 5:
+                    if shape == "S" or shape == "Z":
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 9, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
+                    elif shape == "O":
                         pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 3, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
-                    elif block[row][col] == 12:
+                    elif shape == "I":
                         pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 3, row * GRID_SIZE + 20, 12, 12, block[row][col])
                     else:
-                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 8, row * GRID_SIZE + 18, 12, 12, block[row][col])
-                    
-                    
-    # Makes the current block fall
-    def falling(self, x, y, mino, orientation):
-        if self.detect_collision(x, y, mino, orientation):
-            self.fix_block()
-        else:
-            y += 1
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 9, row * GRID_SIZE + 25, 12, 12, block[row][col])
 
+    # def draw_hold(self, mino):
+    #     block = mino["block"][0]
+    #     shape = mino["shape"]
+
+    #     for row in range(4):
+    #         for col in range(4):
+    #             if block[row][col] != 0:
+    #                 if shape == "S" or shape == "Z":
+    #                     pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 8, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
+    #                 elif shape == "O":
+    #                     pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 3, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
+    #                 elif shape == "I":
+    #                     pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 3, row * GRID_SIZE + 20, 12, 12, block[row][col])
+    #                 else:
+    #                     pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 8, row * GRID_SIZE + 18, 12, 12, block[row][col])
+                    
     def detect_collision(self, x, y, mino, orientation):
         block = mino["block"][orientation]
 
         for row in range(4):
             for col in range(4):
                 if block[row][col] != 0:
-                    print(f"row: {row}, y: {y}, col: {col}, x: {x}")
-                    if row + y + 1 > BOARDHEIGHT - 1:
+
+                    if row + y + 1 > 18:
                         return True
                     elif self.board[row + y + 1][col + x] != 0 and self.board[row + y + 1][col + x] != 1:
                         return True
         return False
 
     # Fixes the block in the current position and adds to the board
-    def fix_block(self, x, y, mino, orientation, next_mino):
+    def fix_block(self, x, y, mino, orientation):
         block = mino["block"][orientation]
 
         for row in range(4):
@@ -360,18 +362,16 @@ class Board:
                 if block[row][col] != 0:
                     self.board[row + y][col + x] = block[row][col]
 
-        self.clear_lines()
-
     def clear_lines(self):
         lines_to_clear = []
-        for index, row in enumerate(range(BOARDHEIGHT)):
+        for index, row in enumerate(range(20)):
             if self.board[row].count(0) == 0:
                 lines_to_clear.append(index)
 
         if len(lines_to_clear) > 0:
             for index in range(len(lines_to_clear)):
                 self.board.pop(lines_to_clear[index])
-                self.board.insert(0, [0] * BOARDWIDTH)
+                self.board.insert(2, [0] * BOARDWIDTH)
             
             self.cleared_lines = len(lines_to_clear)
             self.consecutive_clears += 1
@@ -432,12 +432,9 @@ class Move:
 
         for row in range(4):
             for col in range(4):
-                is_above_board = row + y + 1 < 0
-                if is_above_board:
-                    continue
 
                 if block[row][col] != 0:
-                    if row + y + 1 > BOARDHEIGHT - 1:
+                    if row + y + 1 > 18:
                         return True
 
                     if self.board[row + y + 1][col + x] != 0:
@@ -449,9 +446,6 @@ class Move:
 
         for row in range(4):
             for col in range(4):
-                is_above_board = row + y + 1 < 0
-                if is_above_board:
-                    continue
 
                 if block[row][col] != 0:
                     if col + x - 1 < 0:
@@ -465,9 +459,6 @@ class Move:
 
         for row in range(4):
             for col in range(4):
-                is_above_board = row + y + 1 < 0
-                if is_above_board:
-                    continue
 
                 if block[row][col] != 0:
                     if col + x + 1 > BOARDWIDTH - 1:
@@ -482,29 +473,12 @@ class Move:
         for row in range(4):
             for col in range(4):
                 if block[row][col] != 0:
-                    if row + y > BOARDHEIGHT - 1 or col + x < 0 or col + x > BOARDWIDTH - 1:
+                    if row + y > 18 or col + x < 0 or col + x > BOARDWIDTH - 1:
                         return False
                     
                     elif self.board[row + y][col + x] != 0:
                         return False
         return True
-
-    # def can_rotate_left(self, mino, x, y, orientation):
-    #     block = mino.mino["block"][orientation]
-
-    #     for row in range(4):
-    #         for col in range(4):
-    #             if block[row][col] != 0:
-    #                 if row + y > BOARDHEIGHT - 1 or col + x < 0 or col + x > BOARDWIDTH - 1:
-    #                     return False
-                    
-    #                 elif self.board[row + y][col + x] != 0:
-    #                     return False
-    #     return True
-
-    def get_each_rotation_position(self, wallkicks, orientation):
-        for _ in range(len(wallkicks)):
-            return wallkicks[orientation]
 
 class Scores:
     def __init__(self):
@@ -531,8 +505,8 @@ class Scores:
             return True
         return False
 
-    def can_level_up(self):
-        return self.lines > self.level * 5
+    def can_level_up(self, lines, level):
+        return lines > level * 5
 
 class Tetris:
     def __init__(self):
@@ -543,8 +517,9 @@ class Tetris:
     def reset(self):
         self.state = "running"
         self.is_gameover = False
-        self.hold = False
+        # self.hold = False
         self.cleared = False
+        self.lock_delay = 300
 
         self.s = Scores()
         self.level = self.s.level
@@ -558,10 +533,8 @@ class Tetris:
         self.t = Tetromino(BAG[0])
         self.b = Board(BOARDWIDTH, BOARDHEIGHT)
 
-        self.block = self.t.block
         self.next = Tetromino(BAG[1])
-        self.next_block = self.next.block
-        self.hold_block = None
+        # self.hold_mino = None 
         
         self.x = self.t.x
         self.y = self.t.y
@@ -586,113 +559,165 @@ class Tetris:
                 self.state = "running"
         
         if self.state == "running":
-            if pyxel.frame_count % 60 * self.fall_speed == 0:
+            if pyxel.frame_count % (60 / self.fall_speed) == 0:
                 if not self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation):
                     self.y += 1
                     self.b.grid = deepcopy(self.b.board)
                     self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
                 else:
-                    self.b.fix_block(self.x, self.y, self.t.mino, self.orientation, self.next)
-                    self.hold = False
-
-                    if self.b.clear_lines():
-                        self.cleared = True
-                    
-                    if self.cleared:
-                        self.score += self.s.points(self.b.cleared_lines)
-                        self.lines += self.b.cleared_lines
-                        self.combos += self.b.consecutive_clears if self.b.consecutive_clears > 0 else 0
-                        self.cleared = False
-
-                    self.t.mino = self.next.mino
-                    self.x = self.t.x
-                    self.y = self.t.y
-                    self.next = Tetromino(BAG[random.randint(0, 6)])
+                    self.b.fix_block(self.x, self.y, self.t.mino, self.orientation)
+                    if self.check_game_over():
+                        self.is_gameover = True
+                    self.add_scores()
+                    self.generate_new_block()
 
             if pyxel.btnp(pyxel.KEY_LEFT, 10, 2) and not pyxel.btn(pyxel.KEY_RIGHT):
-                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
-                self.x = self.move.move_left()
-                self.b.grid = deepcopy(self.b.board)
-                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
-
-            if pyxel.btnp(pyxel.KEY_RIGHT, 10, 2) and not pyxel.btn(pyxel.KEY_LEFT):
-                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
-                self.x = self.move.move_right()
-                self.b.grid = deepcopy(self.b.board)
-                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
-
-            if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
-                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
-                self.y = self.move.move_down()
-                self.b.grid = deepcopy(self.b.board)
-                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
-
-            if pyxel.btn(pyxel.KEY_SPACE):
-                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
-                self.y = self.move.hard_drop()
-                self.b.grid = deepcopy(self.b.board)
-                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
-
-            if pyxel.btnp(pyxel.KEY_X, 10, 2) and not pyxel.btn(pyxel.KEY_Z):
-                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
-                self.orientation = self.move.rotate_right()
-                if not self.move.can_rotate(self.t, self.x, self.y, self.orientation):
-                    self.orientation -= 1
-                self.b.grid = deepcopy(self.b.board)
-                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
-
-            if pyxel.btnp(pyxel.KEY_Z, 10, 2) and not pyxel.btn(pyxel.KEY_X):
-                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
-                self.orientation = self.move.rotate_left()
-                if not self.move.can_rotate(self.t, self.x, self.y, self.orientation):
-                    self.orientation += 1
-                self.b.grid = deepcopy(self.b.board)
-                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
-            
-            if pyxel.btnp(pyxel.KEY_C, 10, 2):
-                if self.hold == False:
-                    if self.hold_block == None:
-                        self.hold_block = self.t.mino
-                        self.t.mino = self.next.mino
-                        self.next = Tetromino(BAG[random.randint(0, 6)])
-                        self.next_block = self.next.block
-                    else:
-                        self.hold_block, self.t.mino = self.t.mino, self.hold_block
-                    self.x = self.t.x
-                    self.y = self.t.y   
-                    self.hold = True
+                if self.y > -1:
+                    self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
+                    self.x = self.move.move_left()
                     self.b.grid = deepcopy(self.b.board)
                     self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
 
+            if pyxel.btnp(pyxel.KEY_RIGHT, 10, 2) and not pyxel.btn(pyxel.KEY_LEFT):
+                if self.y > -1:
+                    self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
+                    self.x = self.move.move_right()
+                    self.b.grid = deepcopy(self.b.board)
+                    self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
 
-                
+            if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
+                if self.y > -1:
+                    self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
+                    self.y = self.move.move_down()
+                    self.b.grid = deepcopy(self.b.board)
+                    self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
+                    if self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation):
+                        if pyxel.frame_count % self.lock_delay == 5:
+                            self.b.fix_block(self.x, self.y, self.t.mino, self.orientation)
+                            if self.check_game_over():
+                                self.is_gameover = True
+                            self.add_scores()
+                            self.generate_new_block()
+
+            if pyxel.btn(pyxel.KEY_SPACE):
+                if self.y > -1:
+                    #TODO ADD HARD DROP POINTS TO THE SCORE BY NUMBER OF CELLS DROPPED * 2
+                    self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
+                    self.y = self.move.hard_drop()
+                    self.b.grid = deepcopy(self.b.board)
+                    self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
+                    if self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation):
+                        if pyxel.frame_count % self.lock_delay == 5:
+                            self.b.fix_block(self.x, self.y, self.t.mino, self.orientation)
+                            if self.check_game_over():
+                                self.is_gameover = True
+                            self.add_scores()
+                            self.generate_new_block()
+
+            if pyxel.btnp(pyxel.KEY_X, 10, 2) and not pyxel.btn(pyxel.KEY_Z):
+                if self.y > -1:
+                    self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
+                    self.orientation = self.move.rotate_right()
+
+                    if not self.move.can_rotate(self.t, self.x, self.y, self.orientation):
+                        wallkicks = self.t.wallkicks[:4]
+                        for x, y in wallkicks[self.orientation]:
+                            if self.move.can_rotate(self.t, self.x + x, self.y + y, self.orientation):
+                                self.x += x
+                                self.y += y
+                                break
+                        else:
+                            self.orientation -= 1
+                    self.b.grid = deepcopy(self.b.board)
+                    self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
+
+            if pyxel.btnp(pyxel.KEY_Z, 10, 2) and not pyxel.btn(pyxel.KEY_X):
+                if self.y > -1:
+                    self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
+                    self.orientation = self.move.rotate_left()
+
+                    if not self.move.can_rotate(self.t, self.x, self.y, self.orientation):
+                        wallkicks = self.t.wallkicks[4:]
+                        for x, y in wallkicks[self.orientation]:
+                            if self.move.can_rotate(self.t, self.x + x, self.y + y, self.orientation):
+                                self.x += x
+                                self.y += y
+                                break
+                        else:
+                            self.orientation += 1
+                    self.b.grid = deepcopy(self.b.board)
+                    self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
+            
+            # if pyxel.btnp(pyxel.KEY_C, 10, 2):
+            #     if self.hold_mino == None:
+            #         self.hold_mino = self.t.mino
+            #         self.t.mino = self.next.mino
+            #         self.next = Tetromino(BAG[random.randint(0, 6)])
+            #         self.next_block = self.next.block
+            #     else:
+            #         self.hold_mino, self.t.mino = self.t.mino, self.hold_mino
+            #     self.x = self.t.x
+            #     self.y = self.t.y
+            #     self.orientation = self.t.current_orientation
+            #     self.hold = True
+            #     self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
+            #     self.b.grid = deepcopy(self.b.board)
+            
     def draw(self):
         pyxel.cls(0)
-        self.b.draw_next(self.next.x, self.next.y, self.next.mino, self.next.current_orientation)
-        if self.hold:
-            self.b.draw_hold(self.hold_block, self.orientation)
+        self.b.draw_next(self.next.mino)
+        # if self.hold:
+        #     self.b.draw_hold(self.hold_mino)
         self.b.draw_board()
         self.draw_grid()
         self.draw_borders()
         self.text()
 
+        if self.is_gameover:
+            pyxel.cls(0)
+
         if self.state == "paused":
             pyxel.text(WINDOWWIDTH // 2 - 20, WINDOWHEIGHT // 2 - 12, "PAUSED", pyxel.frame_count % 16)
 
     def draw_borders(self):
-        pyxel.rectb(4, 8, (BOARDWIDTH * GRID_SIZE) + 1, (BOARDHEIGHT * GRID_SIZE) + 1, 5)
-        pyxel.rectb((WINDOWWIDTH / 2) + 59, 16, 54, 48, 5)
+        pyxel.rectb(4, 8, (BOARDWIDTH * GRID_SIZE) + 1, (19 * GRID_SIZE) + 1, 5)
+        # pyxel.rectb((WINDOWWIDTH / 2) + 59, 16, 54, 48, 5)
         pyxel.rectb(WINDOWWIDTH / 2 , 16, 54, 48, 5)
 
     def draw_grid(self):
         for row in range(10):
-            pyxel.line(4 + (GRID_SIZE * row), 8, 4 + (GRID_SIZE * row), (BOARDHEIGHT * 12) + 8, 13)
+            pyxel.line(4 + (GRID_SIZE * row), 8, 4 + (GRID_SIZE * row), (19 * GRID_SIZE) + 8, 13)
             pyxel.line(4, 8 + (GRID_SIZE * row), 4 + (BOARDWIDTH * 12), 8 + (GRID_SIZE * row), 13)
             pyxel.line(4, 8 + (GRID_SIZE * (row + 10)), 4 + (BOARDWIDTH * 12), 8 + (GRID_SIZE * (row + 10)), 13)
+    
+    def generate_new_block(self):
+        self.t.mino = self.next.mino
+        self.x = self.t.x
+        self.y = self.t.y
+        self.orientation = self.t.current_orientation
+        self.next = Tetromino(BAG[random.randint(0, 6)])
+        self.hold = False
+
+    def add_scores(self):
+        if self.b.clear_lines():
+            self.cleared = True
         
+        if self.cleared:
+            self.combos += self.b.consecutive_clears if self.b.consecutive_clears > 0 else 0
+            self.score += self.s.points(self.b.cleared_lines)
+            self.lines += self.b.cleared_lines
+
+            if self.s.can_level_up(self.lines, self.level):
+                self.level += 1
+                self.fall_speed += 1
+            self.cleared = False
+    
+    def check_game_over(self):
+        return self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation) if self.y < 0 else False
+
     def text(self):
-        pyxel.text(WINDOWWIDTH / 2 + 1, 9, "HOLD: ", 10)
-        pyxel.text(WINDOWWIDTH / 2 + 60, 9, "NEXT: ", 10)
+        # pyxel.text(WINDOWWIDTH / 2 + 1, 9, "HOLD: ", 10)
+        pyxel.text(WINDOWWIDTH / 2 + 1, 9, "NEXT: ", 10)
         pyxel.text(WINDOWWIDTH / 2 + 1, 70, "LEVEL: ", 10)
         pyxel.text(WINDOWWIDTH / 2 + 30, 70, str(self.level), 6)
         pyxel.text(WINDOWWIDTH / 2 + 1, 80, "SCORE: ", 10)

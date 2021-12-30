@@ -431,7 +431,7 @@ class Move:
         for _ in range(len(wallkicks)):
             return wallkicks[curr_rotation]
 
-class Board:
+class Board:    
     def __init__(self):
         self.board = [[0] * BOARDWIDTH for _ in range(BOARDHEIGHT)]
         self.grid = deepcopy(self.board)

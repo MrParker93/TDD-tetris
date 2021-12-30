@@ -1,5 +1,7 @@
+import pyxel
+
 BOARDWIDTH = 10
-BOARDHEIGHT = 20
+BOARDHEIGHT = 30
 WINDOWWIDTH = 256
 WINDOWHEIGHT = 256
 
@@ -18,3 +20,10 @@ POINTS = {
 LINES = 0 
 COMBOS = 0
 SPINS = 0
+
+print(f"yellow O: {pyxel.COLOR_YELLOW}")
+print(f"purple T: {pyxel.COLOR_PURPLE}")
+print(f"green S: {pyxel.COLOR_GREEN}")
+print(f"red Z: {pyxel.COLOR_RED}")
+print(f"blue J: {pyxel.COLOR_DARKBLUE}")
+print(f"orange L: {pyxel.COLOR_ORANGE}")
