@@ -1,7 +1,6 @@
 import pyxel
 import random
 from constants import *
-from scores import Scores
 from copy import deepcopy
 
 BOARDWIDTH = 10
@@ -11,28 +10,34 @@ WINDOWHEIGHT = 256
 
 GRID_SIZE = 12
 BAG = [_ for _ in range(7)]
-
+POINTS = {
+    "0": 0,
+    "1": 40,
+    "2": 100,
+    "3": 300,
+    "4": 1200
+}
 
 class Tetromino:
     O_MINO = {
         "block": [
-            [[0, 1, 1, 0],
-             [0, 1, 1, 0],
+            [[0, 5, 5, 0],
+             [0, 5, 5, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
              
-            [[0, 1, 1, 0],
-             [0, 1, 1, 0],
+            [[0, 5, 5, 0],
+             [0, 5, 5, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
 
-            [[0, 1, 1, 0],
-             [0, 1, 1, 0],
+            [[0, 5, 5, 0],
+             [0, 5, 5, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]],
 
-            [[0, 1, 1, 0],
-             [0, 1, 1, 0],
+            [[0, 5, 5, 0],
+             [0, 5, 5, 0],
              [0, 0, 0, 0],
              [0, 0, 0, 0]]
         ],
@@ -227,10 +232,10 @@ class Tetromino:
     def get_wallkicks(self, generator): 
         if generator != 6:
             wallkicks = [
-                [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 0 orientation: 0
                 [(0, 0), (-1, 0), (-1, -1), (0, 2), (-1, 2)],  # 0 -> R  orientation: 1
                 [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 2 orientation: 2
                 [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 2 -> L orientation: 3
+                [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 0 orientation: 0
                 [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 0 orientation: 0
                 [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 0 -> L orientation: -1
                 [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 2 orientation: -2
@@ -255,11 +260,6 @@ class Board:
         self.height = height
         self.board = [[0] * self.width for _ in range(self.height)]
         self.grid = deepcopy(self.board)
-        self.blocks = self.generate_block(BAG[0], BAG[1])
-        self.block = self.blocks[0]
-        self.next_block = self.blocks[1]
-        self.start_pos_x = self.block.x
-        self.start_pos_y = self.block.y
         self.cleared_lines = 0
         self.consecutive_clears = -1
 
@@ -289,7 +289,7 @@ class Board:
         for row in range(4):
             for col in range(4):
                 if block[row][col] != 0:
-                    self.grid[row + temp_y][col + temp_x] = 7
+                    self.grid[row + temp_y][col + temp_x] = 1
         
         for row in range(4):
             for col in range(4):
@@ -308,13 +308,27 @@ class Board:
             for col in range(4):
                 if block[row][col] != 0:
                     if block[row][col]  == 4 or block[row][col]  == 14:
-                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 65 + x, row * GRID_SIZE + 18 + GRID_SIZE + y, 12, 12, block[row][col])
-                    elif block[row][col] == 1:
-                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 59 + x, row * GRID_SIZE + 18 + GRID_SIZE + y, 12, 12, block[row][col])
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 68, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
+                    elif block[row][col] == 5:
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 62, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
                     elif block[row][col] == 12:
-                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 59 + x, row * GRID_SIZE + 20 + y, 12, 12, block[row][col])
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 62, row * GRID_SIZE + 20, 12, 12, block[row][col])
                     else:
-                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 65 + x, row * GRID_SIZE + 18 + y, 12, 12, block[row][col])
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 68, row * GRID_SIZE + 18, 12, 12, block[row][col])
+
+    def draw_hold(self, mino, orientation):
+        block = mino["block"][orientation]
+        for row in range(4):
+            for col in range(4):
+                if block[row][col] != 0:
+                    if block[row][col]  == 4 or block[row][col]  == 14:
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 8, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
+                    elif block[row][col] == 5:
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 3, row * GRID_SIZE + 18 + GRID_SIZE, 12, 12, block[row][col])
+                    elif block[row][col] == 12:
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 3, row * GRID_SIZE + 20, 12, 12, block[row][col])
+                    else:
+                        pyxel.rect(col * GRID_SIZE + (WINDOWWIDTH / 2) + 8, row * GRID_SIZE + 18, 12, 12, block[row][col])
                     
                     
     # Makes the current block fall
@@ -330,104 +344,80 @@ class Board:
         for row in range(4):
             for col in range(4):
                 if block[row][col] != 0:
+                    print(f"row: {row}, y: {y}, col: {col}, x: {x}")
                     if row + y + 1 > BOARDHEIGHT - 1:
                         return True
-                    elif self.board[row + y + 1][col + x] != 0 and self.board[row + y + 1][col + x] != 7:
+                    elif self.board[row + y + 1][col + x] != 0 and self.board[row + y + 1][col + x] != 1:
                         return True
         return False
 
     # Fixes the block in the current position and adds to the board
-    def fix_block(self):
-        for row in range(len(self.block.block)):
-            for col in range(len(self.block.block[0])):
-                if self.block.block[row][col] != 0:
-                    self.board[row + self.block.y][col + self.block.x] = self.block.block[row][col]
+    def fix_block(self, x, y, mino, orientation, next_mino):
+        block = mino["block"][orientation]
+
+        for row in range(4):
+            for col in range(4):
+                if block[row][col] != 0:
+                    self.board[row + y][col + x] = block[row][col]
 
         self.clear_lines()
-        self.block.x = self.block.mino["x"]
-        self.block.y = self.block.mino["y"]
-        if not self.is_falling():
-            self.block = self.next_block
-            random.shuffle(BAG)
-            self.blocks = self.generate_block(BAG[0], BAG[1])
-            self.next_block = self.blocks[0]
 
     def clear_lines(self):
         lines_to_clear = []
-        for index, row in enumerate(range(self.height)):
+        for index, row in enumerate(range(BOARDHEIGHT)):
             if self.board[row].count(0) == 0:
                 lines_to_clear.append(index)
 
         if len(lines_to_clear) > 0:
             for index in range(len(lines_to_clear)):
                 self.board.pop(lines_to_clear[index])
-                self.board.insert(0, [0] * self.width)
+                self.board.insert(0, [0] * BOARDWIDTH)
             
             self.cleared_lines = len(lines_to_clear)
             self.consecutive_clears += 1
+            return True
         else:
             self.consecutive_clears = -1
-        self.grid = deepcopy(self.board)
-
+            return False
+        
 class Move:
     def __init__(self, x, y, orientation, mino, board):
         self.mino = mino
-        self.block = self.mino.block
-        self.wallkicks = self.mino.wallkicks
         self.board = board
         self.x = x
         self.y = y
         self.orientation = orientation
 
     def move_left(self):
-        print(f"x before: {self.x}")
-        self.x -= 1
-        print(f"x after: {self.x}")
-        if not self.block_collision(self.block, x=-1):
+        if not self.left_collision(self.mino, self.x, self.y, self.orientation):
+            self.x -= 1
             return self.x
-        self.x += 1
         return self.x
 
     def move_right(self):
-        print(f"x before: {self.x}")
-        self.x += 1
-        print(f"x after: {self.x}")
-        if not self.block_collision(self.block, x=1):
+        if not self.right_collision(self.mino, self.x, self.y, self.orientation):
+            self.x += 1
             return self.x
-        self.x -= 1
         return self.x
 
     def move_down(self):
-        print(f"y before: {self.y}")
-        self.y += 1
-        print(f"y after: {self.y}")
-        if not self.block_collision(self.block, y=1):
+        if not self.bottom_collision(self.mino, self.x, self.y, self.orientation):
+            self.y += 1
             return self.y
-        self.y -= 1
         return self.y
 
     def hard_drop(self):
-        for row in reversed(range(BOARDHEIGHT)):
-            print(f"y: {self.y}")
-            drop = row - self.y if self.y >=0 else row + self.y
-            self.y += drop
-            if not self.block_collision(self.block, y=drop):
-                return self.y
-        self.y -= drop
+        while not self.bottom_collision(self.mino, self.x, self.y, self.orientation):
+            self.y += 1
         return self.y
 
     def rotate_right(self):
-        # self.block = self.mino.rotate_right()
         if self.orientation == 3:
             self.orientation = 0
             return self.orientation
         else:
             self.orientation += 1
-        return self.orientation
-        # if self.can_rotate_right(self.block):
-        # if not self.block_collision(self.block):
-        # self.block = self.mino.rotate_left()
-        # return self.block
+            return self.orientation
     
     def rotate_left(self):
         if self.orientation == 0:
@@ -435,85 +425,114 @@ class Move:
             return self.orientation
         else:
             self.orientation -= 1
-        return self.orientation
-        # if self.can_rotate_left(self.block):
-        # if not self.block_collision(self.block):
-        # self.block = self.mino.rotate_right()
-        # return self.block
+            return self.orientation
 
-    def block_collision(self, block, x=0, y=0):
-        for row in range(len(block)):
-            for col in range(len(block[0])):
-                is_above_board = row + self.y< 0
+    def bottom_collision(self, mino, x, y, orientation):
+        block = mino.mino["block"][orientation]
+
+        for row in range(4):
+            for col in range(4):
+                is_above_board = row + y + 1 < 0
                 if is_above_board:
                     continue
+
                 if block[row][col] != 0:
-                    if col + self.x < 0 or col + self.x > BOARDWIDTH - 1:
-                        print(f"col {col} + x {self.x}: {self.x + col}")
+                    if row + y + 1 > BOARDHEIGHT - 1:
                         return True
 
-                    if row + self.y > BOARDHEIGHT - 1:
-                        return True
-
-                    if self.board[row + self.y][col + self.x] != 0:
+                    if self.board[row + y + 1][col + x] != 0:
                         return True
         return False
 
-    def can_rotate_right(self, block):
-        wallkicks = self.wallkicks[4:]
-        rotation = self.mino.current_orientation % self.mino.rotations
-        each_variation = self.get_each_rotation_position(wallkicks, rotation)
-        # if self.y < 0:
-        #     new_y = self.y + 1
-        # else:
-        #     new_y = self.y
-            
-        for row in range(len(block)):
-            for col in range(len(block[0])):
+    def left_collision(self, mino, x, y, orientation):
+        block = mino.mino["block"][orientation]
+
+        for row in range(4):
+            for col in range(4):
+                is_above_board = row + y + 1 < 0
+                if is_above_board:
+                    continue
+
                 if block[row][col] != 0:
-                    for x, y in each_variation:
-                        if col + self.x + x < 0 or col + self.x + x >= BOARDWIDTH \
-                             or row + self.y + y >= BOARDHEIGHT:
-                            continue
-
-                        if self.block_collision(block, x, y):
-                            continue
-
-                        if 0 <= col + self.x + x < BOARDWIDTH and row + self.y + y < BOARDHEIGHT:
-                            self.x += x
-                            self.y += y
-                            return True
+                    if col + x - 1 < 0:
+                        return True
+                    elif self.board[row + y][col + x - 1] != 0:
+                        return True
         return False
 
-    def can_rotate_left(self, block):
-        wallkicks = self.wallkicks[:4]
-        rotation = self.mino.current_orientation % self.mino.rotations
-        each_variation = self.get_each_rotation_position(wallkicks, rotation)
-        # if self.mino.y < 0:
-        #     new_y = self.mino.y + 1
-        # else:
-        #     new_y = self.mino.y
-            
-        for row in range(len(block)):
-            for col in range(len(block[0])):
+    def right_collision(self, mino, x, y, orientation):
+        block = mino.mino["block"][orientation]
+
+        for row in range(4):
+            for col in range(4):
+                is_above_board = row + y + 1 < 0
+                if is_above_board:
+                    continue
+
                 if block[row][col] != 0:
-                    for x, y in each_variation:
-                        if col + self.x + x < 0 or col + self.x + x >= BOARDWIDTH \
-                             or row + self.y + y >= BOARDHEIGHT:
-                            continue
-
-                        if self.block_collision(block, x, y):
-                            continue
-
-                        if 0 <= col + self.x + x < BOARDWIDTH and row + self.y + y < BOARDHEIGHT:
-                            self.x += x
-                            self.y += y
-                            return True
+                    if col + x + 1 > BOARDWIDTH - 1:
+                        return True
+                    elif self.board[row + y][col + x + 1] != 0:
+                        return True
         return False
 
-    def get_each_rotation_position(self, wallkicks, curr_rotation):
+    def can_rotate(self, mino, x, y, orientation):
+        block = mino.mino["block"][orientation]
+        
+        for row in range(4):
+            for col in range(4):
+                if block[row][col] != 0:
+                    if row + y > BOARDHEIGHT - 1 or col + x < 0 or col + x > BOARDWIDTH - 1:
+                        return False
+                    
+                    elif self.board[row + y][col + x] != 0:
+                        return False
+        return True
+
+    # def can_rotate_left(self, mino, x, y, orientation):
+    #     block = mino.mino["block"][orientation]
+
+    #     for row in range(4):
+    #         for col in range(4):
+    #             if block[row][col] != 0:
+    #                 if row + y > BOARDHEIGHT - 1 or col + x < 0 or col + x > BOARDWIDTH - 1:
+    #                     return False
+                    
+    #                 elif self.board[row + y][col + x] != 0:
+    #                     return False
+    #     return True
+
+    def get_each_rotation_position(self, wallkicks, orientation):
         for _ in range(len(wallkicks)):
-            return wallkicks[curr_rotation]
+            return wallkicks[orientation]
+
+class Scores:
+    def __init__(self):
+        self.score = SCORE
+        self.level = LEVEL
+        self.lines = LINES
+        self.combos = COMBOS
+        self.spins = SPINS
+        self.fall_speed = FALL_SPEED
+    
+    def points(self, cleared_lines):
+        if cleared_lines != None:
+            self.lines += cleared_lines
+            if self.check_combo_count(self.combos):
+                multiplier = (cleared_lines * self.level) + (50 * self.level)
+                self.score += POINTS[str(cleared_lines)] * (self.level + 1) + multiplier
+            else:
+                self.score += POINTS[str(cleared_lines)] * (self.level + 1)
+        return self.score
+
+    def check_combo_count(self, combo_count):
+        if combo_count > 0:
+            self.combos += combo_count
+            return True
+        return False
+
+    def can_level_up(self):
+        return self.lines > self.level * 5
 
 class Tetris:
     def __init__(self):
@@ -524,13 +543,16 @@ class Tetris:
     def reset(self):
         self.state = "running"
         self.is_gameover = False
+        self.hold = False
+        self.cleared = False
 
-        self.level = Scores().level
-        self.score = Scores().score
-        self.lines = Scores().lines
-        self.combos = Scores().combos
-        self.spins = Scores().spins
-        self.fall_speed = Scores().fall_speed
+        self.s = Scores()
+        self.level = self.s.level
+        self.score = self.s.score
+        self.lines = self.s.lines
+        self.combos = self.s.combos
+        self.spins = self.s.spins
+        self.fall_speed = self.s.fall_speed
 
         random.shuffle(BAG)
         self.t = Tetromino(BAG[0])
@@ -539,14 +561,15 @@ class Tetris:
         self.block = self.t.block
         self.next = Tetromino(BAG[1])
         self.next_block = self.next.block
+        self.hold_block = None
         
         self.x = self.t.x
         self.y = self.t.y
         self.orientation = self.t.current_orientation
 
         self.board = self.b.board
-        self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
-
+        
+        self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
 
     def update(self):
         if pyxel.btn(pyxel.KEY_Q):
@@ -567,35 +590,87 @@ class Tetris:
                 if not self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation):
                     self.y += 1
                     self.b.grid = deepcopy(self.b.board)
+                    self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
+                else:
+                    self.b.fix_block(self.x, self.y, self.t.mino, self.orientation, self.next)
+                    self.hold = False
+
+                    if self.b.clear_lines():
+                        self.cleared = True
+                    
+                    if self.cleared:
+                        self.score += self.s.points(self.b.cleared_lines)
+                        self.lines += self.b.cleared_lines
+                        self.combos += self.b.consecutive_clears if self.b.consecutive_clears > 0 else 0
+                        self.cleared = False
+
+                    self.t.mino = self.next.mino
+                    self.x = self.t.x
+                    self.y = self.t.y
+                    self.next = Tetromino(BAG[random.randint(0, 6)])
 
             if pyxel.btnp(pyxel.KEY_LEFT, 10, 2) and not pyxel.btn(pyxel.KEY_RIGHT):
+                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
                 self.x = self.move.move_left()
                 self.b.grid = deepcopy(self.b.board)
+                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
 
             if pyxel.btnp(pyxel.KEY_RIGHT, 10, 2) and not pyxel.btn(pyxel.KEY_LEFT):
+                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
                 self.x = self.move.move_right()
                 self.b.grid = deepcopy(self.b.board)
+                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
 
             if pyxel.btnp(pyxel.KEY_DOWN, 10, 2):
+                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
                 self.y = self.move.move_down()
                 self.b.grid = deepcopy(self.b.board)
+                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
 
             if pyxel.btn(pyxel.KEY_SPACE):
+                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
                 self.y = self.move.hard_drop()
                 self.b.grid = deepcopy(self.b.board)
+                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
 
             if pyxel.btnp(pyxel.KEY_X, 10, 2) and not pyxel.btn(pyxel.KEY_Z):
+                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
                 self.orientation = self.move.rotate_right()
+                if not self.move.can_rotate(self.t, self.x, self.y, self.orientation):
+                    self.orientation -= 1
                 self.b.grid = deepcopy(self.b.board)
+                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
 
             if pyxel.btnp(pyxel.KEY_Z, 10, 2) and not pyxel.btn(pyxel.KEY_X):
+                self.move = Move(self.x, self.y, self.orientation, self.t, self.board)
                 self.orientation = self.move.rotate_left()
+                if not self.move.can_rotate(self.t, self.x, self.y, self.orientation):
+                    self.orientation += 1
                 self.b.grid = deepcopy(self.b.board)
+                self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
+            
+            if pyxel.btnp(pyxel.KEY_C, 10, 2):
+                if self.hold == False:
+                    if self.hold_block == None:
+                        self.hold_block = self.t.mino
+                        self.t.mino = self.next.mino
+                        self.next = Tetromino(BAG[random.randint(0, 6)])
+                        self.next_block = self.next.block
+                    else:
+                        self.hold_block, self.t.mino = self.t.mino, self.hold_block
+                    self.x = self.t.x
+                    self.y = self.t.y   
+                    self.hold = True
+                    self.b.grid = deepcopy(self.b.board)
+                    self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
+
+
                 
     def draw(self):
         pyxel.cls(0)
-        self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
         self.b.draw_next(self.next.x, self.next.y, self.next.mino, self.next.current_orientation)
+        if self.hold:
+            self.b.draw_hold(self.hold_block, self.orientation)
         self.b.draw_board()
         self.draw_grid()
         self.draw_borders()
