@@ -9,6 +9,7 @@ WINDOWHEIGHT = 256
 
 GRID_SIZE = 12
 BAG = [_ for _ in range(7)]
+LOCK_DELAY = 60
 LEVEL = 1
 FALL_SPEED = 2
 SCORE = 0
@@ -249,9 +250,9 @@ class Tetromino:
                 [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 2 orientation: 2
                 [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 2 -> L orientation: 3
                 [(0, 0), (1, 0), (1, 1), (0, -2), (1, -2)],  # R -> 0 orientation: 0
-                [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)],  # 0 -> L orientation: -1
-                [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 2 orientation: -2
-                [(0, 0), (-1, 0), (-1, 1), (0, 2), (-1, 2)]  # 2 -> R orientation: -3
+                [(0, 0), (-1, 0), (-1, 1), (0, 2), (-1, 2)],  # 2 -> R orientation: 1
+                [(0, 0), (-1, 0), (-1, 1), (0, -2), (-1, -2)],  # L -> 2 orientation: 2
+                [(0, 0), (1, 0), (1, -1), (0, 2), (1, 2)]  # 0 -> L orientation: 3
             ]
         else:
             wallkicks = [
@@ -260,9 +261,9 @@ class Tetromino:
                 [(0, 0), (-1, 0), (2, 0), (-1, -2), (2, 1)],  # R -> 2 
                 [(0, 0), (2, 0), (-1, 0), (2, -1), (-1, 2)],  # 2 -> L 
                 [(0, 0), (2, 0), (-1, 0), (2, -1), (-1, 2)],  # R -> 0 
-                [(0, 0), (-1, 0), (2, 0), (-1, -2), (2, 1)],  # 0 -> L 
+                [(0, 0), (1, 0), (-2, 0), (1, 2), (-2, -1)],  # 2 -> R 
                 [(0, 0), (-2, 0), (1, 0), (-2, 1), (1, -2)],  # L -> 2 
-                [(0, 0), (1, 0), (-2, 0), (1, 2), (-2, -1)]  # 2 -> R 
+                [(0, 0), (-1, 0), (2, 0), (-1, -2), (2, 1)]  # 0 -> L 
             ]
         return wallkicks
 
@@ -519,7 +520,7 @@ class Tetris:
         self.is_gameover = False
         # self.hold = False
         self.cleared = False
-        self.lock_delay = 300
+        self.lock_delay = LOCK_DELAY
 
         self.s = Scores()
         self.level = self.s.level
@@ -530,10 +531,10 @@ class Tetris:
         self.fall_speed = self.s.fall_speed
 
         random.shuffle(BAG)
-        self.t = Tetromino(BAG[0])
+        self.bag = self.generate_blocks()
         self.b = Board(BOARDWIDTH, BOARDHEIGHT)
-
-        self.next = Tetromino(BAG[1])
+        self.t = self.bag.pop(0)
+        self.next = self.bag.pop(0)
         # self.hold_mino = None 
         
         self.x = self.t.x
@@ -559,17 +560,18 @@ class Tetris:
                 self.state = "running"
         
         if self.state == "running":
-            if pyxel.frame_count % (60 / self.fall_speed) == 0:
+            if pyxel.frame_count % int(60 / self.fall_speed) == 0:
                 if not self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation):
                     self.y += 1
                     self.b.grid = deepcopy(self.b.board)
                     self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
                 else:
-                    self.b.fix_block(self.x, self.y, self.t.mino, self.orientation)
-                    if self.check_game_over():
-                        self.is_gameover = True
-                    self.add_scores()
-                    self.generate_new_block()
+                    if pyxel.frame_count % self.lock_delay == 0:
+                        self.b.fix_block(self.x, self.y, self.t.mino, self.orientation)
+                        if self.check_game_over():
+                            self.is_gameover = True
+                        self.add_scores()
+                        self.generate_new_block()
 
             if pyxel.btnp(pyxel.KEY_LEFT, 10, 2) and not pyxel.btn(pyxel.KEY_RIGHT):
                 if self.y > -1:
@@ -591,8 +593,9 @@ class Tetris:
                     self.y = self.move.move_down()
                     self.b.grid = deepcopy(self.b.board)
                     self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
-                    if self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation):
-                        if pyxel.frame_count % self.lock_delay == 5:
+
+                    if pyxel.frame_count % self.lock_delay == 0:
+                        if self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation):
                             self.b.fix_block(self.x, self.y, self.t.mino, self.orientation)
                             if self.check_game_over():
                                 self.is_gameover = True
@@ -606,8 +609,9 @@ class Tetris:
                     self.y = self.move.hard_drop()
                     self.b.grid = deepcopy(self.b.board)
                     self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
-                    if self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation):
-                        if pyxel.frame_count % self.lock_delay == 5:
+
+                    if pyxel.frame_count % self.lock_delay == 0:
+                        if self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation):
                             self.b.fix_block(self.x, self.y, self.t.mino, self.orientation)
                             if self.check_game_over():
                                 self.is_gameover = True
@@ -627,7 +631,8 @@ class Tetris:
                                 self.y += y
                                 break
                         else:
-                            self.orientation -= 1
+                            self.orientation -= 1 if self.orientation > 0 else -3
+
                     self.b.grid = deepcopy(self.b.board)
                     self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
 
@@ -644,10 +649,11 @@ class Tetris:
                                 self.y += y
                                 break
                         else:
-                            self.orientation += 1
+                            self.orientation += 1 if self.orientation < 3 else -3
+
                     self.b.grid = deepcopy(self.b.board)
                     self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
-            
+
             # if pyxel.btnp(pyxel.KEY_C, 10, 2):
             #     if self.hold_mino == None:
             #         self.hold_mino = self.t.mino
@@ -662,7 +668,7 @@ class Tetris:
             #     self.hold = True
             #     self.b.drop_block(self.x, self.y, self.t.mino, self.orientation)
             #     self.b.grid = deepcopy(self.b.board)
-            
+
     def draw(self):
         pyxel.cls(0)
         self.b.draw_next(self.next.mino)
@@ -690,13 +696,23 @@ class Tetris:
             pyxel.line(4, 8 + (GRID_SIZE * row), 4 + (BOARDWIDTH * 12), 8 + (GRID_SIZE * row), 13)
             pyxel.line(4, 8 + (GRID_SIZE * (row + 10)), 4 + (BOARDWIDTH * 12), 8 + (GRID_SIZE * (row + 10)), 13)
     
+    def generate_blocks(self):
+        bag = []
+        for _ in range(7):
+            bag.append(Tetromino(BAG[random.randint(0, 6)]))
+        return bag
+
     def generate_new_block(self):
-        self.t.mino = self.next.mino
+        self.t = self.next
         self.x = self.t.x
         self.y = self.t.y
         self.orientation = self.t.current_orientation
-        self.next = Tetromino(BAG[random.randint(0, 6)])
-        self.hold = False
+        if len(self.bag) > 0:
+            self.next = self.bag.pop(0)
+        else:
+            self.bag = self.generate_blocks()
+            self.next = self.bag.pop(0)
+        # self.hold = False
 
     def add_scores(self):
         if self.b.clear_lines():
@@ -710,12 +726,14 @@ class Tetris:
             if self.s.can_level_up(self.lines, self.level):
                 self.level += 1
                 self.fall_speed += 1
-            self.cleared = False
+        self.cleared = False
     
     def check_game_over(self):
         return self.b.detect_collision(self.x, self.y, self.t.mino, self.orientation) if self.y < 0 else False
 
     def text(self):
+        pyxel.FONT_HEIGHT = 12
+        pyxel.FONT_WIDTH = 10
         # pyxel.text(WINDOWWIDTH / 2 + 1, 9, "HOLD: ", 10)
         pyxel.text(WINDOWWIDTH / 2 + 1, 9, "NEXT: ", 10)
         pyxel.text(WINDOWWIDTH / 2 + 1, 70, "LEVEL: ", 10)
