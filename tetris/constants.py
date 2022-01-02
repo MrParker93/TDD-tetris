@@ -20,4 +20,3 @@ POINTS = {
 LINES = 0 
 COMBOS = 0
 SPINS = 0
-print(f"font height: {pyxel.FONT_HEIGHT}, font width: {pyxel.FONT_WIDTH}")

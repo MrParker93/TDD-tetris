@@ -5,6 +5,7 @@ from random import randint
 
 
 class Tetromino(Rotate, Block):
+
     O_MINO = {
         "block": [[5, 5],
                   [5, 5]],
@@ -141,3 +142,9 @@ class Tetromino(Rotate, Block):
                 [(0, 0), (1, 0), (-2, 0), (1, 2), (-2, -1)]  # 2 -> R 
             ]
         return wallkicks
+
+
+t = Tetromino(6)
+a = Tetromino(6)
+
+print(t == a)
